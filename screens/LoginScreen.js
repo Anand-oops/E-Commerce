@@ -1,5 +1,6 @@
-import React, {useState, useContext} from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, TouchableOpacity } from 'react-native';
+
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Text, View, Dimensions, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import KenBurnsView from 'react-native-kenburns-view';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -8,7 +9,7 @@ import { windowHeight, windowWidth } from '../global/Dimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
 
 	const [data, setData] = useState({
 		email: '',
@@ -23,147 +24,148 @@ const LoginScreen = ({navigation}) => {
 		});
 	}
 
-	const {login} = useContext(AuthContext);
+	const { login } = useContext(AuthContext);
 
 	return (
-		
-		<View style={styles.container}>
-			
-			<LinearGradient 
-				colors={['#20527e', '#f08080']}
-				style={{ flex:1}}
-				start={{ x: 0, y: 0 }}
-				end={{ x: 1, y: 1 }} >
+		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
+			<View style={styles.container}>
 
-			
+				<LinearGradient
+					colors={['#20527e', '#f08080']}
+					style={{ flex: 1 }}
+					start={{ x: 0, y: 0 }}
+					end={{ x: 1, y: 1 }} >
 
-			<View style={styles.foreground}>
-				<View style={{ flexDirection: 'row' }} >
-					<FontAwesome
-						style={{ padding: 10, marginVertical: 5 }}
-						name="user-circle-o"
-						size={30}
-						color='#b71c1c' />
 
-					<View style={styles.inputView} >
-						<TextInput
-							style={styles.inputText}
-							placeholder="Email"
-							keyboardType="email-address"
-        					autoCapitalize="none"
-        					autoCorrect={false}
-							placeholderTextColor='grey'
-							onChangeText={(entry) => setData({
-								...data, email: entry
-							})}
-						/>
-					</View>
-				</View>
 
-				<View style={{ flexDirection: 'row' }} >
-					<MaterialIcons
-						style={{ padding: 10, marginVertical: 5 }}
-						name="security"
-						size={30}
-						color="#b71c1c" />
+					<View style={styles.foreground}>
+						<View style={{ flexDirection: 'row' }} >
+							<FontAwesome
+								style={{ padding: 10, marginVertical: 5 }}
+								name="user-circle-o"
+								size={24}
+								color='red' />
 
-					<View style={styles.inputView} >
-						<TextInput
-							style={styles.inputText}
-							placeholder="Password"
-							placeholderTextColor='grey'
-        					autoCapitalize="none"
-        					autoCorrect={false}
-							secureTextEntry={data.securityStatus ? true : false}
-							onChangeText={(entry) => setData({
-								...data, password: entry
-							})}
-						/>
-						<TouchableOpacity onPress={updateSecurityStatus}>
-							{data.securityStatus ?
-								<FontAwesome5
-									style={{ marginTop: 10 }}
-									name="eye-slash"
-									color="#e0e0e0"
-									size={20}
+							<View style={styles.inputView} >
+								<TextInput
+									style={styles.inputText}
+									placeholder=" Enter Email"
+									keyboardType="email-address"
+									autoCapitalize="none"
+									autoCorrect={false}
+									placeholderTextColor='#dcdcdc'
+									onChangeText={(entry) => setData({
+										...data, email: entry
+									})}
 								/>
-								:
-								<FontAwesome5
-									style={{ marginTop: 10 }}
-									name="eye"
-									color="#e0e0e0"
-									size={20}
-								/>}
+							</View>
+						</View>
+
+						<View style={{ flexDirection: 'row' }} >
+							<MaterialIcons
+								style={{ padding: 10, marginVertical: 5 }}
+								name="security"
+								size={24}
+								color="red" />
+
+							<View style={styles.inputView} >
+								<TextInput
+									style={styles.inputText}
+									placeholder="Enter Password"
+									placeholderTextColor='#dcdcdc'
+									autoCapitalize="none"
+									autoCorrect={false}
+									secureTextEntry={data.securityStatus ? true : false}
+									onChangeText={(entry) => setData({
+										...data, password: entry
+									})}
+								/>
+								<TouchableOpacity onPress={updateSecurityStatus}>
+									{data.securityStatus ?
+										<FontAwesome5
+											style={{ marginTop: 10 }}
+											name="eye-slash"
+											color="#e0e0e0"
+											size={20}
+										/>
+										:
+										<FontAwesome5
+											style={{ marginTop: 10 }}
+											name="eye"
+											color="#e0e0e0"
+											size={20}
+										/>}
+								</TouchableOpacity>
+							</View>
+
+						</View>
+
+						<TouchableOpacity>
+							<Text
+								style={{ color: 'red', textAlign: 'right', marginRight: '15%', fontSize: 16, fontWeight: 'bold' }}>
+								Forgot password?</Text>
 						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles.loginButton}
+							onPress={() =>
+								console.log(data.email, data.password)
+								//login(data.email,data.password)
+							}
+						>
+							<Text style={styles.loginText}>LOGIN</Text>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles.signUpButton}
+							onPress={() => navigation.navigate('SignUpScreen')}
+							underlayColor='#fff'>
+							<Text style={styles.signUpText}>New here?  SIGN UP.</Text>
+						</TouchableOpacity>
+
+						<Text
+							style={{ color: 'white', marginTop: 40, textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
+							Sign in with your social account : </Text>
+
+						<View style={{
+							flexDirection: 'row',
+							justifyContent: 'space-around',
+						}}>
+							<TouchableOpacity
+								style={styles.socialButton}
+								//onPress={}
+								underlayColor='#fff'>
+
+								<View style={{ flexDirection: 'row' }}>
+									<FontAwesome
+										name="facebook-square"
+										color="blue"
+										size={20} />
+
+									<Text style={styles.socialText}>Facebook</Text>
+								</View>
+							</TouchableOpacity>
+
+							<TouchableOpacity
+								style={styles.socialButton}
+								//onPress={}
+								underlayColor='#fff'>
+
+								<View style={{ flexDirection: 'row' }}>
+									<FontAwesome
+										name="google"
+										color="#C62828"
+										size={20} />
+
+									<Text style={styles.socialText}>Google</Text>
+								</View>
+							</TouchableOpacity>
+
+						</View>
 					</View>
-
-				</View>
-
-				<TouchableOpacity>
-					<Text
-						style={{ color: '#C62828', textAlign: 'right', marginRight: '15%', fontSize: 16, fontWeight: 'bold' }}>
-						Forgot password?</Text>
-				</TouchableOpacity>
-
-				<TouchableOpacity
-					style={styles.loginButton}
-					onPress={()=>
-						console.log(data.email,data.password)
-						//login(data.email,data.password)
-						}
-				>
-					<Text style={styles.loginText}>LOGIN</Text>
-				</TouchableOpacity>
-
-				<TouchableOpacity
-					style={styles.signUpButton}
-					onPress={() => navigation.navigate('SignUpScreen')}
-					underlayColor='#fff'>
-					<Text style={styles.signUpText}>New here?  SIGN UP.</Text>
-				</TouchableOpacity>
-
-				<Text
-					style={{ color: 'white', marginTop: 30, textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
-					Sign in with your social account : </Text>
-
-				<View style={{
-					flexDirection: 'row',
-					justifyContent: 'space-around',
-				}}>
-					<TouchableOpacity
-						style={styles.socialButton}
-						//onPress={}
-						underlayColor='#fff'>
-
-						<View style={{ flexDirection: 'row' }}>
-							<FontAwesome
-								name="facebook-square"
-								color="#C62828"
-								size={20} />
-
-							<Text style={styles.socialText}>Facebook</Text>
-						</View>
-					</TouchableOpacity>
-
-					<TouchableOpacity
-						style={styles.socialButton}
-						//onPress={}
-						underlayColor='#fff'>
-
-						<View style={{ flexDirection: 'row' }}>
-							<FontAwesome
-								name="google-plus-square"
-								color="#C62828"
-								size={20} />
-
-							<Text style={styles.socialText}>Google</Text>
-						</View>
-					</TouchableOpacity>
-
-				</View>
+				</LinearGradient>
 			</View>
-			</LinearGradient>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 }
 
@@ -171,12 +173,12 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		height: windowHeight,
+		height: '100%',
 		width: windowWidth,
-		justifyContent:'center'
+		justifyContent: 'center'
 	},
 	foreground: {
-		marginTop: '40%',
+		marginTop: '50%',
 		marginLeft: '4%',
 	},
 	inputView: {
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 		elevation: 20,
 		paddingVertical: 10,
-		backgroundColor: '#C62828',
+		backgroundColor: 'red',
 		borderRadius: 100,
 		borderWidth: 1,
 		borderColor: '#C62828',
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
 		paddingRight: 10
 	},
 	signUpButton: {
-		elevation: 10,
+
 		marginHorizontal: 40,
 		marginTop: 20,
 		paddingTop: 10,
@@ -234,19 +236,20 @@ const styles = StyleSheet.create({
 		paddingRight: 10
 	},
 	socialButton: {
+		backgroundColor: 'white',
 		marginTop: 20,
 		padding: 10,
 		borderRadius: 100,
 		borderWidth: 2,
 		borderColor: 'white',
-		elevation: 25,
+		// elevation: 25,
 		width: 125,
 		//marginHorizontal:20,
 	},
 	socialText: {
 		flex: 1,
 		elevation: 10,
-		color: 'white',
+		color: 'gray',
 		textAlign: 'center',
 		fontWeight: 'bold',
 		paddingHorizontal: 10
