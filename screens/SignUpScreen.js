@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { windowHeight, windowWidth } from '../global/Dimensions';
 
 export default function SignUpScreen() {
 
@@ -81,9 +82,10 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     container: {
+        paddingTop:'40%',
         flex: 1,
         alignItems: "center",
-        justifyContent: "center"
+        //justifyContent: "center"
 
     },
 

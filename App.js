@@ -1,21 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, Image, View, Dimensions, StatusBar, TextInput} from 'react-native';
 import LoginScreen from './screens/LoginScreen'
+import SignUpScreen from "./screens/SignUpScreen";
 
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <View >
       <LoginScreen />
    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  }
-});
