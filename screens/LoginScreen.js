@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput,Keyboard, TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
 import KenBurnsView from 'react-native-kenburns-view';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -24,7 +24,7 @@ const LoginScreen = () => {
 
 
 	return (
-		
+		<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>
 		<View style={styles.container}>
 			
 			<LinearGradient 
@@ -40,14 +40,14 @@ const LoginScreen = () => {
 					<FontAwesome
 						style={{ padding: 10, marginVertical: 5 }}
 						name="user-circle-o"
-						size={30}
-						color='#b71c1c' />
+						size={24}
+						color='red' />
 
 					<View style={styles.inputView} >
 						<TextInput
 							style={styles.inputText}
-							placeholder="Email"
-							placeholderTextColor='grey'
+							placeholder=" Enter Email"
+							placeholderTextColor='#dcdcdc'
 							onChangeText={(entry) => setData({
 								...data, email: entry
 							})}
@@ -59,14 +59,14 @@ const LoginScreen = () => {
 					<MaterialIcons
 						style={{ padding: 10, marginVertical: 5 }}
 						name="security"
-						size={30}
-						color="#b71c1c" />
+						size={24}
+						color="red" />
 
 					<View style={styles.inputView} >
 						<TextInput
 							style={styles.inputText}
-							placeholder="Password"
-							placeholderTextColor='grey'
+							placeholder="Enter Password"
+							placeholderTextColor='#dcdcdc'
 							secureTextEntry={data.securityStatus ? true : false}
 							onChangeText={(entry) => setData({
 								...data, password: entry
@@ -94,7 +94,7 @@ const LoginScreen = () => {
 
 				<TouchableOpacity>
 					<Text
-						style={{ color: '#C62828', textAlign: 'right', marginRight: '15%', fontSize: 16, fontWeight: 'bold' }}>
+						style={{ color: 'red', textAlign: 'right', marginRight: '15%', fontSize: 16, fontWeight: 'bold' }}>
 						Forgot password?</Text>
 				</TouchableOpacity>
 
@@ -113,7 +113,7 @@ const LoginScreen = () => {
 				</TouchableOpacity>
 
 				<Text
-					style={{ color: 'white', marginTop: 30, textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
+					style={{ color: 'white', marginTop: 40, textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
 					Sign in with your social account : </Text>
 
 				<View style={{
@@ -128,7 +128,7 @@ const LoginScreen = () => {
 						<View style={{ flexDirection: 'row' }}>
 							<FontAwesome
 								name="facebook-square"
-								color="#C62828"
+								color="blue"
 								size={20} />
 
 							<Text style={styles.socialText}>Facebook</Text>
@@ -142,7 +142,7 @@ const LoginScreen = () => {
 
 						<View style={{ flexDirection: 'row' }}>
 							<FontAwesome
-								name="google-plus-square"
+								name="google"
 								color="#C62828"
 								size={20} />
 
@@ -154,6 +154,7 @@ const LoginScreen = () => {
 			</View>
 			</LinearGradient>
 		</View>
+		</TouchableWithoutFeedback>
 	);
 }
 
@@ -161,12 +162,12 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		height: windowHeight,
+		height: '100%',
 		width: windowWidth,
 		justifyContent:'center'
 	},
 	foreground: {
-		marginTop: '40%',
+		marginTop: '50%',
 		marginLeft: '4%',
 	},
 	inputView: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 		elevation: 20,
 		paddingVertical: 10,
-		backgroundColor: '#C62828',
+		backgroundColor: 'red',
 		borderRadius: 100,
 		borderWidth: 1,
 		borderColor: '#C62828',
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
 		paddingRight: 10
 	},
 	signUpButton: {
-		elevation: 10,
+	
 		marginHorizontal: 40,
 		marginTop: 20,
 		paddingTop: 10,
@@ -224,19 +225,20 @@ const styles = StyleSheet.create({
 		paddingRight: 10
 	},
 	socialButton: {
+		backgroundColor:'white',
 		marginTop: 20,
 		padding: 10,
 		borderRadius: 100,
 		borderWidth: 2,
 		borderColor: 'white',
-		elevation: 25,
+		// elevation: 25,
 		width: 125,
 		//marginHorizontal:20,
 	},
 	socialText: {
 		flex: 1,
 		elevation: 10,
-		color: 'white',
+		color: 'gray',
 		textAlign: 'center',
 		fontWeight: 'bold',
 		paddingHorizontal: 10

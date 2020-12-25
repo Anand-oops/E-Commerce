@@ -7,7 +7,8 @@ import SignUpScreen from "./screens/SignUpScreen";
 export default function App() {
   return (
     <View >
-      <LoginScreen />
+      {/* <SignUpScreen/> */}
+      <LoginScreen/>
    </View>
   );
 }
