@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { windowHeight, windowWidth } from '../global/Dimensions';
+import { AuthContext } from '../navigation/AuthProvider';
 
-export default function SignUpScreen() {
+export default function SignUpScreen({navigation}) {
+
+    const {register} = useContext(AuthContext);
+
+    const [data, setData] = useState({
+		email: '',
+		password: '',
+	});
 
     return (
 
@@ -13,28 +20,42 @@ export default function SignUpScreen() {
                 style={styles.container}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}>
+
                 <TextInput
                     style={styles.inputText}
                     placeholder={'Enter Email'}
-                    placeholderTextColor='#dcdcdc' />
+                    placeholderTextColor='#dcdcdc' 
+                    placeholderTextColor='grey'
+				    onChangeText={(entry) => setData({
+						...data, email:entry
+					})}/>
+
                 <TextInput
                     style={styles.inputText}
                     placeholder={'Enter Password'}
-                    placeholderTextColor='#dcdcdc' />
+                    placeholderTextColor='#dcdcdc'
+                    onChangeText={(entry) => setData({
+                        ...data, password: entry
+                    })} />
 
                 <TouchableOpacity
                     style={styles.loginScreenButton}
-                    //   onPress={() => navigate('HomeScreen')}
-                    underlayColor='#fff'>
-                    <Text style={styles.loginText}>LOGIN</Text>
+                    //onPress={() => register()}
+                    underlayColor='#fff'
+                    onPress={() => {console.log(data.email,data.password)}}>
+
+                    <Text style={styles.loginText}>SIGN UP</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     style={styles.signinButton}
-                    //   onPress={() => navigate('HomeScreen')}
-                    underlayColor='#fff'>
-                    <Text style={styles.signinText}>Already have a account? Log in.</Text>
+                    underlayColor='#fff'
+                    onPress={() => {navigation.navigate('LoginScreen')}} >
+                    <Text style={styles.signinText}>Already have a account?  LOG IN.</Text>
+
                 </TouchableOpacity>
                 <Text style={styles.text}>Sign up with your social account</Text>
+
                 <View style={{
                 flex: 0,
                 flexDirection: 'row',
@@ -54,24 +75,7 @@ export default function SignUpScreen() {
                 </View>
             </LinearGradient>
 
-
-
-            {/* <View>
-                <TextInput
-                style = {styles.inputText}
-                placeholder='Enter Email'
-                />
-                </View> */}
-
         </View>
-
-
-
-
-
-
-
-
     );
 
 }

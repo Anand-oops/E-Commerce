@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import { StyleSheet, Text, View, Dimensions, TextInput, TouchableOpacity } from 'react-native';
 import KenBurnsView from 'react-native-kenburns-view';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -6,10 +6,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { windowHeight, windowWidth } from '../global/Dimensions';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AuthContext } from '../navigation/AuthProvider';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
 
-	const [data, setData] = React.useState({
+	const [data, setData] = useState({
 		email: '',
 		password: '',
 		securityStatus: true,
@@ -22,6 +23,7 @@ const LoginScreen = () => {
 		});
 	}
 
+	const {login} = useContext(AuthContext);
 
 	return (
 		
@@ -47,6 +49,9 @@ const LoginScreen = () => {
 						<TextInput
 							style={styles.inputText}
 							placeholder="Email"
+							keyboardType="email-address"
+        					autoCapitalize="none"
+        					autoCorrect={false}
 							placeholderTextColor='grey'
 							onChangeText={(entry) => setData({
 								...data, email: entry
@@ -67,6 +72,8 @@ const LoginScreen = () => {
 							style={styles.inputText}
 							placeholder="Password"
 							placeholderTextColor='grey'
+        					autoCapitalize="none"
+        					autoCorrect={false}
 							secureTextEntry={data.securityStatus ? true : false}
 							onChangeText={(entry) => setData({
 								...data, password: entry
@@ -100,14 +107,17 @@ const LoginScreen = () => {
 
 				<TouchableOpacity
 					style={styles.loginButton}
-				onPress={()=>{console.log(data.email,data.password)}}
+					onPress={()=>
+						console.log(data.email,data.password)
+						//login(data.email,data.password)
+						}
 				>
 					<Text style={styles.loginText}>LOGIN</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
 					style={styles.signUpButton}
-					//onPress={}
+					onPress={() => navigation.navigate('SignUpScreen')}
 					underlayColor='#fff'>
 					<Text style={styles.signUpText}>New here?  SIGN UP.</Text>
 				</TouchableOpacity>

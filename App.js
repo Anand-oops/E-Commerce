@@ -1,13 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, Image, View, Dimensions, StatusBar, TextInput} from 'react-native';
-import LoginScreen from './screens/LoginScreen'
-import SignUpScreen from "./screens/SignUpScreen";
+import Providers from './navigation';
 
-
-export default function App() {
-  return (
-    <View >
-      <LoginScreen />
-   </View>
-  );
+const App = () => {
+  return <Providers />;
 }
+
+export default App;
