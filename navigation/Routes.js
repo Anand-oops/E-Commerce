@@ -4,6 +4,7 @@ import {AuthContext} from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
+import Navigator from './drawer';
 
 const Routes = () => {
 
@@ -26,6 +27,7 @@ const Routes = () => {
     return (
       <NavigationContainer>
           {user ? <AppStack/> : <AuthStack/>}
+          {/* {user ? <Navigator/> : <AuthStack/>} */}
       </NavigationContainer>
     );
 };
