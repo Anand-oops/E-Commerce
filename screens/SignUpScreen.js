@@ -9,7 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SignUpScreen({ navigation }) {
 
-    const { register } = useContext(AuthContext);
+    const { register, googleLogin } = useContext(AuthContext);
 
     const [data, setData] = useState({
         email: '',
@@ -54,7 +54,7 @@ export default function SignUpScreen({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginScreenButton}
-                        onPress={() => {Keyboard.dismiss() ; register(data.email, data.password)} }
+                        onPress={() => {Keyboard.dismiss();console.log(data.email,data.password); register(data.email, data.password)} }
                         underlayColor='#fff' >
                         <Text style={styles.loginText}>SIGN UP</Text>
                     </TouchableOpacity>
@@ -83,7 +83,7 @@ export default function SignUpScreen({ navigation }) {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.socialButton}
-                            //   onPress={() => navigate('HomeScreen')}
+                            onPress={() => googleLogin()}
                             underlayColor='#fff'>
                             <AntDesign name="google" size={24} color="red" />
                             <Text style={styles.socialText}>Google</Text>

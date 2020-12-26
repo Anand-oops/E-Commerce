@@ -8,7 +8,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Text style={styles.text}>Welcome {user.uid}</Text>
       
-      <Button title="Logout" onPress={logout()} />
+      <Button title="Logout" onPress={() => logout()} />
     </View>
   );
 }

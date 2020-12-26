@@ -1,7 +1,6 @@
 
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import KenBurnsView from 'react-native-kenburns-view';
+import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -24,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
 		});
 	}
 
-	const { login } = useContext(AuthContext);
+	const { login, googleLogin } = useContext(AuthContext);
 
 	return (
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
@@ -108,7 +107,7 @@ const LoginScreen = ({ navigation }) => {
 
 						<TouchableOpacity
 							style={styles.loginButton}
-							onPress={() => {Keyboard.dismiss() ; login(data.email,data.password)}} >
+							onPress={() => {Keyboard.dismiss() ;console.log(data.email,data.password); login(data.email,data.password)}} >
 							<Text style={styles.loginText}>LOGIN</Text>
 						</TouchableOpacity>
 
@@ -144,7 +143,7 @@ const LoginScreen = ({ navigation }) => {
 
 							<TouchableOpacity
 								style={styles.socialButton}
-								//onPress={}
+								onPress={() => googleLogin()}
 								underlayColor='#fff'>
 
 								<View style={{ flexDirection: 'row' }}>
