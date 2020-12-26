@@ -5,7 +5,7 @@ import KenBurnsView from 'react-native-kenburns-view';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { windowHeight, windowWidth } from '../global/Dimensions';
+import { windowWidth } from '../global/Dimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 
@@ -108,11 +108,7 @@ const LoginScreen = ({ navigation }) => {
 
 						<TouchableOpacity
 							style={styles.loginButton}
-							onPress={() =>
-								//console.log(data.email, data.password)
-								login(data.email,data.password)
-							}
-						>
+							onPress={() => {Keyboard.dismiss() ; login(data.email,data.password)}} >
 							<Text style={styles.loginText}>LOGIN</Text>
 						</TouchableOpacity>
 
@@ -154,7 +150,7 @@ const LoginScreen = ({ navigation }) => {
 								<View style={{ flexDirection: 'row' }}>
 									<FontAwesome
 										name="google"
-										color="#C62828"
+										color="red"
 										size={20} />
 
 									<Text style={styles.socialText}>Google</Text>
