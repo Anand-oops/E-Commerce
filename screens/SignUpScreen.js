@@ -54,9 +54,8 @@ export default function SignUpScreen({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginScreenButton}
-                        //onPress={() => { register(data.email, data.password) }}
-                        underlayColor='#fff'
-                        onPress={() => { console.log(data.email, data.password) }}>
+                        onPress={() => {Keyboard.dismiss() ; register(data.email, data.password)} }
+                        underlayColor='#fff' >
                         <Text style={styles.loginText}>SIGN UP</Text>
                     </TouchableOpacity>
 

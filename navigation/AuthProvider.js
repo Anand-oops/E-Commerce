@@ -1,6 +1,8 @@
 import React, {createContext, useState} from 'react';
 import {Alert} from 'react-native';
 import Firebase from '../firebaseConfig';
+import auth from '@react-native-firebase/auth'
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
@@ -14,7 +16,7 @@ export const AuthProvider = ({children}) => {
 
         login: async (email, password) => {
           try {
-            Firebase.auth().signInWithEmailAndPassword(email, password);
+            await Firebase.auth().signInWithEmailAndPassword(email, password);
 
           } catch (e) {
             console.log(e);
@@ -31,7 +33,7 @@ export const AuthProvider = ({children}) => {
         },
         register: async (email, password) => {
           try {
-            await auth().createUserWithEmailAndPassword(email, password)
+            await Firebase.auth().createUserWithEmailAndPassword(email, password)
 
           } catch (e) {
             console.log("error"+e);
@@ -47,7 +49,7 @@ export const AuthProvider = ({children}) => {
         },
         logout: async () => {
           try {
-            Firebase.auth().signOut();
+            await Firebase.auth().signOut();
           } catch (e) {
             console.log(e);
           }
