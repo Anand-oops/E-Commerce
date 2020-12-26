@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Dimensions, Text, View, TextInput, Button, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 import { Entypo } from '@expo/vector-icons';
@@ -32,8 +32,11 @@ export default function SignUpScreen({ navigation }) {
                             style={styles.inputText}
                             placeholder={'Enter Email'}
                             placeholderTextColor='#dcdcdc'
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+							autoCorrect={false}
                             onChangeText={(entry) => setData({
-                                ...data, password: entry
+                                ...data, email: entry
                             })} />
                     </View>
                     <View style={{ flexDirection: 'row' }}>
@@ -41,6 +44,8 @@ export default function SignUpScreen({ navigation }) {
                         <TextInput
                             style={styles.inputText}
                             placeholder={'Enter Password'}
+							autoCapitalize="none"
+							autoCorrect={false}
                             placeholderTextColor='#dcdcdc'
                             onChangeText={(entry) => setData({
                                 ...data, password: entry
@@ -49,7 +54,7 @@ export default function SignUpScreen({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginScreenButton}
-                        //onPress={() => register()}
+                        //onPress={() => { register(data.email, data.password) }}
                         underlayColor='#fff'
                         onPress={() => { console.log(data.email, data.password) }}>
                         <Text style={styles.loginText}>SIGN UP</Text>
@@ -99,16 +104,13 @@ const styles = StyleSheet.create({
 
         height: '100%',
         width: '100%'
-        // height:Dimensions.get('window').height ,
-        // width:Dimensions.get('window').width
+        
     },
     container: {
         flex: 1,
         alignItems: "center",
         // justifyContent: "center",
         paddingTop: '50%'
-
-
     },
 
     inputText: {
@@ -118,22 +120,21 @@ const styles = StyleSheet.create({
         padding: 8,
         margin: 10,
         width: "75%",
-
-
+        //flex: 1,
+		color: 'white',
+		fontSize: 16,
     },
     button: {
         margin: 10,
         backgroundColor: 'red',
         width: 300,
-
-
-
     },
     loginScreenButton: {
         marginRight: 40,
         marginLeft: 40,
         marginTop: 20,
         paddingTop: 10,
+        elevation: 20,
         paddingBottom: 10,
         backgroundColor: 'red',
         borderRadius: 100,
@@ -187,10 +188,11 @@ const styles = StyleSheet.create({
         width: 125,
     },
     socialText: {
-        color: 'gray',
-        textAlign: 'center',
-        paddingLeft: 10,
-        fontWeight: 'bold',
-        paddingRight: 10
+        flex: 1,
+		elevation: 10,
+		color: 'gray',
+		textAlign: 'center',
+		fontWeight: 'bold',
+		paddingRight: 10
     }
 });

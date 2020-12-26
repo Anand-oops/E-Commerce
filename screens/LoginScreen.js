@@ -109,8 +109,8 @@ const LoginScreen = ({ navigation }) => {
 						<TouchableOpacity
 							style={styles.loginButton}
 							onPress={() =>
-								console.log(data.email, data.password)
-								//login(data.email,data.password)
+								//console.log(data.email, data.password)
+								login(data.email,data.password)
 							}
 						>
 							<Text style={styles.loginText}>LOGIN</Text>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
 		borderRadius: 100,
 		borderWidth: 2,
 		borderColor: 'white',
-		// elevation: 25,
+		elevation: 25,
 		width: 125,
 		//marginHorizontal:20,
 	},
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
 		color: 'gray',
 		textAlign: 'center',
 		fontWeight: 'bold',
-		paddingHorizontal: 10
+		paddingRight: 10
 	}
 });
 
