@@ -1,6 +1,6 @@
 
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -10,6 +10,27 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 const LoginScreen = ({ navigation }) => {
 
+	const { login, googleLogin } = useContext(AuthContext);
+
+	function loginWithEmail(){
+		if (data.email.length<=4) {
+			Alert.alert("Credentials error",
+				"Invalid E-mail",
+				[
+					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
+				], {cancelable:false});
+		}
+		else if (data.password<6) {
+			Alert.alert("Credentials error",
+				"Password should be at least 6 characters",
+				[
+					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
+				], {cancelable:false});
+		}
+		else{
+			login(data.email,data.password);
+		}		
+	}
 	const [data, setData] = useState({
 		email: '',
 		password: '',
@@ -23,7 +44,6 @@ const LoginScreen = ({ navigation }) => {
 		});
 	}
 
-	const { login, googleLogin } = useContext(AuthContext);
 
 	return (
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
@@ -107,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
 
 						<TouchableOpacity
 							style={styles.loginButton}
-							onPress={() => {Keyboard.dismiss() ;console.log(data.email,data.password); login(data.email,data.password)}} >
+							onPress={() => {Keyboard.dismiss() ;console.log(data.email,data.password); loginWithEmail()}} >
 							<Text style={styles.loginText}>LOGIN</Text>
 						</TouchableOpacity>
 
@@ -143,7 +163,7 @@ const LoginScreen = ({ navigation }) => {
 
 							<TouchableOpacity
 								style={styles.socialButton}
-								onPress={() => googleLogin()}
+								//onPress={() => googleLogin()}
 								underlayColor='#fff'>
 
 								<View style={{ flexDirection: 'row' }}>

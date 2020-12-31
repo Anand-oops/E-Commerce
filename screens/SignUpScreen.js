@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Keyboard, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 import { Entypo } from '@expo/vector-icons';
@@ -10,6 +10,26 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function SignUpScreen({ navigation }) {
 
     const { register, googleLogin } = useContext(AuthContext);
+
+    function registerWithEmail(){
+        if (data.email.length<=4) {
+			Alert.alert("Credentials error",
+				"Invalid E-mail",
+				[
+					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
+				], {cancelable:false});
+		}
+		else if (data.password.length<6) {
+			Alert.alert("Credentials error",
+				"Password should be at least 6 characters",
+				[
+					{text:"Retry" , onPress:() => console.log("OK Prssed.")}
+				], {cancelable:false});
+		}
+		else{
+			register(data.email,data.password);
+		}		
+    }
 
     const [data, setData] = useState({
         email: '',
@@ -54,7 +74,7 @@ export default function SignUpScreen({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginScreenButton}
-                        onPress={() => {Keyboard.dismiss();console.log(data.email,data.password); register(data.email, data.password)} }
+                        onPress={() => {Keyboard.dismiss();console.log(data.email,data.password); registerWithEmail()} }
                         underlayColor='#fff' >
                         <Text style={styles.loginText}>SIGN UP</Text>
                     </TouchableOpacity>
@@ -83,7 +103,7 @@ export default function SignUpScreen({ navigation }) {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.socialButton}
-                            onPress={() => googleLogin()}
+                            //onPress={() => googleLogin()}
                             underlayColor='#fff'>
                             <AntDesign name="google" size={24} color="red" />
                             <Text style={styles.socialText}>Google</Text>
