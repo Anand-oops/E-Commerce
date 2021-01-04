@@ -1,9 +1,22 @@
-import React, { useContext } from 'react';
+import React, { Component, useContext } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
+import Firebase from '../firebaseConfig'
 
 const HomeScreen = () => {
+
   const {user, logout} = useContext(AuthContext);
+
+  console.log(user)
+
+  Firebase.database().ref(`/Admin/${user.uid}`).set({
+    id:user.uid,
+    email:user.email,
+    password:user.providerId,
+    displayName:user.displayName,
+    phoneNumber:user.phoneNumber,
+    })
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome {user.uid}</Text>

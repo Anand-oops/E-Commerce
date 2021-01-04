@@ -36,6 +36,7 @@ export default function SignUpScreen({ navigation }) {
         password: '',
     });
 
+
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
             <View style={styles.main}>
