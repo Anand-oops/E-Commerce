@@ -7,8 +7,6 @@ const HomeScreen = () => {
 
   const {user, logout} = useContext(AuthContext);
 
-  console.log(user)
-
   Firebase.database().ref(`/Admin/${user.uid}`).set({
     id:user.uid,
     email:user.email,
