@@ -2,19 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function DemoScreen() {
+export default function PendingListScreen() {
 
     return (
         
         <View style={styles.main}>
             
-            <LinearGradient
-                colors={['#20527e', '#f08080']}
-                style={styles.container}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}>
-                <Text style={ {color:'black'}}>this is demo Screen </Text>
-            </LinearGradient>
+            
+                <Text style={ {color:'black'}}>this is pendingList Screen </Text>
+            
 
 
 
