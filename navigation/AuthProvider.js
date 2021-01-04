@@ -23,21 +23,15 @@ export const AuthProvider = ({ children }) => {
 					try {
 						await Firebase.auth().signInWithEmailAndPassword(email, password);
 					} catch (e) {
-						Alert.alert(
-							"Authentication Error",
-							"Password incorrect or User not registered",
-							[
-								{ text: "OK", onPress: () => console.log("OK Pressed") }
-							],
-							{ cancelable: false }
-						);
+						alert(e);
 					}
 				},
-				register: async (email, password) => {
+				register: async (email,password) => {
 					try {
-						await Firebase.auth().createUserWithEmailAndPassword(email, password)
+						await Firebase.auth().createUserWithEmailAndPassword(email, password);
 					} catch (e) {
-						console.log("error" + e);
+						alert(e);
+						console.log(e);
 					}
 				},
 				logout: async () => {
@@ -49,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 				},
 				googleLogin: async () => {
 					try {
-						const {type, result} = await GoogleSignIn.signInAsync({
+						const {type} = await GoogleSignIn.signInAsync({
 							androidClientId: '401682790263-al3cr5tdl1n0ht73fab8r46u91bkoii8.apps.googleusercontent.com',
 							scopes: ['profile', 'email']
 						});
@@ -59,14 +53,7 @@ export const AuthProvider = ({ children }) => {
 							}
 						} catch (e) {
 						console.log(e);
-						Alert.alert(
-							"Google Error",
-							{ e },
-							[
-								{ text: "OK", onPress: () => console.log("OK Pressed") }
-							],
-							{ cancelable: false }
-						);
+						alert(e)
 					}
 				}
 			}}>
