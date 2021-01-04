@@ -33,7 +33,7 @@ const AppStack = createStackNavigator(screens,{
     defaultNavigationOptions:{
         headerTintColor:'white',
         headerStyle:{
-            backgroundColor:'black',height:90
+            backgroundColor:'black',height:70
         }
     }
 });

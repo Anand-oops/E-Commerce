@@ -5,6 +5,7 @@ import { AuthContext } from '../navigation/AuthProvider';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SignUpScreen({ navigation }) {
@@ -40,7 +41,7 @@ export default function SignUpScreen({ navigation }) {
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
             <View style={styles.main}>
-
+            <StatusBar style="auto" />
                 <LinearGradient
                     colors={['#20527e', '#f08080']}
                     style={styles.container}
