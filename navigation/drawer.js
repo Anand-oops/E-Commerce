@@ -9,7 +9,7 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 import React from "react";
 
-import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, Alert } from "react-native";
 import Firebase from "../firebaseConfig";
 
 const customComponent = (props) => {
@@ -30,7 +30,14 @@ const customComponent = (props) => {
         <TouchableOpacity >
             <Text
                 style={{ width:'100%',backgroundColor:'#eee',color: 'black', fontSize: 20, fontWeight: 'bold',height:50,textAlign:'center',paddingTop:10 }}
-                onPress={() => logout() }>
+                onPress={() => {
+                    Alert.alert("Logout", "You will be logged out...",
+                    [
+                        {text:"Proceed", onPress: () => logout()},
+                        {text:"Cancel" }
+                    ],{cancelable: false}
+                    );
+                } }>
                 SIGN OUT</Text>
         </TouchableOpacity>
     </SafeAreaView>
