@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity, Touchabl
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { windowWidth } from '../global/Dimensions';
+import { windowWidth } from '../shared/Dimensions';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';

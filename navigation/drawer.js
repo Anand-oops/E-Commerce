@@ -33,8 +33,8 @@ const customComponent = (props) => {
                 onPress={() => {
                     Alert.alert("Logout", "You will be logged out...",
                     [
-                        {text:"Proceed", onPress: () => logout()},
-                        {text:"Cancel" }
+                        {text:"Cancel" },
+                        {text:"Proceed", onPress: () => logout()}
                     ],{cancelable: false}
                     );
                 } }>

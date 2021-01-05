@@ -1,18 +1,16 @@
-import React, { Component, useContext, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
 import { StatusBar } from 'expo-status-bar';
 import { SliderBox } from "react-native-image-slider-box"
 import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-simple-toast';
+import Card from '../shared/Card'
 
 function HomeScreen() {
 
 	const { user } = useContext(AuthContext);
-
-	// Firebase.database().ref(`/Admin/${user.uid}`)
-	// 	.on('value', snapshot => console.log("User data: ", "changed"))
 
 	Firebase.database().ref(`/Admin/${user.uid}`).update({
 		id: user.uid,
@@ -25,6 +23,13 @@ function HomeScreen() {
 	const [deckListenStatus, setDeckListenStatus] = useState(true)
 	const [imageIndex, setImageIndex] = useState()
 	const [deleteImageNames, setDeleteImageNames] = useState([])
+	const [showCardModal, setShowCardModel] = useState(false)
+	const [header, setHeader] = useState('')
+	const [cards, setCards] = useState([])
+	const [showImageModal, setShowImageModal] = useState(false)
+	const [smallText, setSmallText] = useState('')
+	const [bigText, setBigText] = useState('')
+	const [image, setImage] = useState(require('../assets/images/add.png'))
 
 
 
@@ -49,6 +54,53 @@ function HomeScreen() {
 		}
 	};
 
+	const AddCard = (header) => {
+		if (header.length==0) {
+			Alert.alert("Wait", "Empty header not allowed",
+			[{text:"Retry", onPress:() => {return}}],{cancelable:true})
+		}else{
+			setCards([...cards, {
+				key: new Date().getTime(),
+				images: [],
+				header: header
+			}])
+			setShowCardModel(false),
+			setHeader('')
+		}
+		
+	}
+
+	const AddCardContent = (header, image, smallText, bigText) => {
+		const cardArray = cards;
+		const cardIndex = cardArray.findIndex(card => card.header === header);
+		if (image.uri) {
+			if (cardArray[cardIndex].images) {
+				cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
+					key: new Date().getTime(),
+					image: image,
+					textItem: smallText,
+					textOff: bigText,
+				}];
+			}else
+			cardArray[cardIndex].images = [ {
+				key: new Date().getTime(),
+				image: image,
+				textItem: smallText,
+				textOff: bigText,
+			}];
+			
+			setCards(cardArray)
+			setShowImageModal(false)
+			setHeader('')
+			setImage(require('../assets/images/add.png'))
+			setSmallText('')
+			setBigText('')
+		}
+		else {
+			Alert.alert('Image Not Found', 'Please pick an image from the gallery');
+		}
+	}
+
 	const AddImageHandler = async (key) => {
 		const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -67,7 +119,7 @@ function HomeScreen() {
 		const blob = await response.blob();
 		console.log(imageName)
 		Firebase.storage()
-			.ref(`ImagesDeck/${imageName}`)
+			.ref(`${imageName}`)
 			.put(blob)
 			.then((snapshot) => {
 				console.log(`${imageName} has been successfully uploaded.`);
@@ -76,11 +128,20 @@ function HomeScreen() {
 						setDeckChanged(true);
 						setImagesDeck([...imagesDeck, { imageName: imageName, uri: url }])
 					}
+					else if (key == 'cardImage') {
+						setImage({
+							imageName: imageName,
+							uri: url,
+						})
+					}
 				});
 			})
 			.catch((e) => console.log('uploading image error', e));
 
 	};
+
+	const closeModal = () => { setShowCardModel(false), setHeader(''), setShowImageModal(false),  setSmallText(''),
+								setImage(require('../assets/images/add.png')), setHeader(''), setBigText('') }
 
 	function SaveToDatabase() {
 		let Imageflag = true;
@@ -98,18 +159,19 @@ function HomeScreen() {
 			Toast.show('No new image selected', Toast.SHORT);
 		}
 		if (deleteImageNames.length > 0) {
-			deleteImageNames.map(imageName =>
-				Firebase.storage().ref('ImagesDeck/' + imageName).delete().then(() => {
+			deleteImageNames.map(imageName =>{
+				Firebase.storage().ref(imageName).delete().then(() => {
 					console.log(`${imageName} has been deleted successfully.`);
-					Firebase.database().ref('/ImagesDeck').set(imagesDeck).then(() => {
-						setDeckListenStatus(true);
-						setDeckChanged(false);
-					}).catch((e) => {
-						Imageflag = false
-						console.log('error on image deletion ', e)
-						Toast.show('Error occured while updating', Toast.SHORT);
+					
 					})
-				}));
+				Firebase.database().ref('/ImagesDeck').set(imagesDeck).then(() => {
+					setDeckListenStatus(true);
+					setDeckChanged(false);
+				}).catch((e) => {
+					Imageflag = false
+					console.log('error on image deletion ', e)
+					Toast.show('Error occured while updating', Toast.SHORT);
+			}	)});
 			setDeleteImageNames([])
 		}
 		if (Imageflag) {
@@ -118,26 +180,97 @@ function HomeScreen() {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={{ paddingTop: 0, flex: 1, }}>
 			<StatusBar style="light" />
+			<ScrollView keyboardShouldPersistTaps='always'>
+				<View style={styles.iconContainer}>
 
-			<View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-				<Text style={styles.text} onPress={() => DeleteImageHandler(imageIndex)}>Delete</Text>
-				<Text style={styles.text} onPress={() => AddImageHandler('deck')}>Add</Text>
-			</View>
+					<TouchableOpacity onPress={() => DeleteImageHandler(imageIndex)}>
+						<Image source={require('../assets/images/delete.png')} style={styles.image} />
+					</TouchableOpacity>
+					<Text style={{ fontSize: 18, fontWeight: 'bold' }}> Image Deck </Text>
+					<TouchableOpacity onPress={() => AddImageHandler('deck')}>
+						<Image source={require('../assets/images/add.png')} style={styles.image} />
+					</TouchableOpacity>
 
-			<View style={{ elevation: 5, height: 175, borderColor: 'black', borderWidth: 1, }}>
-				<SliderBox
-					images={imagesDeck}
-					autoplay={true}
-					sliderBoxHeight={175}
-					circleLoop={true}
-					resizeMode={'contain'}
-					currentImageEmitter={index => {
-						setImageIndex(index)
-					}}
-				/>
-			</View>
+				</View>
+				<View style={styles.imageDeck}>
+					<SliderBox
+						images={imagesDeck}
+						autoplay={true}
+						sliderBoxHeight={175}
+						circleLoop={true}
+						resizeMode={'contain'}
+						currentImageEmitter={index => {
+							setImageIndex(index)
+						}} />
+				</View>
+				<View>
+					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
+						addImage={() => { setShowImageModal(true), setHeader('') }} deleteImage={() => DeleteCardImageHandler()}
+						deleteCard={() => DeleteCardHandler()} />)}
+
+					<TouchableOpacity style={styles.bottomContainer} onPress={() => setShowCardModel(true)}>
+						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
+					</TouchableOpacity>
+				</View>
+
+				<Modal
+					visible={showCardModal}
+					position='center'
+					transparent={true}
+					onRequestClose={() => closeModal()}>
+					<View style={styles.modalContainer}>
+						<View style={styles.cardModalScreen}>
+							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Card Header Name:</Text>
+							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+								<TextInput style={styles.modalTextInput} onChangeText={(header) => setHeader(header)} value={header} />
+							</View>
+							<View style={styles.modalButtonContainer}>
+								<View style={{ padding: 10, width: '30%' }}>
+									<Button title='Cancel' onPress={() => closeModal()} />
+								</View>
+								<View style={{ padding: 10, width: '30%' }}>
+									<Button title='OK' onPress={() => AddCard(header)} />
+
+								</View>
+							</View>
+						</View>
+					</View>
+				</Modal>
+
+				<Modal
+					visible={showImageModal}
+					position='center'
+					transparent={true}
+					onRequestClose={() => closeModal}>
+					<View style={styles.modalContainer}>
+						<View style={styles.imageModalScreen}>
+							<TouchableOpacity onPress={() => AddImageHandler('cardImage')} style={styles.cardImageContainer}>
+								<Image source={image} style={styles.cardImage} />
+							</TouchableOpacity>
+							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter SmallText:</Text>
+							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+								<TextInput style={styles.modalTextInput} onChangeText={(smallText) => setSmallText(smallText)} value={smallText} />
+							</View>
+							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter BigText:</Text>
+							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+								<TextInput style={styles.modalTextInput} onChangeText={(bigText) => setBigText(bigText)} value={bigText} />
+							</View>
+							<View style={styles.modalButtonContainer}>
+							<View style={{ padding: 10, width: '30%' }}>
+									<Button title='Cancel' onPress={() => closeModal()} />
+								</View>
+								<View style={{ padding: 10, width: '30%' }}>
+									<Button title='OK' onPress={() => AddCardContent(header, image, smallText, bigText)} />
+								</View>
+								
+							</View>
+						</View>
+					</View>
+				</Modal>
+
+			</ScrollView>
 			<TouchableOpacity style={styles.saveButton} onPress={() => SaveToDatabase()}>
 				<Text style={{ color: 'white' }}>SAVE CHANGES</Text>
 			</TouchableOpacity>
@@ -148,18 +281,34 @@ function HomeScreen() {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: '#f9fafd',
-		flex: 1,
-		justifyContent: 'center',
+	bottomContainer: {
 		alignItems: 'center',
-		padding: 20,
+		marginVertical: 40,
+		marginBottom: 60,
 	},
-	text: {
-		fontSize: 20,
-		marginHorizontal: 20,
-		color: '#333333'
+	iconContainer: {
+		flexDirection: 'row',
+		padding: 10,
+		paddingHorizontal: 20,
+		borderWidth: 1,
+		borderColor: 'black',
+		justifyContent: 'space-between',
+		alignItems: 'center'
 	},
+
+	image: {
+		height: 30,
+		width: 30,
+		paddingHorizontal: 10
+	},
+
+	imageDeck: {
+		elevation: 5,
+		height: 175,
+		borderColor: 'black',
+		borderWidth: 1,
+	},
+
 	saveButton: {
 		backgroundColor: '#ec2F4B',
 		padding: 15,
@@ -167,5 +316,62 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		margin: 5,
 		alignItems: 'center',
+	},
+	modalContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	imageModalScreen: {
+		height: 400,
+		width: '85%',
+		borderRadius: 20,
+		justifyContent: 'center',
+		elevation: 20,
+		borderWidth: 1,
+		borderColor: 'black',
+		backgroundColor: 'white'
+	},
+
+	cardImageContainer: {
+		flex: 1,
+		padding: 10,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+
+	cardImage: {
+		height: 80,
+		width: 80,
+		marginVertical: 20,
+		resizeMode: 'contain',
+		justifyContent: 'center',
+	},
+
+	cardModalScreen: {
+		height: 200,
+		width: '85%',
+		borderRadius: 15,
+		justifyContent: 'center',
+		elevation: 20,
+		borderWidth: 1,
+		borderColor: 'black',
+		backgroundColor: 'white'
+	},
+	modalTextInput: {
+		width: '90%',
+		marginVertical: 10,
+		padding: 5,
+		paddingLeft: 15,
+		borderWidth: 1,
+		borderColor: 'black',
+		borderRadius: 10,
+		backgroundColor: 'white'
+	},
+	modalButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginVertical: 15,
 	},
 });
