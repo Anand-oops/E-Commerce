@@ -1,12 +1,13 @@
-
 import React, { useState, useContext } from 'react';
 import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { windowWidth } from '../global/Dimensions';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
+import { StatusBar } from 'expo-status-bar';
 
 const LoginScreen = ({ navigation }) => {
 
@@ -49,6 +50,8 @@ const LoginScreen = ({ navigation }) => {
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
 			<View style={styles.container}>
 
+			<StatusBar style="auto" />
+			
 				<LinearGradient
 					colors={['#20527e', '#f08080']}
 					style={{ flex: 1 }}

@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet,Text,View  } from 'react-native';
 import { Entypo } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 
 export default function header({navigation, title}){

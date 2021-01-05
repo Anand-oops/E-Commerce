@@ -1,19 +1,19 @@
 import {createStackNavigator} from "react-navigation-stack";
 import Header from '../shared/header';
 import React from 'react';
-import PendingListScreen from '../screens/pendingListScreen';
+import DrawerItemsList from '../screens/DrawerItemsList';
 
 const screens = {
-    PendingList:{  screen:PendingListScreen, navigationOptions: ({navigation})=>{
+    PendingList:{  screen:DrawerItemsList, navigationOptions: ({navigation})=>{
         return {
             
-                headerTitle:()=><Header navigation={navigation} title='Pending list'/>,
+                headerTitle:()=><Header navigation={navigation} title='Drawer List'/>,
             
         }
     } }
 }
 
-const pendingListStack = createStackNavigator(screens,{
+const drawerStack = createStackNavigator(screens,{
     defaultNavigationOptions:{
         headerTintColor:'white',
         headerStyle:{
@@ -22,4 +22,4 @@ const pendingListStack = createStackNavigator(screens,{
     }
 });
 
-export default pendingListStack;
+export default drawerStack;
