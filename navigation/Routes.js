@@ -3,8 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {AuthContext} from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import AuthStack from './AuthStack';
-import AppStack from './AppStack';
-import Navigator from './drawer';
+import Navigator from './Drawer';
 
 const Routes = () => {
 

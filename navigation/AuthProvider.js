@@ -1,5 +1,4 @@
 import React, { createContext, useState } from 'react';
-import { Alert } from 'react-native';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import Firebase from '../firebaseConfig';
 

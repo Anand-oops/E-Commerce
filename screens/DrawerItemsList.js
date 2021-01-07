@@ -6,17 +6,8 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 var data;
 export default function DrawerItemsList() {
-    //   const ref=Firebase.database().ref('drawerItems').push().key();
-    // const ref = Firebase.database().ref(`Admin/`);
-    // ref.on('value', function (snapshot) {
-    //      data = snapshot.val();
-    //     ;
-    //     console.log(console.log(data));
 
-    // })
-
-
-    const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [text, onTextChange] = useState('');
 
     const ModalInput = ({ onTextChange, onSubmit, visible, value, toggle }) => {

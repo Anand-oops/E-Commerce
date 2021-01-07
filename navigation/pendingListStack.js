@@ -1,7 +1,7 @@
 import {createStackNavigator} from "react-navigation-stack";
-import Header from '../shared/header';
+import Header from '../shared/Header';
 import React from 'react';
-import PendingListScreen from '../screens/pendingListScreen';
+import PendingListScreen from '../screens/PendingListScreen';
 
 const screens = {
     PendingList:{  screen:PendingListScreen, navigationOptions: ({navigation})=>{

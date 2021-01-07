@@ -1,5 +1,5 @@
 import {createStackNavigator} from "react-navigation-stack";
-import Header from '../shared/header';
+import Header from '../shared/Header';
 import React from 'react';
 import DrawerItemsList from '../screens/DrawerItemsList';
 

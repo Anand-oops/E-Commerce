@@ -2,19 +2,6 @@ import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
-
-// const HomeScreen = () => {
-
-//   const {user, logout} = useContext(AuthContext);
-
-//   Firebase.database().ref(`/Admin/${user.uid}`).set({
-//     id:user.uid,
-//     email:user.email,
-//     password:user.providerId,
-//     displayName:user.displayName,
-//     phoneNumber:user.phoneNumber,
-//     })
-
 import { StatusBar } from 'expo-status-bar';
 import { SliderBox } from "react-native-image-slider-box"
 import * as ImagePicker from 'expo-image-picker'
