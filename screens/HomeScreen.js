@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SliderBox } from "react-native-image-slider-box"
 import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-simple-toast';
-import Card from '../shared/Card'
+import Card from '../shared/AdminCard'
 
 const HomeScreen = (props) => {
 
