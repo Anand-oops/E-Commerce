@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet,View } from "react-native";
+import React,{useState} from "react";
+import { StyleSheet,View, } from "react-native";
 
 
 export default function card(props){
@@ -16,6 +16,8 @@ export default function card(props){
 
 const styles=StyleSheet.create({
     card:{
+        marginTop:8,
+        height:80,
         borderRadius:6,
         elevation:3,
         backgroundColor:'#fff',
@@ -27,5 +29,11 @@ const styles=StyleSheet.create({
         marginVertical:6,
         
     },
-    cardItems:{}
+    cardItems:{
+        flexDirection:'row',
+        flex:1,
+        padding:10,
+        alignItems:'center',
+        // justifyContent:'center',
+    }
 })

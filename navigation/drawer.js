@@ -9,13 +9,12 @@ import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from '../navigation/DrawerItemsStack';
 import React from "react";
-
-import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity } from "react-native";
-
+import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, Alert } from "react-native";
 
 
 const customComponent = (props) => {
 
+    
     const { user, logout } = useContext(AuthContext);
     var name;
     const ref = Firebase.database().ref(`Admin/${user.uid}`);
@@ -33,27 +32,33 @@ const customComponent = (props) => {
         name = data.firstName;
 
     })
-    return (
-        <SafeAreaView style={{ flex: 1, }}>
+    return(
+    <SafeAreaView style={{ flex: 1, }}>
 
-            <View style={{ flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center', marginTop: 10, paddingTop: 15, paddingLeft: 15 }}>
-                <AntDesign name="user" size={40} color="black" />
+        <View style={{ flexDirection:'row',height: 100, backgroundColor: 'white', alignItems: 'center',  marginTop: 10,paddingTop:15,paddingLeft:15 }}>
+            <AntDesign name="user" size={40} color="black"  />
+            <Text style={{ marginTop: 10,fontSize:20 }}> Hey, User !!</Text>
+        </View>
 
-                <Text style={{ marginTop: 10, fontSize: 20 }}>{"Welcome " + name}</Text>
-            </View>
+        <ScrollView>
+            <DrawerItems  {...props} />
+        </ScrollView>
+        <TouchableOpacity >
+            <Text
+                style={{ width:'100%',backgroundColor:'#eee',color: 'black', fontSize: 20, fontWeight: 'bold',height:50,textAlign:'center',paddingTop:10 }}
+                onPress={() => {
+                    Alert.alert("Logout", "You will be logged out...",
+                    [
+                        {text:"Proceed", onPress: () => logout()},
+                        {text:"Cancel" }
+                    ],{cancelable: false}
+                    );
+                } }>
+                SIGN OUT</Text>
+        </TouchableOpacity>
+    </SafeAreaView>
+)}
 
-            <ScrollView>
-                <DrawerItems  {...props} />
-            </ScrollView>
-            <TouchableOpacity >
-                <Text
-                    style={{ width: '100%', backgroundColor: '#eee', color: 'black', fontSize: 20, fontWeight: 'bold', height: 50, textAlign: 'center', paddingTop: 10 }}
-                    onPress={() => logout()}>
-                    SIGN OUT</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
-    )
-}
 
 const screens = {
 
