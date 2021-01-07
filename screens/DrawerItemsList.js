@@ -1,6 +1,6 @@
 import React ,{useState}from 'react';
 import { StyleSheet, Text, View,FlatList, TouchableOpacity, Button,Modal,TextInput } from 'react-native';
-import Card from "../shared/card";
+import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -14,8 +14,11 @@ export default function DrawerItemsList() {
     //     console.log(console.log(data));
 
     // })
+
+
     const [visible, setVisible] = useState(false);
   const [text, onTextChange] = useState('');
+
     const ModalInput = ({ onTextChange, onSubmit, visible, value, toggle }) => {
         return (
           <Modal visible={visible} transparent={true} position='center' style={{ borderRadius:20, alignSelf:'center', justifyContent:'center'}}>
