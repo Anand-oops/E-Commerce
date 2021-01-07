@@ -19,7 +19,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SliderBox } from "react-native-image-slider-box"
 import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-simple-toast';
-import Card from '../shared/Card'
+import Card from '../shared/AdminCard'
 
 const HomeScreen = (props) => {
 
@@ -67,18 +67,21 @@ const HomeScreen = (props) => {
 	})
 
 	const DeleteImageHandler = index => {
+		console.log("DeleteImageHandler : ",index)
 		if (imagesDeck.length > 0) {
 			const imageDeckArray = imagesDeck;
 			const imageRef = imageDeckArray.splice(index, 1);
 			if (imageRef[0]) {
 				const imageName = imageRef[0].imageName;
 				setDeleteImageNames([...deleteImageNames, imageName])
+				setDeckChanged(true)
 				setImagesDeck(imageDeckArray)
 			}
 		}
 	};
 
 	const AddCard = (header) => {
+		console.log("AddCard",header)
 		if (header.length==0) {
 			Alert.alert("Wait", "Empty header not allowed",
 			[{text:"Retry", onPress:() => {return}}],{cancelable:true})
@@ -88,17 +91,18 @@ const HomeScreen = (props) => {
 				images: [],
 				header: header
 			}])
-			setShowCardModel(false),
+			setShowCardModel(false)
+			setCardChanged(true)
 			setHeader('')
 		}
 		
 	}
 
 	const AddCardContent = (header, image, smallText, bigText) => {
-		console.log(header,smallText,bigText)
+		console.log("AddCardContent",header,smallText,bigText)
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
-		console.log(cardIndex)
+		console.log("Card Index:",cardIndex)
 		if (image.uri) {
 			cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
 				key: new Date().getTime(),
@@ -107,6 +111,7 @@ const HomeScreen = (props) => {
 				textOff: bigText,
 			}];
 			setCards(cardArray)
+			setCardChanged(true)
 			setShowImageModal(false)
 			setHeader('')
 			setImage(require('../assets/images/add.png'))
@@ -174,6 +179,7 @@ const HomeScreen = (props) => {
                 if (imageRef) {
 					const imageName = imageRef[0].image.imageName;
 					setDeleteImageNames([...deleteImageNames,imageName]);
+					setCardChanged(true)
 					setCards(cardArray)
                 }
             }
@@ -197,6 +203,7 @@ const HomeScreen = (props) => {
 						setDeleteImageNames([...deleteImageNames, Image.image.imageName])
 					})
 				setCards(cardArray)
+				setCardChanged(true)
                 }
             }
         }]);
@@ -218,22 +225,22 @@ const HomeScreen = (props) => {
 		}
 
 		let CardFlag = true;
-		if (cards.length>0) {
+		if (isCardChanged) {
 			cards.map(card => {
                 if (card.images.length == 0) {
                     Alert.alert('Card Image Error', `The card with the header ${card.header} does not contain any images. Please add an image to the card`)
                     CardFlag = false;
                 }
-            });
-            if (isCardChanged) {
-                Firebase.database().ref('/Cards').set(cards).then(() => {
+			});
+			if (CardFlag) {
+				Firebase.database().ref('/Cards').set(cards).then(() => {
 					setCardListenStatus(true);
 					setCardChanged(false)
-                }).catch((error) => {
+				}).catch((error) => {
 					CardFlag=false;
-                    console.log(error);
-                });
-            }
+					console.log(error);
+				});
+			}
 		}
 		
 		if (deleteImageNames.length > 0) {
@@ -242,24 +249,6 @@ const HomeScreen = (props) => {
 				Firebase.storage().ref(imageName).delete().then(() => {
 					console.log(`${imageName} has been deleted successfully.`);
 					})
-				});
-
-				Firebase.database().ref('/ImagesDeck').set(imagesDeck).then(() => {
-					setDeckListenStatus(true);
-					setDeckChanged(false);
-				}).catch((e) => {
-					Imageflag = false
-					console.log('error on image deletion ', e)
-					Toast.show('Error occured while updating', Toast.SHORT); 
-				});
-
-				Firebase.database().ref('/Cards').set(cards).then(() => {
-					setCardListenStatus(true)
-					setCardChanged(false)
-				}).catch((e) => {
-					CardFlag = false
-					console.log('error on Card image deletion ',e)
-					Toast.show('Error occured while updating',Toast.SHORT);
 				});
 
 			setDeleteImageNames([])
@@ -297,7 +286,7 @@ const HomeScreen = (props) => {
 				</View>
 				<View>
 					{cards.map(card => <Card key={card.key} images={card.images} header={card.header} 
-					deleteImage={() => { DeleteCardImageHandler()}}
+					deleteImage={(index) => { DeleteCardImageHandler(index,card.header)}}
 					deleteCard={() => { DeleteCardHandler(card.header) }}
 					addImage={() => {setHeader(card.header), setShowImageModal(true) }}  />)}
 
