@@ -6,11 +6,11 @@ const Card = props => {
         <View>
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={props.deleteCard.bind(this, props.header)}>
+                <TouchableOpacity onPress={props.deleteCard.bind()}>
                         <Image source={require('../assets/images/delete.png')} style={styles.icon} />
                     </TouchableOpacity>
                     <Text style={{fontSize:18, fontWeight: 'bold'}}>{props.header}</Text>
-                    <TouchableOpacity onPress={props.addImage.bind(this, props.header)}>
+                    <TouchableOpacity onPress={props.addImage.bind()}>
                         <Image source={require('../assets/images/add.png')} style={styles.icon} />
                     </TouchableOpacity>
                 </View>
@@ -20,7 +20,7 @@ const Card = props => {
                     <FlatList data={props.images}
                         renderItem={ (itemData) => (
                             <View style={styles.Container}>
-                                <TouchableOpacity onLongPress={props.deleteImage.bind(this, itemData.index, props.header)}>
+                                <TouchableOpacity onLongPress={props.deleteImage.bind()}>
                                     <Image style={styles.image} source={itemData.item.image} />
                                     <Text style={styles.text}>{itemData.item.textItem}</Text>
                                     <Text style={styles.offerText}>{itemData.item.textOff}</Text>

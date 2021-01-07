@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-simple-toast';
 import Card from '../shared/Card'
 
-function HomeScreen() {
+const HomeScreen = (props) => {
 
 	const { user } = useContext(AuthContext);
 
@@ -21,7 +21,7 @@ function HomeScreen() {
 	const [imagesDeck, setImagesDeck] = useState([])
 	const [isDeckChanged, setDeckChanged] = useState(false)
 	const [deckListenStatus, setDeckListenStatus] = useState(true)
-	const [imageIndex, setImageIndex] = useState()
+	const [imageIndex, setImageIndex] = useState(0)
 	const [deleteImageNames, setDeleteImageNames] = useState([])
 	const [showCardModal, setShowCardModel] = useState(false)
 	const [header, setHeader] = useState('')
@@ -30,6 +30,8 @@ function HomeScreen() {
 	const [smallText, setSmallText] = useState('')
 	const [bigText, setBigText] = useState('')
 	const [image, setImage] = useState(require('../assets/images/add.png'))
+	const [cardListenStatus, setCardListenStatus] = useState(true)
+	const [isCardChanged, setCardChanged] = useState(false)
 
 
 
@@ -38,6 +40,15 @@ function HomeScreen() {
 			if (data.val()) {
 				setImagesDeck(data.val())
 				setDeckListenStatus(false)
+			}
+		}
+	})
+
+	Firebase.database().ref(`/Cards`).once('value').then((data) => {
+		if(cardListenStatus){
+			if (data.val()) {
+				setCards(data.val())
+				setCardListenStatus(false)
 			}
 		}
 	})
@@ -71,24 +82,17 @@ function HomeScreen() {
 	}
 
 	const AddCardContent = (header, image, smallText, bigText) => {
+		console.log(header,smallText,bigText)
 		const cardArray = cards;
-		const cardIndex = cardArray.findIndex(card => card.header === header);
+		const cardIndex = cardArray.findIndex((card) => card.header === header);
+		console.log(cardIndex)
 		if (image.uri) {
-			if (cardArray[cardIndex].images) {
-				cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
-					key: new Date().getTime(),
-					image: image,
-					textItem: smallText,
-					textOff: bigText,
-				}];
-			}else
-			cardArray[cardIndex].images = [ {
+			cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
 				key: new Date().getTime(),
 				image: image,
 				textItem: smallText,
 				textOff: bigText,
 			}];
-			
 			setCards(cardArray)
 			setShowImageModal(false)
 			setHeader('')
@@ -129,6 +133,7 @@ function HomeScreen() {
 						setImagesDeck([...imagesDeck, { imageName: imageName, uri: url }])
 					}
 					else if (key == 'cardImage') {
+						setCardChanged(true);
 						setImage({
 							imageName: imageName,
 							uri: url,
@@ -140,8 +145,51 @@ function HomeScreen() {
 
 	};
 
-	const closeModal = () => { setShowCardModel(false), setHeader(''), setShowImageModal(false),  setSmallText(''),
-								setImage(require('../assets/images/add.png')), setHeader(''), setBigText('') }
+	const DeleteCardImageHandler = (index, header) => {
+		console.log("Index : "+index)
+		console.log("Header : "+header)
+		Alert.alert('Confirm Delete', 'Do you want to delete this item?', [{
+            text: 'Cancel',
+            style: 'cancel',
+        }, {
+            text: 'OK',
+            onPress: () => {
+                const cardArray = cards;
+                const cardIndex = cardArray.findIndex(card => card.header === header);
+                const imageRef = cardArray[cardIndex].images.splice(index, 1);
+                console.log(imageRef);
+                if (imageRef) {
+					const imageName = imageRef[0].image.imageName;
+					setDeleteImageNames([...deleteImageNames,imageName]);
+					setCards(cardArray)
+                }
+            }
+        }]);
+	}
+
+	const DeleteCardHandler = (header) => {
+		console.log("Delete Card "+ header);
+        Alert.alert('Confirm Delete', 'Do you want to delete this card?', [{
+            text: 'Cancel',
+            style: 'cancel',
+        }, {
+            text: 'OK',
+            onPress: () => {
+                const cardArray = cards;
+                const cardIndex = cardArray.findIndex(card => card.header === header);
+                const card = cardArray.splice(cardIndex, 1);
+				const Images = card[0].images;
+                if (Images) {
+					Images.map(Image => {
+						setDeleteImageNames([...deleteImageNames, Image.image.imageName])
+					})
+				setCards(cardArray)
+                }
+            }
+        }]);
+    }
+
+	const closeModal = () => { setShowCardModel(false), setShowImageModal(false) }
 
 	function SaveToDatabase() {
 		let Imageflag = true;
@@ -155,26 +203,55 @@ function HomeScreen() {
 				Toast.show('Error occured while updating', Toast.SHORT);
 			});
 		}
-		else {
-			Toast.show('No new image selected', Toast.SHORT);
+
+		let CardFlag = true;
+		if (cards.length>0) {
+			cards.map(card => {
+                if (card.images.length == 0) {
+                    Alert.alert('Card Image Error', `The card with the header ${card.header} does not contain any images. Please add an image to the card`)
+                    CardFlag = false;
+                }
+            });
+            if (isCardChanged) {
+                Firebase.database().ref('/Cards').set(cards).then(() => {
+					setCardListenStatus(true);
+					setCardChanged(false)
+                }).catch((error) => {
+					CardFlag=false;
+                    console.log(error);
+                });
+            }
 		}
+		
 		if (deleteImageNames.length > 0) {
+			console.log("updatedList")
 			deleteImageNames.map(imageName =>{
 				Firebase.storage().ref(imageName).delete().then(() => {
 					console.log(`${imageName} has been deleted successfully.`);
-					
 					})
+				});
+
 				Firebase.database().ref('/ImagesDeck').set(imagesDeck).then(() => {
 					setDeckListenStatus(true);
 					setDeckChanged(false);
 				}).catch((e) => {
 					Imageflag = false
 					console.log('error on image deletion ', e)
-					Toast.show('Error occured while updating', Toast.SHORT);
-			}	)});
+					Toast.show('Error occured while updating', Toast.SHORT); 
+				});
+
+				Firebase.database().ref('/Cards').set(cards).then(() => {
+					setCardListenStatus(true)
+					setCardChanged(false)
+				}).catch((e) => {
+					CardFlag = false
+					console.log('error on Card image deletion ',e)
+					Toast.show('Error occured while updating',Toast.SHORT);
+				});
+
 			setDeleteImageNames([])
 		}
-		if (Imageflag) {
+		if (Imageflag && CardFlag) {
 			Toast.show('Contents updated', Toast.SHORT);
 		}
 	}
@@ -206,9 +283,10 @@ function HomeScreen() {
 						}} />
 				</View>
 				<View>
-					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
-						addImage={() => { setShowImageModal(true), setHeader('') }} deleteImage={() => DeleteCardImageHandler()}
-						deleteCard={() => DeleteCardHandler()} />)}
+					{cards.map(card => <Card key={card.key} images={card.images} header={card.header} 
+					deleteImage={() => { DeleteCardImageHandler()}}
+					deleteCard={() => { DeleteCardHandler(card.header) }}
+					addImage={() => {setHeader(card.header), setShowImageModal(true) }}  />)}
 
 					<TouchableOpacity style={styles.bottomContainer} onPress={() => setShowCardModel(true)}>
 						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
@@ -243,7 +321,7 @@ function HomeScreen() {
 					visible={showImageModal}
 					position='center'
 					transparent={true}
-					onRequestClose={() => closeModal}>
+					onRequestClose={() => closeModal()}>
 					<View style={styles.modalContainer}>
 						<View style={styles.imageModalScreen}>
 							<TouchableOpacity onPress={() => AddImageHandler('cardImage')} style={styles.cardImageContainer}>
