@@ -20,7 +20,7 @@ const Card = props => {
                     <FlatList data={props.images}
                         renderItem={ (itemData) => (
                             <View style={styles.Container}>
-                                <TouchableOpacity onLongPress={props.deleteImage.bind()}>
+                                <TouchableOpacity onLongPress={props.deleteImage.bind(this, itemData.index)}>
                                     <Image style={styles.image} source={itemData.item.image} />
                                     <Text style={styles.text}>{itemData.item.textItem}</Text>
                                     <Text style={styles.offerText}>{itemData.item.textOff}</Text>
