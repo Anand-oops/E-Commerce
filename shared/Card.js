@@ -3,12 +3,13 @@ import { StyleSheet,View, } from "react-native";
 
 
 export default function card(props){
-
+    // console.log("vghvghvgh",props);
     return(
-
+        
         <View style={styles.card}>
             <View style={styles.cardItems}>
-                {props.children}
+                {props.children
+                }
             </View>
         </View>
     )

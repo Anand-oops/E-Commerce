@@ -298,6 +298,7 @@ const HomeScreen = (props) => {
 				<Modal
 					visible={showCardModal}
 					position='center'
+					
 					transparent={true}
 					onRequestClose={() => closeModal()}>
 					<View style={styles.modalContainer}>
