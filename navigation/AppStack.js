@@ -1,21 +1,6 @@
-// import React from 'react';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import HomeScreen from '../screens/HomeScreen';
-
-// const Stack = createStackNavigator();
-
-// const AppStack = () => {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen name='Home' component={HomeScreen} />
-//     </Stack.Navigator>
-//   );
-// }
-
-// export default AppStack;
 import {createStackNavigator} from "react-navigation-stack";
 import Home from '../screens/HomeScreen';
-import Header from '../shared/header';
+import Header from '../shared/Header';
 import React from 'react';
 
 const screens = {

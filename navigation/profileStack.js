@@ -1,20 +1,7 @@
-// import { createStackNavigator } from "react-navigation-stack";
-// import Demo from '../screens/demoScreen';
-
-// const screens = {
-//     Demo:{  screen:Demo, navigationOptions:{
-//         title:'Demo Screen'
-//     } }
-// }
-
-// const StackDemo = createStackNavigator(screens);
-
-// export default StackDemo;
-
 import {createStackNavigator} from "react-navigation-stack";
-import Header from '../shared/header';
+import Header from '../shared/Header';
 import React from 'react';
-import Profile from '../screens/profileScreen';
+import Profile from '../screens/ProfileScreen';
 
 const screens = {
     Profile:{  screen:Profile, navigationOptions: ({navigation})=>{

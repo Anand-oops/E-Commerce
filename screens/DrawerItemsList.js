@@ -6,6 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 export default function DrawerItemsList() {
 
+<<<<<<< HEAD
   const [listenCheck,setListenCheck]=useState(true);
   const [visible, setVisible] = useState(false);
   const [items,setItems]=useState([]);
@@ -67,6 +68,10 @@ export default function DrawerItemsList() {
       </FlatList>
 
 
+=======
+  const [visible, setVisible] = useState(false);
+  const [text, onTextChange] = useState('');
+>>>>>>> c723ca2c290988134f16e0ae6a000f0494be04a4
 
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black', width: '100%' }}
         onPress={() => { setVisible(true) }}>
