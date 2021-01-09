@@ -35,7 +35,6 @@ export default function DrawerItemsList() {
 		console.log("save", items);
 		if (isChanged) {
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
-				
 				setListenCheck(true)
 			})
 		}
