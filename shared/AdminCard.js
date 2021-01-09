@@ -28,7 +28,7 @@ const Card = props => {
                             </View>
                         )}
                         numColumns={2}
-                        scrollEnabled={false} />
+                        scrollEnabled={true} />
                 </View>
             </View>
         </View>

@@ -37,7 +37,7 @@ const customComponent = (props) => {
 
         <View style={{ flexDirection:'row',height: 100, backgroundColor: 'white', alignItems: 'center',  marginTop: 10,paddingTop:15,paddingLeft:15 }}>
             <AntDesign name="user" size={40} color="black"  />
-            <Text style={{ marginTop: 10,fontSize:20 }}> Hey, User !!</Text>
+            <Text style={{ marginTop: 10,fontSize:20 }}> {"Hey " + name+ "!!"}</Text>
         </View>
 
         <ScrollView>

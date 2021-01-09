@@ -285,7 +285,6 @@ const HomeScreen = (props) => {
 				<Modal
 					visible={showCardModal}
 					position='center'
-					
 					transparent={true}
 					onRequestClose={() => closeModal()}>
 					<View style={styles.modalContainer}>
@@ -378,11 +377,11 @@ const styles = StyleSheet.create({
 	},
 
 	saveButton: {
-		backgroundColor: '#ec2F4B',
+		backgroundColor: 'black',
 		padding: 15,
 		elevation: 10,
-		borderRadius: 10,
-		margin: 5,
+		borderTopLeftRadius:30,
+		borderTopRightRadius:30,
 		alignItems: 'center',
 	},
 	modalContainer: {

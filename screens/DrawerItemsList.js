@@ -1,136 +1,204 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 export default function DrawerItemsList() {
 
+	const [listenCheck, setListenCheck] = useState(true);
+	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+	const [visibleModalEdit, setVisibleModalEdit] = useState(false);
+	const [items, setItems] = useState([]);
+	const [text, onTextChange] = useState('');
+	const [isChanged, setChanged] = useState(false);
 
-  const [listenCheck,setListenCheck]=useState(true);
-  const [visible, setVisible] = useState(false);
-  const [items,setItems]=useState([]);
-  const [text, onTextChange] = useState('');
-  // const DATA = [
-  //   {
-  //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-  //     title: 'First Item',
-  //   },
-  //   {
-  //     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-  //     title: 'Second Item',
-  //   },
-  //   {
-  //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-  //     title: 'Third Item',
-  //   },
-  // ];
+	Firebase.database().ref('DrawerItemsList/').once('value').then((data) => {
+		if (listenCheck) {
+			if (data.val()) {
+				setItems(data.val());
+				console.log("Items", items);
+				setListenCheck(false);
+			}
+		}
+	})
 
-  const addItem=(text)=>{ 
+	const addItem = (text) => {
+		console.log("add", text)
+		setItems([...items, { itemName: text }]);
+		setVisibleModalAdd(!visibleModalAdd);
+		setChanged(true);
+		onTextChange('');
+	};
+	function deleteItem  (index)  {
 
-      var newPostKey = Firebase.database().ref().child('DrawerItemsListGarvit/').push().key;
-      var postData = {
-           name:text,
-      };
+		console.log("deleted", index);
 
-      var updates = {};
-      updates['DrawerItemsListGarvit/' + newPostKey] = postData;
-      Firebase.database().ref().update(updates);
-    // Firebase.database().ref(`DrawerItemsListGarvit/`).push({
-    //   name:text,
-    // });
-    setVisible(!visible);
-    onTextChange('');
-    setListenCheck(true);
-  };
+		const newArray = items;
+			 newArray.splice(index, 1);
 
-  Firebase.database().ref('DrawerItemsListGarvit/').on('value',function (snapshot) {
-    if(listenCheck){
-      if(snapshot.val()!=null){
-    setItems([...items,snapshot.val()]);
-      }
-    console.log("hi",items);
-    console.log(JSON.stringify(items));
-    setListenCheck(false);
-  }
-  })
-  
-  return (
+			
 
-    <View style={styles.main}>
+				setItems(newArray);
+				console.log(items.length);
 
-      <FlatList data={Object.keys(items) }renderItem={({ item }) =>
-      (<Card>
-        <Text style={{ color: 'black', fontSize: 20 }}>{items[item].name}</Text>
-        <TouchableOpacity style={{ position: 'absolute', right: 50 }}>
-          <Entypo name="edit" size={30} color="red" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ position: 'absolute', right: 5 }}>
-          <MaterialIcons name="delete" size={35} color="blue" />
-        </TouchableOpacity>
-      </Card>)}>
+			
 
-      </FlatList>
+		// Firebase.database().ref(`DrawerItemsList/${index}`).remove();
+		
+	}
+
+	const editName=()=>{
+
+	}
 
 
+	function saveToDatabase() {
+		console.log("save", items);
+		if (isChanged) {
+			
+			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 
+				setListenCheck(true)
+			})
+		}
+	}
+	return (
 
-      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black', width: '100%' }}
-        onPress={() => { setVisible(true) }}>
-        <Text style={{ color: 'white', fontSize: 20 }}>ADD ITEM</Text>
-      </TouchableOpacity>
-      
-      <Modal visible={visible} transparent={true}  position='center'  >
-        <View
-          style={{
-            height: 150,
-            padding: 20,
-            width: '80%',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{ alignSelf: 'center' }}>ADD ITEM</Text>
-          <TextInput
-            style={{ margin: 3 }}
-            // value={text}
-            onChangeText={(val)=>{onTextChange(val)}}
-            placeholder={'Enter text'}
-          />
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-            <View style={{ margin: 1, padding: 1 }}><Button title="close" onPress={() => setVisible(!visible)} /></View>
-            <View style={{ margin: 1, padding: 1 }}><Button title="ok" onPress={()=>{addItem(text)}} /></View>
-          </View>
-        </View>
-      </Modal>
-      
-    </View>
+		<View style={styles.main}>
 
-  );
+			<FlatList data={items} extraData={items} renderItem={({ item }) =>
+			(<Card>
+				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
+				<TouchableOpacity style={{ position: 'absolute', right: 50 }}
+					onPress={() => { setVisibleModalEdit(true) }}>
+					<Entypo name="edit" size={30} color="blue"  />
+				</TouchableOpacity>
+				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => {
+						Alert.alert("Delete", "Are you sure ?",
+							[
+								{ text: "No" },
+								{ text: "Yes", onPress: () => deleteItem( items.indexOf(item)) }
+							], { cancelable: false }
+						);
+					}}>
+					<MaterialIcons name="delete" size={35} color="red"  />
+				</TouchableOpacity>
+			</Card>)}>
 
+			</FlatList>
+
+			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
+				onPress={() => setVisibleModalAdd(!visibleModalAdd)}>
+				<Ionicons name="add-circle" size={30} color="black" />
+			</TouchableOpacity>
+
+			<TouchableOpacity style={styles.saveButton}
+				onPress={() => saveToDatabase()}>
+				<Text style={{ color: 'white', fontSize: 20 }} >Submit</Text>
+			</TouchableOpacity>
+
+			<Modal
+				visible={visibleModalAdd}
+				position='center'
+				transparent={true}
+				onRequestClose={() => setVisibleModalAdd(!visibleModalAdd)}>
+				<View style={styles.modalContainer}>
+					<View style={styles.cardModalScreen}>
+						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Item</Text>
+						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+							<TextInput style={styles.modalTextInput} onChangeText={(val) => onTextChange(val)}
+								value={text} placeholder={'Enter item name'} />
+						</View>
+						<View style={styles.modalButtonContainer}>
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='Cancel' onPress={() => setVisibleModalAdd(!visibleModalAdd)} />
+							</View>
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='OK' onPress={() => addItem(text)} />
+
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+			<Modal
+				visible={visibleModalEdit}
+				position='center'
+				transparent={true}
+				onRequestClose={() => setVisibleModalEdit(!visibleModalEdit)}>
+				<View style={styles.modalContainer}>
+					<View style={styles.cardModalScreen}>
+						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Edit Item</Text>
+						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+							<TextInput style={styles.modalTextInput} onChangeText={(val) => editName(val)}
+								value={text} placeholder={'Enter item name'} />
+						</View>
+						<View style={styles.modalButtonContainer}>
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='Cancel' onPress={() => setVisibleModalEdit(!visibleModalEdit)} />
+							</View>
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='OK' onPress={() => addItem(text)} />
+
+							</View>
+						</View>
+					</View>
+				</View>
+			</Modal>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  main: {
-
-    height: '100%',
-    width: '100%'
-    // height:Dimensions.get('window').height ,
-    // width:Dimensions.get('window').width
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    // justifyContent: "center",
-    paddingTop: '50%'
-
-
-  },
-
-
-
-
+	main: {
+		height: '100%',
+		width: '100%'
+	},
+	saveButton: {
+		borderTopLeftRadius: 30,
+		borderTopRightRadius: 30,
+		alignItems: 'center',
+		backgroundColor: 'black',
+		padding: 15,
+		elevation: 10,
+	},
+	container: {
+		flex: 1,
+		alignItems: "center",
+		paddingTop: '50%'
+	},
+	modalContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	cardModalScreen: {
+		height: 200,
+		width: '85%',
+		borderRadius: 15,
+		justifyContent: 'center',
+		elevation: 20,
+		borderWidth: 1,
+		borderColor: 'black',
+		backgroundColor: 'white'
+	}, modalTextInput: {
+		width: '90%',
+		marginVertical: 10,
+		padding: 5,
+		paddingLeft: 15,
+		borderWidth: 1,
+		borderColor: 'black',
+		borderRadius: 10,
+		backgroundColor: 'white'
+	},
+	modalButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginVertical: 15,
+	},
 });
 
 
-  
+
