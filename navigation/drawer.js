@@ -5,7 +5,7 @@ import AppStack from "./AppStack";
 import profileStack from "./ProfileStack";
 import pendingListStack from "./PendingListStack";
 import { AntDesign } from '@expo/vector-icons';
-import { AuthContext } from '../navigation/AuthProvider';
+import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from '../navigation/DrawerItemsStack';
 //import CustomerOrder from './navigation/CustomerOrdersStack'
@@ -39,7 +39,7 @@ const customComponent = (props) => {
 
         <View style={{ flexDirection:'row',height: 100, backgroundColor: 'white', alignItems: 'center',  marginTop: 10,paddingTop:15,paddingLeft:15 }}>
             <AntDesign name="user" size={40} color="black"  />
-            <Text style={{ marginTop: 10,fontSize:20 }}> Hey, User !!</Text>
+            <Text style={{ marginTop: 10,fontSize:20 }}> {"Hey " + name+ "!!"}</Text>
         </View>
 
         <ScrollView>
