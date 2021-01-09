@@ -5,9 +5,9 @@ import AppStack from "./AppStack";
 import profileStack from "./ProfileStack";
 import pendingListStack from "./PendingListStack";
 import { AntDesign } from '@expo/vector-icons';
-import { AuthContext } from '../navigation/AuthProvider';
+import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
-import DrawerItemsStack from '../navigation/DrawerItemsStack';
+import DrawerItemsStack from './DrawerItemsStack';
 import React from "react";
 import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, Alert } from "react-native";
 

@@ -6,7 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 export default function DrawerItemsList() {
 
-<<<<<<< HEAD
+
   const [listenCheck,setListenCheck]=useState(true);
   const [visible, setVisible] = useState(false);
   const [items,setItems]=useState([]);
@@ -28,21 +28,26 @@ export default function DrawerItemsList() {
 
   const addItem=(text)=>{ 
 
-    //  var key=Firebase.database().ref('DrawerItemsList/').push.key;
-    Firebase.database().ref(`DrawerItemsList/`).push({
-      name:text,
-      // key:key
-    });
+      var newPostKey = Firebase.database().ref().child('DrawerItemsListGarvit/').push().key;
+      var postData = {
+           name:text,
+      };
+
+      var updates = {};
+      updates['DrawerItemsListGarvit/' + newPostKey] = postData;
+      Firebase.database().ref().update(updates);
+    // Firebase.database().ref(`DrawerItemsListGarvit/`).push({
+    //   name:text,
+    // });
     setVisible(!visible);
     onTextChange('');
     setListenCheck(true);
   };
 
-  
-  Firebase.database().ref('DrawerItemsList/').on('value',function (snapshot) {
+  Firebase.database().ref('DrawerItemsListGarvit/').on('value',function (snapshot) {
     if(listenCheck){
       if(snapshot.val()!=null){
-    setItems(...items,snapshot.val());
+    setItems([...items,snapshot.val()]);
       }
     console.log("hi",items);
     console.log(JSON.stringify(items));
@@ -68,10 +73,7 @@ export default function DrawerItemsList() {
       </FlatList>
 
 
-=======
-  const [visible, setVisible] = useState(false);
-  const [text, onTextChange] = useState('');
->>>>>>> c723ca2c290988134f16e0ae6a000f0494be04a4
+
 
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black', width: '100%' }}
         onPress={() => { setVisible(true) }}>
