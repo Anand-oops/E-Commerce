@@ -5,6 +5,7 @@ import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-simple-toast' 
 
 
 export default function DrawerItemsList() {
@@ -68,6 +69,7 @@ export default function DrawerItemsList() {
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 				setListenCheck(true)
 				setChanged(false)
+				Toast.show("Categories Updated",Toast.SHORT);
 			})
 		}
 	}
