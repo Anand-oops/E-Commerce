@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function PendingListScreen() {
+export default function AllOrders() {
 
     return (
         
         <View style={styles.main}>
-                <Text style={ {color:'black'}}>this is pendingList Screen </Text>
+                <Text style={ {color:'black'}}>All Orders </Text>
         </View>
     );
 }
