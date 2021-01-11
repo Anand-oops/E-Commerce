@@ -31,22 +31,14 @@ export default function DrawerItemsList() {
 		setChanged(true);
 		onTextChange('');
 	};
+
 	function deleteItem  (index)  {
-
 		console.log("deleted", index);
-
 		const newArray = items;
-			 newArray.splice(index, 1);
-
-			
-
-				setItems(newArray);
-				console.log(items.length);
-
-			
-
-		// Firebase.database().ref(`DrawerItemsList/${index}`).remove();
-		
+		newArray.splice(index, 1);
+		setItems(newArray);
+		setChanged(true);
+		saveToDatabase();		
 	}
 
 	const editName=()=>{
@@ -60,6 +52,7 @@ export default function DrawerItemsList() {
 			
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 				setListenCheck(true)
+				setChanged(false)
 			})
 		}
 	}
@@ -67,7 +60,7 @@ export default function DrawerItemsList() {
 
 		<View style={styles.main}>
 
-			<FlatList data={items} extraData={items} renderItem={({ item }) =>
+			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 50 }}
