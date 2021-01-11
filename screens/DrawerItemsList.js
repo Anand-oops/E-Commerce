@@ -5,14 +5,18 @@ import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+
+
 export default function DrawerItemsList() {
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 	const [visibleModalEdit, setVisibleModalEdit] = useState(false);
 	const [items, setItems] = useState([]);
+	const [itemName,setItemName]=useState('');
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
+	const [key,setKey]=useState('');
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((data) => {
 		if (listenCheck) {
@@ -31,33 +35,31 @@ export default function DrawerItemsList() {
 		setChanged(true);
 		onTextChange('');
 	};
-	function deleteItem  (index)  {
-
+	function deleteItem(index) {
 		console.log("deleted", index);
-
 		const newArray = items;
-			 newArray.splice(index, 1);
-
-			
-
-				setItems(newArray);
-				console.log(items.length);
-
-			
-
+		newArray.splice(index, 1);
+		setItems(newArray);
+		setChanged(true);
+		saveToDatabase();
 		// Firebase.database().ref(`DrawerItemsList/${index}`).remove();
-		
 	}
 
-	const editName=()=>{
-
+	const editName = (itemName,key) => {
+		console.log("key",key)
+		console.log("name",itemName)
+              Firebase.database().ref(`DrawerItemsList/${key}`).set({
+                        itemName:itemName
+			  })
+		// 	  setChanged(true);
+		// saveToDatabase();
 	}
 
-
+    
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
-			
+
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 
 				setListenCheck(true)
@@ -68,22 +70,22 @@ export default function DrawerItemsList() {
 
 		<View style={styles.main}>
 
-			<FlatList data={items} extraData={items} renderItem={({ item }) =>
+			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 50 }}
-					onPress={() => { setVisibleModalEdit(true) }}>
-					<Entypo name="edit" size={30} color="blue"  />
+					onPress={() => { setVisibleModalEdit(true);setKey(items.indexOf(item)) }}>
+					<Entypo name="edit" size={30} color="blue" />
 				</TouchableOpacity>
 				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => {
-						Alert.alert("Delete", "Are you sure ?",
-							[
-								{ text: "No" },
-								{ text: "Yes", onPress: () => deleteItem( items.indexOf(item)) }
-							], { cancelable: false }
-						);
-					}}>
-					<MaterialIcons name="delete" size={35} color="red"  />
+					Alert.alert("Delete", "Are you sure ?",
+						[
+							{ text: "No" },
+							{ text: "Yes", onPress: () => deleteItem(items.indexOf(item)) }
+						], { cancelable: false }
+					);
+				}}>
+					<MaterialIcons name="delete" size={35} color="red" />
 				</TouchableOpacity>
 			</Card>)}>
 
@@ -100,6 +102,7 @@ export default function DrawerItemsList() {
 			</TouchableOpacity>
 
 			<Modal
+			 
 				visible={visibleModalAdd}
 				position='center'
 				transparent={true}
@@ -124,6 +127,7 @@ export default function DrawerItemsList() {
 				</View>
 			</Modal>
 			<Modal
+			    key={key}
 				visible={visibleModalEdit}
 				position='center'
 				transparent={true}
@@ -132,16 +136,15 @@ export default function DrawerItemsList() {
 					<View style={styles.cardModalScreen}>
 						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Edit Item</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
-							<TextInput style={styles.modalTextInput} onChangeText={(val) => editName(val)}
-								value={text} placeholder={'Enter item name'} />
+							<TextInput style={styles.modalTextInput} onChangeText={(val) => setItemName(val)}
+								/*value={text}*/ placeholder={'Enter item name'} />
 						</View>
 						<View style={styles.modalButtonContainer}>
 							<View style={{ padding: 10, width: '30%' }}>
 								<Button title='Cancel' onPress={() => setVisibleModalEdit(!visibleModalEdit)} />
 							</View>
 							<View style={{ padding: 10, width: '30%' }}>
-								<Button title='OK' onPress={() => addItem(text)} />
-
+								<Button title='OK' onPress={() => {editName(itemName,key); setVisibleModalEdit(!visibleModalEdit);} }/>
 							</View>
 						</View>
 					</View>
