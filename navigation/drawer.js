@@ -7,7 +7,7 @@ import pendingListStack from "./PendingListStack";
 import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
-import DrawerItemsStack from '../navigation/DrawerItemsStack';
+import DrawerItemsStack from './DrawerItemsStack';
 //import CustomerOrder from './navigation/CustomerOrdersStack'
 import AllOrders from '../screens/AllCustomerOrders'
 import React from "react";

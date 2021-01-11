@@ -48,9 +48,10 @@ export default function DrawerItemsList() {
 	const editName = (itemName,key) => {
 		console.log("key",key)
 		console.log("name",itemName)
-              Firebase.database().ref(`DrawerItemsList/${key}`).set({
+              Firebase.database().ref(`DrawerItemsList/${key}`).update({
                         itemName:itemName
 			  })
+			  setListenCheck(true);
 		// 	  setChanged(true);
 		// saveToDatabase();
 	}
