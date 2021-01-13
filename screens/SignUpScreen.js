@@ -7,41 +7,69 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons';
+import Firebase from '../firebaseConfig'
 
 export default function SignUpScreen({ navigation }) {
 
     const { register, googleLogin } = useContext(AuthContext);
-
-    function registerWithEmail(){
-        if (data.email.length<=4) {
-			Alert.alert("Credentials error",
-				"Invalid E-mail",
-				[
-					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
-				], {cancelable:false});
-		}
-		else if (data.password.length<6) {
-			Alert.alert("Credentials error",
-				"Password should be at least 6 characters",
-				[
-					{text:"Retry" , onPress:() => console.log("OK Prssed.")}
-				], {cancelable:false});
-		}
-		else{
-			register(data.email,data.password);
-		}		
-    }
-
     const [data, setData] = useState({
         email: '',
         password: '',
     });
+    var registeredEmails = []
 
+    Firebase.database().ref('Dealers/').once('value').then(snapshot => {
+        if (snapshot.val()) {
+            var keys = Object.keys(snapshot.val())
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i]
+                registeredEmails.push(snapshot.val()[key].email)
+            }
+        }
+    })
+
+    Firebase.database().ref('Customers/').once('value').then(snapshot => {
+        if (snapshot.val()) {
+            var keys = Object.keys(snapshot.val())
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i]
+                registeredEmails.push(snapshot.val()[key].email)
+            }
+        }
+    })
+
+    function registerWithEmail() {
+        if (data.email.length <= 4) {
+            Alert.alert("Credentials error",
+                "Invalid E-mail",
+                [
+                    { text: "Retry"}
+                ], { cancelable: false });
+        }
+        else if (data.password.length < 6) {
+            Alert.alert("Credentials error",
+                "Password should be at least 6 characters",
+                [
+                    { text: "Retry"}
+                ], { cancelable: false });
+        }
+        else {
+            const index = registeredEmails.findIndex((email) => email === data.email)
+            if (index === -1) {
+                register(data.email, data.password);
+            } else
+                Alert.alert("Registration Error !",
+                    "This e-mail is already registered with us. Try Logging In...",
+                    [
+                        { text: "OK"}
+                    ], { cancelable: false });
+        }
+    }
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
             <View style={styles.main}>
-            <StatusBar style="auto" />
+                <StatusBar style="auto" />
                 <LinearGradient
                     colors={['#20527e', '#f08080']}
                     style={styles.container}
@@ -56,7 +84,7 @@ export default function SignUpScreen({ navigation }) {
                             placeholderTextColor='#dcdcdc'
                             autoCapitalize="none"
                             keyboardType="email-address"
-							autoCorrect={false}
+                            autoCorrect={false}
                             onChangeText={(entry) => setData({
                                 ...data, email: entry
                             })} />
@@ -66,8 +94,8 @@ export default function SignUpScreen({ navigation }) {
                         <TextInput
                             style={styles.inputText}
                             placeholder={'Enter Password'}
-							autoCapitalize="none"
-							autoCorrect={false}
+                            autoCapitalize="none"
+                            autoCorrect={false}
                             placeholderTextColor='#dcdcdc'
                             onChangeText={(entry) => setData({
                                 ...data, password: entry
@@ -76,7 +104,7 @@ export default function SignUpScreen({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginScreenButton}
-                        onPress={() => {Keyboard.dismiss();console.log(data.email,data.password); registerWithEmail()} }
+                        onPress={() => { Keyboard.dismiss(); console.log(data.email, data.password); registerWithEmail() }}
                         underlayColor='#fff' >
                         <Text style={styles.loginText}>SIGN UP</Text>
                     </TouchableOpacity>
@@ -125,7 +153,7 @@ const styles = StyleSheet.create({
 
         height: '100%',
         width: '100%'
-        
+
     },
     container: {
         flex: 1,
@@ -142,8 +170,8 @@ const styles = StyleSheet.create({
         margin: 10,
         width: "75%",
         //flex: 1,
-		color: 'white',
-		fontSize: 16,
+        color: 'white',
+        fontSize: 16,
     },
     button: {
         margin: 10,
@@ -210,10 +238,10 @@ const styles = StyleSheet.create({
     },
     socialText: {
         flex: 1,
-		elevation: 10,
-		color: 'gray',
-		textAlign: 'center',
-		fontWeight: 'bold',
-		paddingRight: 10
+        elevation: 10,
+        color: 'gray',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        paddingRight: 10
     }
 });

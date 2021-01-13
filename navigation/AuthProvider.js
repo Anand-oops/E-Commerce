@@ -2,15 +2,10 @@ import React, { createContext, useState } from 'react';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import Firebase from '../firebaseConfig';
 
-
-
 export const AuthContext = createContext();
-
-
 
 export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
-
 
 	return (
 		<AuthContext.Provider
