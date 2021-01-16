@@ -7,30 +7,11 @@ import { windowWidth } from '../shared/Dimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 import { StatusBar } from 'expo-status-bar';
+import Firebase from '../firebaseConfig'
 
 const LoginScreen = ({ navigation }) => {
 
 	const { login, googleLogin } = useContext(AuthContext);
-
-	function loginWithEmail(){
-		if (data.email.length<=4) {
-			Alert.alert("Credentials error",
-				"Invalid E-mail",
-				[
-					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
-				], {cancelable:false});
-		}
-		else if (data.password<6) {
-			Alert.alert("Credentials error",
-				"Password should be at least 6 characters",
-				[
-					{text:"Retry" , onPress:() => console.log("OK Pressed.")}
-				], {cancelable:false});
-		}
-		else{
-			login(data.email,data.password);
-		}		
-	}
 	const [data, setData] = useState({
 		email: '',
 		password: '',
@@ -43,8 +24,46 @@ const LoginScreen = ({ navigation }) => {
 			securityStatus: !data.securityStatus
 		});
 	}
+	var adminUsers = []
 
+	Firebase.database().ref('Admin/').once('value').then(snapshot => {
+        if (snapshot.val()) {
+            var keys = Object.keys(snapshot.val())
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i]
+                adminUsers.push(snapshot.val()[key].email)
+            }
+        }
+    })
 
+	function loginWithEmail(){
+		if (data.email.length<=4) {
+			Alert.alert("Credentials error",
+				"Invalid E-mail",
+				[
+					{text:"Retry"}
+				], {cancelable:false});
+		}
+		else if (data.password<6) {
+			Alert.alert("Credentials error",
+				"Password should be at least 6 characters",
+				[
+					{text:"Retry"}
+				], {cancelable:false});
+		}
+		else{
+			const index = adminUsers.findIndex((email) => email === data.email)
+            if (index === -1) {
+                Alert.alert("Login Error !",
+                    "No Admin account linked with this email. Try Signing In...",
+                    [
+                        { text: "OK"}
+                    ], { cancelable: false });
+            } else  
+				login(data.email,data.password);
+		}		
+	}
+	
 	return (
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
 			<View style={styles.container}>
