@@ -1,9 +1,9 @@
-import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { useContext } from 'react'
 import { createAppContainer } from "react-navigation";
-import AppStack from "./AppStack";
-import profileStack from "./ProfileStack";
-import pendingListStack from "./PendingListStack";
+import AppStack from './AppStack';
+import profileStack from './ProfileStack';
+import pendingListStack from './PendingListStack';
 import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
@@ -20,17 +20,8 @@ const customComponent = (props) => {
     const { user, logout } = useContext(AuthContext);
     var name;
     const ref = Firebase.database().ref(`Admin/${user.uid}`);
-    // ref.once('value').then(function(snapshot){
-    //      var data=snapshot.val();
-    //     console.log(data.firstName);
-
-    //     name=data.firstName;
-
-    // })
     ref.on('value', function (snapshot) {
         var data = snapshot.val();
-        //console.log(data.firstName);
-
         name = data.firstName;
 
     })

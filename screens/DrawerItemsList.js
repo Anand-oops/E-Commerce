@@ -5,6 +5,7 @@ import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-simple-toast' 
 
 
 export default function DrawerItemsList() {
@@ -13,10 +14,10 @@ export default function DrawerItemsList() {
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 	const [visibleModalEdit, setVisibleModalEdit] = useState(false);
 	const [items, setItems] = useState([]);
-	const [itemName,setItemName]=useState('');
+	const [itemName, setItemName] = useState('');
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
-	const [key,setKey]=useState('');
+	const [key, setKey] = useState('');
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((data) => {
 		if (listenCheck) {
@@ -35,6 +36,8 @@ export default function DrawerItemsList() {
 		setChanged(true);
 		onTextChange('');
 	};
+
+
 	function deleteItem(index) {
 		console.log("deleted", index);
 		const newArray = items;
@@ -42,27 +45,31 @@ export default function DrawerItemsList() {
 		setItems(newArray);
 		setChanged(true);
 		saveToDatabase();
-		// Firebase.database().ref(`DrawerItemsList/${index}`).remove();
 	}
 
-	const editName = (itemName,key) => {
-		console.log("key",key)
-		console.log("name",itemName)
-              Firebase.database().ref(`DrawerItemsList/${key}`).update({
-                        itemName:itemName
-			  })
-			  setListenCheck(true);
-		// 	  setChanged(true);
+	const editName = (itemName, key) => {
+		console.log("key", key)
+		console.log("name", itemName)
+		const newArray = items;
+		newArray.splice(key, 1, { itemName: itemName })
+		console.log("new: ", newArray);
+		setItems(newArray);
+		setChanged(true);
+		//   Firebase.database().ref(`DrawerItemsList/${key}`).set({
+		//             itemName:itemName
+		//   })
 		// saveToDatabase();
 	}
 
-    
+
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
 
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 				setListenCheck(true)
+				setChanged(false)
+				Toast.show("Categories Updated",Toast.SHORT);
 			})
 		}
 	}
@@ -74,7 +81,7 @@ export default function DrawerItemsList() {
 			(<Card>
 				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 50 }}
-					onPress={() => { setVisibleModalEdit(true);setKey(items.indexOf(item)) }}>
+					onPress={() => { setVisibleModalEdit(true); setKey(items.indexOf(item)) }}>
 					<Entypo name="edit" size={30} color="blue" />
 				</TouchableOpacity>
 				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => {
@@ -102,7 +109,6 @@ export default function DrawerItemsList() {
 			</TouchableOpacity>
 
 			<Modal
-			 
 				visible={visibleModalAdd}
 				position='center'
 				transparent={true}
@@ -127,7 +133,7 @@ export default function DrawerItemsList() {
 				</View>
 			</Modal>
 			<Modal
-			    key={key}
+				key={key}
 				visible={visibleModalEdit}
 				position='center'
 				transparent={true}
@@ -144,7 +150,7 @@ export default function DrawerItemsList() {
 								<Button title='Cancel' onPress={() => setVisibleModalEdit(!visibleModalEdit)} />
 							</View>
 							<View style={{ padding: 10, width: '30%' }}>
-								<Button title='OK' onPress={() => {editName(itemName,key); setVisibleModalEdit(!visibleModalEdit);} }/>
+								<Button title='OK' onPress={() => { editName(itemName, key); setVisibleModalEdit(!visibleModalEdit); }} />
 							</View>
 						</View>
 					</View>

@@ -1,15 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../navigation/AuthProvider';
-import { View, Text, TouchableOpacity, ImageBackground, TextInput, StyleSheet, SafeAreaView, Keyboard, TouchableWithoutFeedback, ToastAndroid, } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Text, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { StatusBar } from 'expo-status-bar';
+import Toast from 'react-native-simple-toast'
 import Firebase from '../firebaseConfig'
-import HomeScreen from './HomeScreen'
 import { FloatingLabelInput } from 'react-native-floating-label-input'
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ }) => {
 
 	const { user } = useContext(AuthContext);
 	const [listen, setListen] = useState(true)
@@ -43,7 +42,7 @@ const ProfileScreen = ({ navigation }) => {
 				firstName: value.firstName,
 				lastName: value.lastName,
 				mobile: value.mobile,
-			}, ToastAndroid.show("Successfully Updated", ToastAndroid.SHORT))
+			}, Toast.show("Successfully Updated", Toast.SHORT))
 		}
 	}
 
