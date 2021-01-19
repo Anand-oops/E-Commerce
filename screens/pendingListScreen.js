@@ -31,7 +31,7 @@ const pressHandler =(item)=>{
              
                 <FlatList data={items} renderItem={({ item }) =>
 			(<Card>
-				<Text style={{ color: 'black', fontSize: 18 }}>{"Dealer ID : "+ item }</Text>
+				<Text style={{ color: 'black', fontSize: 16 }}>{"Dealer ID : "+ item }</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 10 }}
 					onPress={() => pressHandler(item) }>
 					<AntDesign name="doubleright" size={30} color="black" />

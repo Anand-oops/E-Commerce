@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 50,
-
 	},
 	saveButton: {
 		padding: 15,
@@ -128,7 +127,4 @@ const styles = StyleSheet.create({
 		backgroundColor: 'black',
 		alignItems: 'center',
 	},
-
-
-
 });

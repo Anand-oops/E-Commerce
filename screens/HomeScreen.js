@@ -45,7 +45,7 @@ const HomeScreen = (props) => {
 	})
 
 	Firebase.database().ref(`/Cards`).once('value').then((data) => {
-		if(cardListenStatus){
+		if (cardListenStatus) {
 			if (data.val()) {
 				setCards(data.val())
 				setCardListenStatus(false)
@@ -54,7 +54,7 @@ const HomeScreen = (props) => {
 	})
 
 	const DeleteImageHandler = index => {
-		console.log("DeleteImageHandler : ",index)
+		console.log("DeleteImageHandler : ", index)
 		if (imagesDeck.length > 0) {
 			const imageDeckArray = imagesDeck;
 			const imageRef = imageDeckArray.splice(index, 1);
@@ -68,28 +68,33 @@ const HomeScreen = (props) => {
 	};
 
 	const AddCard = (header) => {
-		console.log("AddCard",header)
-		if (header.length==0) {
+		console.log("AddCard", header)
+		if (header.length == 0) {
 			Alert.alert("Wait", "Empty header not allowed",
-			[{text:"Retry", onPress:() => {return}}],{cancelable:true})
-		}else{
-			setCards([...cards, {
-				key: new Date().getTime(),
-				images: [],
-				header: header
-			}])
-			setShowCardModel(false)
-			setCardChanged(true)
-			setHeader('')
+				[{ text: "Retry", onPress: () => { return } }], { cancelable: true })
+		} else {
+			if (cards.findIndex((card) => card.header === header) == -1) {
+				Alert.alert("Wait", "Card with same header already present. Try another header...",
+					[{ text: "Retry", onPress: () => { return } }], { cancelable: true })
+			}
+			else {
+				setCards([...cards, {
+					key: new Date().getTime(),
+					images: [],
+					header: header
+				}])
+				setShowCardModel(false)
+				setCardChanged(true)
+				setHeader('')
+			}
 		}
-		
 	}
 
 	const AddCardContent = (header, image, smallText, bigText) => {
-		console.log("AddCardContent",header,smallText,bigText)
+		console.log("AddCardContent", header, smallText, bigText)
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
-		console.log("Card Index:",cardIndex)
+		console.log("Card Index:", cardIndex)
 		if (image.uri) {
 			cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
 				key: new Date().getTime(),
@@ -151,50 +156,50 @@ const HomeScreen = (props) => {
 	};
 
 	const DeleteCardImageHandler = (index, header) => {
-		console.log("Index : "+index)
-		console.log("Header : "+header)
+		console.log("Index : " + index)
+		console.log("Header : " + header)
 		Alert.alert('Confirm Delete', 'Do you want to delete this item?', [{
-            text: 'Cancel',
-            style: 'cancel',
-        }, {
-            text: 'OK',
-            onPress: () => {
-                const cardArray = cards;
-                const cardIndex = cardArray.findIndex(card => card.header === header);
-                const imageRef = cardArray[cardIndex].images.splice(index, 1);
-                console.log(imageRef);
-                if (imageRef) {
+			text: 'Cancel',
+			style: 'cancel',
+		}, {
+			text: 'OK',
+			onPress: () => {
+				const cardArray = cards;
+				const cardIndex = cardArray.findIndex(card => card.header === header);
+				const imageRef = cardArray[cardIndex].images.splice(index, 1);
+				console.log(imageRef);
+				if (imageRef) {
 					const imageName = imageRef[0].image.imageName;
-					setDeleteImageNames([...deleteImageNames,imageName]);
+					setDeleteImageNames([...deleteImageNames, imageName]);
 					setCardChanged(true)
 					setCards(cardArray)
-                }
-            }
-        }]);
+				}
+			}
+		}]);
 	}
 
 	const DeleteCardHandler = (header) => {
-		console.log("Delete Card "+ header);
-        Alert.alert('Confirm Delete', 'Do you want to delete this card?', [{
-            text: 'Cancel',
-            style: 'cancel',
-        }, {
-            text: 'OK',
-            onPress: () => {
-                const cardArray = cards;
-                const cardIndex = cardArray.findIndex(card => card.header === header);
-                const card = cardArray.splice(cardIndex, 1);
+		console.log("Delete Card " + header);
+		Alert.alert('Confirm Delete', 'Do you want to delete this card?', [{
+			text: 'Cancel',
+			style: 'cancel',
+		}, {
+			text: 'OK',
+			onPress: () => {
+				const cardArray = cards;
+				const cardIndex = cardArray.findIndex(card => card.header === header);
+				const card = cardArray.splice(cardIndex, 1);
 				const Images = card[0].images;
-                if (Images) {
+				if (Images) {
 					Images.map(Image => {
 						setDeleteImageNames([...deleteImageNames, Image.image.imageName])
 					})
-				setCards(cardArray)
-				setCardChanged(true)
-                }
-            }
-        }]);
-    }
+					setCards(cardArray)
+					setCardChanged(true)
+				}
+			}
+		}]);
+	}
 
 	const closeModal = () => { setShowCardModel(false), setShowImageModal(false) }
 
@@ -214,29 +219,29 @@ const HomeScreen = (props) => {
 		let CardFlag = true;
 		if (isCardChanged) {
 			cards.map(card => {
-                if (card.images.length == 0) {
-                    Alert.alert('Card Image Error', `The card with the header ${card.header} does not contain any images. Please add an image to the card`)
-                    CardFlag = false;
-                }
+				if (card.images.length == 0) {
+					Alert.alert('Card Image Error', `The card with the header ${card.header} does not contain any images. Please add an image to the card`)
+					CardFlag = false;
+				}
 			});
 			if (CardFlag) {
 				Firebase.database().ref('/Cards').set(cards).then(() => {
 					setCardListenStatus(true);
 					setCardChanged(false)
 				}).catch((error) => {
-					CardFlag=false;
+					CardFlag = false;
 					console.log(error);
 				});
 			}
 		}
-		
+
 		if (deleteImageNames.length > 0) {
 			console.log("updatedList")
-			deleteImageNames.map(imageName =>{
+			deleteImageNames.map(imageName => {
 				Firebase.storage().ref(imageName).delete().then(() => {
 					console.log(`${imageName} has been deleted successfully.`);
-					})
-				});
+				})
+			});
 
 			setDeleteImageNames([])
 		}
@@ -272,10 +277,10 @@ const HomeScreen = (props) => {
 						}} />
 				</View>
 				<View>
-					{cards.map(card => <Card key={card.key} images={card.images} header={card.header} 
-					deleteImage={(index) => { DeleteCardImageHandler(index,card.header)}}
-					deleteCard={() => { DeleteCardHandler(card.header) }}
-					addImage={() => {setHeader(card.header), setShowImageModal(true) }}  />)}
+					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
+						deleteImage={(index) => { DeleteCardImageHandler(index, card.header) }}
+						deleteCard={() => { DeleteCardHandler(card.header) }}
+						addImage={() => { setHeader(card.header), setShowImageModal(true) }} />)}
 
 					<TouchableOpacity style={styles.bottomContainer} onPress={() => setShowCardModel(true)}>
 						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
@@ -325,13 +330,13 @@ const HomeScreen = (props) => {
 								<TextInput style={styles.modalTextInput} onChangeText={(bigText) => setBigText(bigText)} value={bigText} />
 							</View>
 							<View style={styles.modalButtonContainer}>
-							<View style={{ padding: 10, width: '30%' }}>
+								<View style={{ padding: 10, width: '30%' }}>
 									<Button title='Cancel' onPress={() => closeModal()} />
 								</View>
 								<View style={{ padding: 10, width: '30%' }}>
 									<Button title='OK' onPress={() => AddCardContent(header, image, smallText, bigText)} />
 								</View>
-								
+
 							</View>
 						</View>
 					</View>
@@ -380,8 +385,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'black',
 		padding: 15,
 		elevation: 10,
-		borderTopLeftRadius:30,
-		borderTopRightRadius:30,
+		borderTopLeftRadius: 30,
+		borderTopRightRadius: 30,
 		alignItems: 'center',
 	},
 	modalContainer: {

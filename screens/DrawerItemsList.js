@@ -5,7 +5,7 @@ import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import Toast from 'react-native-simple-toast' 
+import Toast from 'react-native-simple-toast'
 
 
 export default function DrawerItemsList() {
@@ -55,21 +55,16 @@ export default function DrawerItemsList() {
 		console.log("new: ", newArray);
 		setItems(newArray);
 		setChanged(true);
-		//   Firebase.database().ref(`DrawerItemsList/${key}`).set({
-		//             itemName:itemName
-		//   })
-		// saveToDatabase();
 	}
 
 
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
-
 			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
 				setListenCheck(true)
 				setChanged(false)
-				Toast.show("Categories Updated",Toast.SHORT);
+				Toast.show("Categories Updated", Toast.SHORT);
 			})
 		}
 	}
