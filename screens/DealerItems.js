@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import Firebase from '../firebaseConfig';
 import { AntDesign } from '@expo/vector-icons';
@@ -47,25 +47,26 @@ export default function PendingListScreen({ navigation }) {
         }]);
     }
 
-    function deleteProduct ( index) {
+    function deleteProduct(index) {
         Alert.alert('Delete Product', 'Are you sure you want to reject this product?', [{
-           text: 'Cancel',
-           style: 'cancel',
+            text: 'Cancel',
+            style: 'cancel',
         }, {
-           text: 'OK',
-           onPress: () => {
-            Firebase.database().ref(`Dealers/${id}/${index}`).update({ status: 'Accepted' });
-           }
+            text: 'OK',
+            onPress: () => {
+                Firebase.database().ref(`Dealers/${id}/${index}`).update({ status: 'Accepted' });
+            }
         }]);
-     };
+    };
 
     function addProduct() {
         product.productPrice = adminPrice;
         var finalPrice = adminPrice - (adminPrice * discountRate) / 100;
-        setProduct([...product, { finalPrice: finalPrice }])
-
-        Firebase.database().ref('ProductList/' + product.category).push(product).then(() => {
-            Firebase.database().ref(`Dealers/${id}/${itemIndex}`).update({ status: 'Accepted' });
+        //var temp = [...product, {finalPrice: finalPrice}]
+        var temp = product;
+        //TODO : add the final price to the product added in Product List
+        Firebase.database().ref('ProductList/' + temp.category).push(temp).then(() => {
+            Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
         }).catch((error) => {
             console.log(error);
         });
@@ -98,7 +99,7 @@ export default function PendingListScreen({ navigation }) {
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Description : {item.description}</Text>
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Specs : {item.specs}</Text>
-                    <View style={{ flexDirection: 'row', width: '100%' }} 
+                    <View style={{ flexDirection: 'row', width: '100%' }}
                     /*visible={ TODO: sirf pending status ke liye buttons show hongi}*/ >
                         <View style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(index)}>
@@ -126,24 +127,24 @@ export default function PendingListScreen({ navigation }) {
                     onRequestClose={() => setShowModal(false)}>
                     <View style={styles.modalContainer}>
                         <View style={styles.cardModalScreen}>
-                            <Text style={styles.modalText}>Enter Product Price:</Text>
-                            <View style={styles.modalTextInputContainer}>
-                                <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(price) => setAdminPrice(price)} value={this.state.price} />
+                            <Text style={{paddingLeft: 15,marginTop: 10}}>Enter Product Price:</Text>
+                            <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                                <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(price) => setAdminPrice(price)} value={adminPrice} />
                             </View>
-                            <Text style={styles.modalText}>Enter Product Discount Percentage:</Text>
-                            <View style={styles.modalTextInputContainer}>
-                                <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(discount) => setDiscountRate(discount)} value={this.state.discount} />
+                            <Text style={{paddingLeft: 15,marginTop: 10}}>Enter Product Discount Percentage:</Text>
+                            <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                                <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(discount) => setDiscountRate(discount)} value={discountRate} />
                             </View>
                             <View style={styles.modalButtonContainer}>
-                                <View style={styles.modalButton}>
+                                <View style={{padding: 10,width: '30%'}}>
+                                    <Button title='Cancel' style={styles.modalButton} onPress={() => setShowModal(false)} />
+                                </View>
+                                <View style={{padding: 10,width: '30%'}}>
                                     <Button title='OK' onPress={() => {
                                         if (adminPrice.size != 0 && parseFloat(discountRate) > 0 && parseFloat(discountRate) < 100) {
                                             addProduct()
                                         } else Toast.show("Enter valid valued", Toast.SHORT);
                                     }} />
-                                </View>
-                                <View style={styles.modalButton}>
-                                    <Button title='Cancel' style={styles.modalButton} onPress={setShowModal(false)} />
                                 </View>
                             </View>
                         </View>
@@ -195,10 +196,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
 
-    modalText: {
-        paddingLeft: 15,
-        marginTop: 10,
-    },
     modalTextInput: {
         width: '90%',
         marginVertical: 10,
@@ -210,19 +207,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
 
-    modalTextInputContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
     modalButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginVertical: 15,
-    },
-
-    modalButton: {
-        padding: 10,
-        width: '30%',
     },
 });
