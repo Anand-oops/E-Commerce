@@ -54,7 +54,7 @@ export default function PendingListScreen({ navigation }) {
         }, {
             text: 'OK',
             onPress: () => {
-                Firebase.database().ref(`Dealers/${id}/${index}`).update({ status: 'Accepted' });
+                Firebase.database().ref(`Dealers/${id}/DealerProducts/${index}`).update({ status: 'Rejected' });
             }
         }]);
     };
@@ -67,6 +67,10 @@ export default function PendingListScreen({ navigation }) {
         //TODO : add the final price to the product added in Product List
         Firebase.database().ref('ProductList/' + temp.category).push(temp).then(() => {
             Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
+            setDealerCall(true);
+            // TODO : Only the pending products will have buttons, so refreshing the list shall remove the buttons from 
+            // the accepted product. Also think about what to do on rejection (delete it maybe ?)
+            // Can think of a way to use 'set' so that the nodes look somewhat ordered :P
         }).catch((error) => {
             console.log(error);
         });
