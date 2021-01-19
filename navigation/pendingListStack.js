@@ -2,6 +2,7 @@ import {createStackNavigator} from "react-navigation-stack";
 import Header from '../shared/Header';
 import React from 'react';
 import PendingListScreen from '../screens/PendingListScreen';
+import DealerItems from "../screens/DealerItems";
 
 const screens = {
     PendingList:{  screen:PendingListScreen, navigationOptions: ({navigation})=>{
@@ -10,7 +11,8 @@ const screens = {
                 headerTitle:()=><Header navigation={navigation} title='Pending list'/>,
             
         }
-    } }
+    } },
+    DealerItems:{ screen:DealerItems}
 }
 
 const pendingListStack = createStackNavigator(screens,{

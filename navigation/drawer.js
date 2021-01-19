@@ -9,7 +9,7 @@ import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from './DrawerItemsStack';
 //import CustomerOrder from './navigation/CustomerOrdersStack'
-import AllOrders from '../screens/AllCustomerOrders'
+import CustomerOrdersStack from './CustomerOrdersStack'
 import React from "react";
 import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, Alert } from "react-native";
 
@@ -59,7 +59,7 @@ const screens = {
     PendingList: { screen: pendingListStack },
     DrawerItemsList: {screen:DrawerItemsStack} ,
     Profile: { screen: profileStack },
-    CustomerOrder: { screen: AllOrders } 
+    CustomerOrder: { screen: CustomerOrdersStack } 
 }
 
 const RootNavigationDrawer = createDrawerNavigator(screens, { contentComponent: customComponent });

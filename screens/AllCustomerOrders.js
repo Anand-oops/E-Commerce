@@ -1,14 +1,44 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import PendingListScreen from  '../screens/PendingListScreen';
+import AllOrders from "../screens/AllOrders";
+import ApprovedOrders from "../screens/ApprovedOrders";
+import PendingOrders from "../screens/PendingOrders";
+import Profile from "../screens/ProfileScreen";
+export default function AllCustomerOrders() {
 
-export default function AllOrders() {
+
+    const Tab = createMaterialTopTabNavigator();
 
     return (
-        
+
         <View style={styles.main}>
-                <Text style={ {color:'black'}}>All Orders </Text>
-        </View>
+        <Tab.Navigator
+        initialRouteName="Feed"
+        tabBarOptions={{
+          activeTintColor: 'white',
+          labelStyle: { fontSize: 10 },
+          style: { backgroundColor: 'gray',elevation:5},
+        }}
+      >
+          <Tab.Screen
+          name="All Orders"
+          component={AllOrders}
+          options={{ tabBarLabel: 'All orders' }}
+        />
+        <Tab.Screen
+          name="Pending Orders"
+          component={PendingOrders}
+          options={{ tabBarLabel: 'Pending Orders' }}
+        />
+        <Tab.Screen
+          name="Approved Orders"
+          component={ApprovedOrders}
+          options={{ tabBarLabel: 'Approved Orders' }}
+        />
+      </Tab.Navigator>
+      </View>
     );
 }
 
