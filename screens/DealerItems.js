@@ -13,7 +13,8 @@ export default function PendingListScreen({ navigation }) {
     const [items, setItems] = useState([]);
     const [dummy, setDummy] = useState([]);
     const [imagesDeck, setImagesDeck] = useState([]);
-    const [allImages, setAllImages] = useState([]);
+    // const [allImages, setAllImages] = useState([]);
+    var allImages=[];
     var id = navigation.getParam('id');
 
 
@@ -24,12 +25,16 @@ export default function PendingListScreen({ navigation }) {
                 var keys = Object.keys(data.val())
                 var key = keys[0];
                 setItems(data.val()[key])
-                let productKeys = Object.keys(data.val()[key])
-                for (let i = 0; i < productKeys.length; i++) {
+                var productKeys = Object.keys(data.val()[key])
+                for (var i = 0; i < productKeys.length; i++) {
                     var productKey = productKeys[i]
                     var images = data.val()[key][productKey].images;
-                    setImagesDeck(images);
-                    // var imagesKey = Object.keys(image)
+                    allImages.push(images);
+                    
+                    // setImagesDeck(images);
+                    // setImagesDeck([...imagesDeck,images])
+                    // console.log("imageDeck",imagesDeck);
+                    // // var imagesKey = Object.keys(image)
                     // for (let index = 0; index < imagesKey.length; index++) {
                     //     var pKey = imagesKey[i];
                     //     console.log("PImage",pKey)
@@ -40,35 +45,26 @@ export default function PendingListScreen({ navigation }) {
                     //setImagesDeck([...imagesDeck, data.val()[key][productKey].images.url ])
                     //setAllImages([...allImages,data.val()[key][productKey].images ])
                 }
+                // console.log(allImages);
+                console.log("ftfthf",allImages[0])
+                setDummy(allImages[0]);
+                console.log("ddsdssdsds",dummy)
+                console.log("ddsdssdsds",dummy)
+                console.log("ddsdssdsds",dummy)
+                console.log("ddsdssdsds",dummy)
+                
                 setDealerCall(false);
+
+                // for (var j=0;j < allImages[0].length;j++){
+                //     var one =allImages[0].
+                // }
+
             }
         }
     })
-   
-
-    // for (var i = 0; i < items.length; i++) {
-    //     Firebase.database().ref(`Dealers/${id}/DealerProducts/${i}/images/`).once('value').then((data) => {
-
-    //         setImages(data.val());
-    //         setAllImages([...allImages, { imagesDeck }])
-    //         // console.log("Items", imagesDeck);
-    //         // console.log("All images",allImages);
-    //     })
-    // }
-
-
-
-    // Firebase.database().ref(`Dealers/${id}/DealerProducts/0/images/`).once('value').then((data) => {
-        
-    //     if (data.val()) {
-    //         console.log("Data",data.val());
-    //     }
-
-    // })
-
-
 
     return (
+        
 
         <View style={styles.main}>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + dealer.id}</Text>
@@ -76,10 +72,11 @@ export default function PendingListScreen({ navigation }) {
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + dealer.email}</Text>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + dealer.mobile}</Text>
 
-            <FlatList data={items} renderItem={({ item }) =>
+            <FlatList data={items} renderItem={
+                ({ item }) =>
             (<View style={styles.card}>
                 <SliderBox
-                    images={imagesDeck}
+                    images = {dummy}
                     autoplay={true}
                     sliderBoxHeight={175}
                     circleLoop={true}
