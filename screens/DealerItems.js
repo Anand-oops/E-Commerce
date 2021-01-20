@@ -11,13 +11,14 @@ export default function PendingListScreen({ navigation }) {
     const [dealerCall, setDealerCall] = useState(true);
     const [dealer, setDealer] = useState([]);
     const [items, setItems] = useState([]);
+    const [filteredItems,setFilteredItems]=useState([]);
     const [showModal, setShowModal] = useState(false)
     const [adminPrice, setAdminPrice] = useState()
     const [discountRate, setDiscountRate] = useState()
     const [product, setProduct] = useState()
     const [itemIndex, setItemIndex] = useState(-1)
     var id = navigation.getParam('id');
-
+    var filtered=[];
 
     Firebase.database().ref(`Dealers/${id}`).once('value').then((data) => {
         if (dealerCall) {
@@ -27,10 +28,23 @@ export default function PendingListScreen({ navigation }) {
                 var key = keys[0];
                 setItems(data.val()[key])
                 setDealerCall(false);
+
             }
         }
     })
+       for(var i=0;i<items.length;i++){
+           
+        // console.log('items i',items[i].status);
 
+           if(items[i].status=='Pending'){
+            //    console.log("yeah")
+               filtered.push(items[i]);
+               console.log('it is done',filtered);
+            //  setFilteredItems([...filteredItems,items[i]]);
+            //  console.log('items i',items[i]);
+           }
+       }
+    //    console.log("filtered Items",filteredItems);
     const acceptProduct = (item, index) => {
         Alert.alert('Accept Product', 'Are you sure you want to add this product to the inventory list?', [{
             text: 'Cancel',
@@ -55,6 +69,7 @@ export default function PendingListScreen({ navigation }) {
             text: 'OK',
             onPress: () => {
                 Firebase.database().ref(`Dealers/${id}/DealerProducts/${index}`).update({ status: 'Rejected' });
+                setDealerCall(true);
             }
         }]);
     };
@@ -66,11 +81,10 @@ export default function PendingListScreen({ navigation }) {
         var temp = product;
         //TODO : add the final price to the product added in Product List
         Firebase.database().ref('ProductList/' + temp.category).push(temp).then(() => {
-            Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
+            Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted',finalPrice:finalPrice });
+            Firebase.database().ref( `ProductList/${temp.category}/${id}`).update({finalPrice:finalPrice,discount:discountRate});
             setDealerCall(true);
-            // TODO : Only the pending products will have buttons, so refreshing the list shall remove the buttons from 
-            // the accepted product. Also think about what to do on rejection (delete it maybe ?)
-            // Can think of a way to use 'set' so that the nodes look somewhat ordered :P
+            
         }).catch((error) => {
             console.log(error);
         });
@@ -79,6 +93,7 @@ export default function PendingListScreen({ navigation }) {
     }
 
     return (
+        
 
         <View style={styles.main}>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + dealer.id}</Text>
@@ -104,7 +119,7 @@ export default function PendingListScreen({ navigation }) {
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Description : {item.description}</Text>
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Specs : {item.specs}</Text>
                     <View style={{ flexDirection: 'row', width: '100%' }}
-                    /*visible={ TODO: sirf pending status ke liye buttons show hongi}*/ >
+                     >
                         <View style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(index)}>
                                 <Text style={{ fontSize: 24, paddingLeft: 5 }}>Discard</Text>
@@ -123,7 +138,7 @@ export default function PendingListScreen({ navigation }) {
                 )}>
 
                 </FlatList>
-
+                {/* </View> */}
                 <Modal
                     visible={showModal}
                     position='center'
