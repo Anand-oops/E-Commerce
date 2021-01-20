@@ -32,7 +32,8 @@ const LoginScreen = ({ navigation }) => {
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i]
                 adminUsers.push(snapshot.val()[key].email)
-            }
+			}
+			console.log("Emails",adminUsers)
         }
     })
 

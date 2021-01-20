@@ -86,7 +86,7 @@ export default function PendingListScreen({ navigation }) {
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + dealer.email}</Text>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + dealer.mobile}</Text>
 
-            <SafeAreaView >
+            <SafeAreaView style={{flex:1}}>
                 <FlatList data={items} renderItem={({ item, index }) =>
                 (<View style={styles.card}>
 
