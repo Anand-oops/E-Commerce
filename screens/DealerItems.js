@@ -51,9 +51,12 @@ export default function PendingListScreen({ navigation }) {
     // is not matching allItems array. So accept and delete product pe work krna hai..
 
     const acceptProduct = (item) => {
-        console.log("ItemAdd",item)
-        var index ;
-        index = items.findIndex((i) => i===item)
+        var index = -1;
+        items.map((i) => {
+            if (i.key==item.key) {
+                index = items.indexOf(i);
+            }
+        })
         console.log("IndexAdd",index)
         Alert.alert('Accept Product', 'Are you sure you want to add this product to the inventory list?', [{
             text: 'Cancel',
@@ -71,9 +74,12 @@ export default function PendingListScreen({ navigation }) {
     }
 
     function deleteProduct(item) {
-        console.log("ItemDel",item)
-        var index ;
-        index = items.findIndex((i) => i===item)
+        var index = -1;
+        items.map((i) => {
+            if (i.key==item.key) {
+                index = items.indexOf(i);
+            }
+        })
         console.log("IndexDel",index)
         Alert.alert('Delete Product', 'Are you sure you want to reject this product?', [{
             text: 'Cancel',
@@ -95,7 +101,7 @@ export default function PendingListScreen({ navigation }) {
         temp.finalPrice = finalPrice;
         temp.discount = discountRate+" %";
         console.log("NEW ",temp)
-        Firebase.database().ref('ProductList/' + temp.category).push(temp).then(() => {
+        Firebase.database().ref(`ProductList/${temp.category}/${temp.key}`).set(temp).then(() => {
             Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
             setDealerCall(true);
             
