@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
 import { StatusBar } from 'expo-status-bar';
@@ -72,12 +72,17 @@ const HomeScreen = (props) => {
 		if (header.length == 0) {
 			Alert.alert("Wait", "Empty header not allowed",
 				[{ text: "Retry", onPress: () => { return } }], { cancelable: true })
-		} else {
-			if (cards.findIndex((card) => card.header === header) == -1) {
-				Alert.alert("Wait", "Card with same header already present. Try another header...",
-					[{ text: "Retry", onPress: () => { return } }], { cancelable: true })
-			}
-			else {
+		} else { 
+			let cardFlag = true;
+			cards.map(card => {
+				console.log("Headers",card.header)
+				if (card.header === header) {
+					Toast.show("Card with same header already present. Try another",Toast.SHORT);
+					cardFlag = false;
+				}
+			});
+			
+			if(cardFlag) {
 				setCards([...cards, {
 					key: new Date().getTime(),
 					images: [],
@@ -300,10 +305,10 @@ const HomeScreen = (props) => {
 							</View>
 							<View style={styles.modalButtonContainer}>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='Cancel' onPress={() => closeModal()} />
+									<Button title='Cancel' onPress={() => {Keyboard.dismiss(),closeModal()}} />
 								</View>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='OK' onPress={() => AddCard(header)} />
+									<Button title='OK' onPress={() => {Keyboard.dismiss(),AddCard(header)}} />
 
 								</View>
 							</View>
