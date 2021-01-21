@@ -9,12 +9,7 @@ export default function PendingListScreen({ navigation }) {
     const [items, setItems] = useState([]);
 
     const [listenCheck, setListenCheck] = useState(true);
-    // var check=navigation.getParam('check');
-    // if(check==0){
-    //     console.log("check",check);
-    //     console.log("kya hai",listenCheck);
-    //     // setListenCheck(true);
-    // }
+    
     const pressHandler = (item) => {
         console.log("clicked");
         navigation.navigate('DealerItems', { id: item.id });

@@ -35,10 +35,7 @@ export default function PendingListScreen({ navigation }) {
                     }
                 }if (filtered.length==0) {
                     Firebase.database().ref(`Dealers/${id}/pendingStatus`).set(false)
-                    .then(
-                        // navigation.navigate('PendingList',{check:0}),
-                        navigation.goBack(),
-                        console.log("Empty"))
+                    .then(navigation.goBack())
                 }
                 setFilteredItems(filtered)
                 setItems(allItems)
@@ -88,6 +85,7 @@ export default function PendingListScreen({ navigation }) {
             text: 'OK',
             onPress: () => {
                 Firebase.database().ref(`Dealers/${id}/DealerProducts/${index}`).update({ status: 'Rejected' });
+                Toast.show("Product Rejected",Toast.SHORT)
                 setDealerCall(true);
             }
         }]);
@@ -100,16 +98,16 @@ export default function PendingListScreen({ navigation }) {
         temp.status = "Accepted"
         temp.finalPrice = finalPrice;
         temp.discount = discountRate+" %";
-        console.log("NEW ",temp)
         Firebase.database().ref(`ProductList/${temp.category}/${temp.key}`).set(temp).then(() => {
             Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
-            setDealerCall(true);
-            
+            Toast.show("Product Accepted",Toast.SHORT)
+            setDealerCall(true);  
         }).catch((error) => {
             console.log(error);
         });
 
         setShowModal(false);
+        setDiscountRate('')
     }
 
     return (
