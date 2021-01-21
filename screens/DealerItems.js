@@ -11,14 +11,14 @@ export default function PendingListScreen({ navigation }) {
     const [dealerCall, setDealerCall] = useState(true);
     const [dealer, setDealer] = useState([]);
     const [items, setItems] = useState([]);
-    const [filteredItems,setFilteredItems]=useState([]);
+    const [filteredItems, setFilteredItems] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [adminPrice, setAdminPrice] = useState()
     const [discountRate, setDiscountRate] = useState()
     const [product, setProduct] = useState()
     const [itemIndex, setItemIndex] = useState(-1)
     var id = navigation.getParam('id');
-    var filtered=[];
+    
 
     Firebase.database().ref(`Dealers/${id}`).once('value').then((data) => {
         if (dealerCall) {
@@ -26,26 +26,35 @@ export default function PendingListScreen({ navigation }) {
                 setDealer(data.val());
                 var keys = Object.keys(data.val())
                 var key = keys[0];
-                setItems(data.val()[key])
+                var filtered = [];
+                var allItems = [];
+                for(var i=0;i<data.val()[key].length;i++){
+                    allItems.push(data.val()[key][i]);
+                    if(data.val()[key][i].status==='Pending'){
+                        filtered.push(data.val()[key][i]);
+                    }
+                }if (filtered.length==0) {
+                    Firebase.database().ref(`Dealers/${id}/pendingStatus`).set(false)
+                    .then(
+                        navigation.navigate('PendingList'),
+                        console.log("Empty"))
+                }
+                setFilteredItems(filtered)
+                setItems(allItems)
                 setDealerCall(false);
 
             }
         }
     })
-       for(var i=0;i<items.length;i++){
-           
-        // console.log('items i',items[i].status);
 
-           if(items[i].status=='Pending'){
-            //    console.log("yeah")
-               filtered.push(items[i]);
-               console.log('it is done',filtered);
-            //  setFilteredItems([...filteredItems,items[i]]);
-            //  console.log('items i',items[i]);
-           }
-       }
-    //    console.log("filtered Items",filteredItems);
-    const acceptProduct = (item, index) => {
+    //TODO: Wo index refer krke work krne se dikkat aa rhi, since only filtered list display krna hai and its index
+    // is not matching allItems array. So accept and delete product pe work krna hai..
+
+    const acceptProduct = (item) => {
+        console.log("ItemAdd",item)
+        var index ;
+        index = items.findIndex((i) => i===item)
+        console.log("IndexAdd",index)
         Alert.alert('Accept Product', 'Are you sure you want to add this product to the inventory list?', [{
             text: 'Cancel',
             style: 'cancel',
@@ -61,7 +70,11 @@ export default function PendingListScreen({ navigation }) {
         }]);
     }
 
-    function deleteProduct(index) {
+    function deleteProduct(item) {
+        console.log("ItemDel",item)
+        var index ;
+        index = items.findIndex((i) => i===item)
+        console.log("IndexDel",index)
         Alert.alert('Delete Product', 'Are you sure you want to reject this product?', [{
             text: 'Cancel',
             style: 'cancel',
@@ -77,12 +90,13 @@ export default function PendingListScreen({ navigation }) {
     function addProduct() {
         product.productPrice = adminPrice;
         var finalPrice = adminPrice - (adminPrice * discountRate) / 100;
-        //var temp = [...product, {finalPrice: finalPrice}]
         var temp = product;
-        //TODO : add the final price to the product added in Product List
+        temp.status = "Accepted"
+        temp.finalPrice = finalPrice;
+        temp.discount = discountRate+" %";
+        console.log("NEW ",temp)
         Firebase.database().ref('ProductList/' + temp.category).push(temp).then(() => {
-            Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted',finalPrice:finalPrice });
-            Firebase.database().ref( `ProductList/${temp.category}/${id}`).update({finalPrice:finalPrice,discount:discountRate});
+            Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
             setDealerCall(true);
             
         }).catch((error) => {
@@ -93,16 +107,15 @@ export default function PendingListScreen({ navigation }) {
     }
 
     return (
-        
 
         <View style={styles.main}>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + dealer.id}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + dealer.firstName + " " + dealer.lastName}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + dealer.email}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + dealer.mobile}</Text>
+            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + (dealer.firstName ?  dealer.firstName +" "+(dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "")}</Text>
 
             <SafeAreaView style={{flex:1}}>
-                <FlatList data={items} renderItem={({ item, index }) =>
+                <FlatList data={filteredItems} renderItem={({ item }) =>
                 (<View style={styles.card}>
 
                     <SliderBox
@@ -121,13 +134,13 @@ export default function PendingListScreen({ navigation }) {
                     <View style={{ flexDirection: 'row', width: '100%' }}
                      >
                         <View style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(index)}>
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(item)}>
                                 <Text style={{ fontSize: 24, paddingLeft: 5 }}>Discard</Text>
                                 <AntDesign name="close" size={34} color="red" />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => acceptProduct(item, index)}>
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => acceptProduct(item)}>
                                 <Text style={{ fontSize: 24, paddingLeft: 5 }}>Accept</Text>
                                 <AntDesign name="check" size={34} color="green" />
                             </TouchableOpacity>
@@ -138,7 +151,7 @@ export default function PendingListScreen({ navigation }) {
                 )}>
 
                 </FlatList>
-                {/* </View> */}
+    
                 <Modal
                     visible={showModal}
                     position='center'

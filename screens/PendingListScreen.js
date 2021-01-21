@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Card from "../shared/Card";
 import { AntDesign } from '@expo/vector-icons';
 import Firebase from '../firebaseConfig';
@@ -18,19 +18,21 @@ export default function PendingListScreen({ navigation }) {
         if (listenCheck) {
             if (data.val()) {
                 var keys = Object.keys(data.val());
+                var temp = []
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i]
-                    setItems([...items, data.val()[key]])
+                    temp.push(data.val()[key])
                 }
+                setItems(temp);
                 setListenCheck(false);
             }
         }
     })
-    return (
 
+    return (
         <View style={styles.main}>
 
-            <FlatList data={items} renderItem={({ item }) =>
+            <FlatList data={items} keyExtractor={(item) => item.id} renderItem={({ item }) =>
             (<Card>
                 <View styles={{flex:1}}>
                 <Text style={{ color: 'black', fontSize: 16 }}>{"Dealer ID : " + item.id}</Text>
@@ -58,7 +60,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        // justifyContent: "center",
         paddingTop: '50%'
     },
 });
