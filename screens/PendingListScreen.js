@@ -6,15 +6,21 @@ import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 
 export default function PendingListScreen({ navigation }) {
+    const [items, setItems] = useState([]);
 
+    const [listenCheck, setListenCheck] = useState(true);
+    // var check=navigation.getParam('check');
+    // if(check==0){
+    //     console.log("check",check);
+    //     console.log("kya hai",listenCheck);
+    //     // setListenCheck(true);
+    // }
     const pressHandler = (item) => {
         console.log("clicked");
         navigation.navigate('DealerItems', { id: item.id });
     }
-    const [items, setItems] = useState([]);
 
-    const [listenCheck, setListenCheck] = useState(true);
-    Firebase.database().ref('Dealers/').once('value').then((data) => {
+    Firebase.database().ref('Dealers/').on('value',(data) => {
         if (listenCheck) {
             if (data.val()) {
                 var keys = Object.keys(data.val());
@@ -27,7 +33,7 @@ export default function PendingListScreen({ navigation }) {
                 setListenCheck(false);
             }
         }
-    })
+    });
 
     return (
         <View style={styles.main}>
