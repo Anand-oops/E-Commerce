@@ -1,14 +1,15 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard, SafeAreaView } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
 import { StatusBar } from 'expo-status-bar';
 import { SliderBox } from "react-native-image-slider-box"
 import * as ImagePicker from 'expo-image-picker'
 import Toast from 'react-native-simple-toast';
+import DropDownPicker from 'react-native-dropdown-picker'
 import Card from '../shared/AdminCard'
 
-const HomeScreen = (props) => {
+const HomeScreen = () => {
 
 	const { user } = useContext(AuthContext);
 
@@ -22,6 +23,7 @@ const HomeScreen = (props) => {
 	const [isDeckChanged, setDeckChanged] = useState(false)
 	const [deckListenStatus, setDeckListenStatus] = useState(true)
 	const [imageIndex, setImageIndex] = useState(0)
+	const [categories, setCategories] = useState([]);
 	const [deleteImageNames, setDeleteImageNames] = useState([])
 	const [showCardModal, setShowCardModel] = useState(false)
 	const [header, setHeader] = useState('')
@@ -29,11 +31,46 @@ const HomeScreen = (props) => {
 	const [showImageModal, setShowImageModal] = useState(false)
 	const [smallText, setSmallText] = useState('')
 	const [bigText, setBigText] = useState('')
+	const [productKey, setProductKey] = useState('')
 	const [image, setImage] = useState(require('../assets/images/add.png'))
 	const [cardListenStatus, setCardListenStatus] = useState(true)
 	const [isCardChanged, setCardChanged] = useState(false)
+	const [drawerItemsCall, setDrawerItemsCall] = useState(true)
+	const [productListCall, setProductListCall] = useState(false)
+	const [products, setProducts] = useState([])
+	const [productImage, setProductImage] = useState('')
 
+	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
+		if (drawerItemsCall) {
+			if (snapshot.val()) {
+				var cats = [];
+				var keys = Object.keys(snapshot.val())
+				for (var i = 0; i < keys.length; i++) {
+					var key = keys[i]
+					var cat = snapshot.val()[key].itemName
+					cats.push({ label: cat, value: cat })
+				}
+				setCategories(cats);
+				setDrawerItemsCall(false)
+			}
+		}
+	})
 
+	Firebase.database().ref(`ProductList/${header}`).once('value').then((snapshot) => {
+		if (productListCall) {
+			if (snapshot.val()) {
+				var prods = [];
+				var keys = Object.keys(snapshot.val())
+				for (var i = 0; i < keys.length; i++) {
+					var key = keys[i]
+					var prod = snapshot.val()[key]
+					prods.push({ label: prod.productName, value: prod})
+				}
+				setProducts(prods);
+				setProductListCall(false)
+			}
+		}
+	})
 
 	Firebase.database().ref(`/ImagesDeck/`).once('value').then((data) => {
 		if (deckListenStatus) {
@@ -70,19 +107,18 @@ const HomeScreen = (props) => {
 	const AddCard = (header) => {
 		console.log("AddCard", header)
 		if (header.length == 0) {
-			Alert.alert("Wait", "Empty header not allowed",
+			Alert.alert("Wait", "Select the category first..",
 				[{ text: "Retry", onPress: () => { return } }], { cancelable: true })
-		} else { 
+		} else {
 			let cardFlag = true;
 			cards.map(card => {
-				console.log("Headers",card.header)
 				if (card.header === header) {
-					Toast.show("Card with same header already present. Try another",Toast.SHORT);
+					Toast.show("Category Card already present.", Toast.SHORT);
 					cardFlag = false;
 				}
 			});
-			
-			if(cardFlag) {
+
+			if (cardFlag) {
 				setCards([...cards, {
 					key: new Date().getTime(),
 					images: [],
@@ -95,29 +131,26 @@ const HomeScreen = (props) => {
 		}
 	}
 
-	const AddCardContent = (header, image, smallText, bigText) => {
-		console.log("AddCardContent", header, smallText, bigText)
+	const AddCardContent = (header, key, image, smallText, bigText) => {
+		console.log("AddCardContent", header, key, smallText, bigText)
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
 		console.log("Card Index:", cardIndex)
-		if (image.uri) {
-			cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
-				key: new Date().getTime(),
-				image: image,
-				textItem: smallText,
-				textOff: bigText,
-			}];
-			setCards(cardArray)
-			setCardChanged(true)
-			setShowImageModal(false)
-			setHeader('')
-			setImage(require('../assets/images/add.png'))
-			setSmallText('')
-			setBigText('')
-		}
-		else {
-			Alert.alert('Image Not Found', 'Please pick an image from the gallery');
-		}
+		cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
+			key: key,
+			image: image,
+			textItem: smallText,
+			textOff: bigText,
+		}];
+		setCards(cardArray)
+		setCardChanged(true)
+		setShowImageModal(false)
+		setHeader('')
+		setImage(require('../assets/images/add.png'))
+		setSmallText('')
+		setBigText('')
+		setProductKey('')
+		
 	}
 
 	const AddImageHandler = async (key) => {
@@ -213,6 +246,7 @@ const HomeScreen = (props) => {
 		if (isDeckChanged) {
 			Firebase.database().ref('/ImagesDeck').set(imagesDeck).then(() => {
 				setDeckListenStatus(true);
+				setDrawerItemsCall(true)
 				setDeckChanged(false);
 			}).catch((error) => {
 				Imageflag = false;
@@ -233,6 +267,7 @@ const HomeScreen = (props) => {
 				Firebase.database().ref('/Cards').set(cards).then(() => {
 					setCardListenStatus(true);
 					setCardChanged(false)
+					setDrawerItemsCall(true)
 				}).catch((error) => {
 					CardFlag = false;
 					console.log(error);
@@ -256,7 +291,7 @@ const HomeScreen = (props) => {
 	}
 
 	return (
-		<View style={{ paddingTop: 0, flex: 1, }}>
+		<SafeAreaView style={{ paddingTop: 0, flex: 1, }}>
 			<StatusBar style="light" />
 			<ScrollView keyboardShouldPersistTaps='always'>
 				<View style={styles.iconContainer}>
@@ -285,9 +320,9 @@ const HomeScreen = (props) => {
 					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
 						deleteImage={(index) => { DeleteCardImageHandler(index, card.header) }}
 						deleteCard={() => { DeleteCardHandler(card.header) }}
-						addImage={() => { setHeader(card.header), setShowImageModal(true) }} />)}
+						addImage={() => { setHeader(card.header),setProductListCall(true) ,setShowImageModal(true)}} />)}
 
-					<TouchableOpacity style={styles.bottomContainer} onPress={() => setShowCardModel(true)}>
+					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true) }}>
 						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
 					</TouchableOpacity>
 				</View>
@@ -299,19 +334,27 @@ const HomeScreen = (props) => {
 					onRequestClose={() => closeModal()}>
 					<View style={styles.modalContainer}>
 						<View style={styles.cardModalScreen}>
-							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Card Header Name:</Text>
-							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
-								<TextInput style={styles.modalTextInput} onChangeText={(header) => setHeader(header)} value={header} />
-							</View>
+							<DropDownPicker style={{ zIndex: 1, marginTop: 10, }}
+								items={categories}
+								placeholder="Select the product category"
+								containerStyle={{ height: 40, margin: 10, }}
+								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
+								style={{ backgroundColor: 'white' }}
+								labelStyle={{ color: 'blue' }}
+								activeLabelStyle={{ color: 'red' }}
+								onChangeItem={item => { setHeader(item.value) }}
+							/>
+
 							<View style={styles.modalButtonContainer}>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='Cancel' onPress={() => {Keyboard.dismiss(),closeModal()}} />
+									<Button title='Cancel' onPress={() => { Keyboard.dismiss(), closeModal() }} />
 								</View>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='OK' onPress={() => {Keyboard.dismiss(),AddCard(header)}} />
+									<Button title='OK' onPress={() => { Keyboard.dismiss(), AddCard(header) }} />
 
 								</View>
 							</View>
+
 						</View>
 					</View>
 				</Modal>
@@ -326,32 +369,53 @@ const HomeScreen = (props) => {
 							<TouchableOpacity onPress={() => AddImageHandler('cardImage')} style={styles.cardImageContainer}>
 								<Image source={image} style={styles.cardImage} />
 							</TouchableOpacity>
-							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter SmallText:</Text>
+							<DropDownPicker 
+								items={products}
+								placeholder="Select the product "
+								containerStyle={{ height: 40, margin: 10, }}
+								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
+								style={{ backgroundColor: 'white' }}
+								labelStyle={{ color: 'blue' }}
+								activeLabelStyle={{ color: 'red' }}
+								onChangeItem={item => { setProductKey(item.value.key) , setProductImage(item.value.image.uri)}}
+							/>
+							<Image source={{uri: productImage}} placeholder={require('../assets/grad.png')} style={{height:80, width:80, alignSelf:'center',resizeMode:'contain'}}/>
+							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sale Text:</Text>
 							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 								<TextInput style={styles.modalTextInput} onChangeText={(smallText) => setSmallText(smallText)} value={smallText} />
 							</View>
-							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter BigText:</Text>
+							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sale Discount:</Text>
 							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
-								<TextInput style={styles.modalTextInput} onChangeText={(bigText) => setBigText(bigText)} value={bigText} />
+								<TextInput style={styles.modalTextInput} keyboardType='number-pad' onChangeText={(bigText) => setBigText(bigText)} value={bigText} />
 							</View>
 							<View style={styles.modalButtonContainer}>
 								<View style={{ padding: 10, width: '30%' }}>
 									<Button title='Cancel' onPress={() => closeModal()} />
 								</View>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='OK' onPress={() => AddCardContent(header, image, smallText, bigText)} />
+									<Button title='OK' onPress={() => {
+										if (!image.uri) {
+											Toast.show("Pick Image from gallery", Toast.SHORT)
+										} else if (!productKey) {
+											Toast.show("Select the Product", Toast.SHORT)
+										} else if (!smallText || !bigText) {
+											Toast.show("Input sale values", Toast.SHORT)
+										} else {
+											AddCardContent(header, productKey, image, smallText, bigText)
+										}
+
+									}} />
 								</View>
 
 							</View>
 						</View>
 					</View>
 				</Modal>
-
 			</ScrollView>
 			<TouchableOpacity style={styles.saveButton} onPress={() => SaveToDatabase()}>
 				<Text style={{ color: 'white' }}>SAVE CHANGES</Text>
 			</TouchableOpacity>
-		</View>
+		</SafeAreaView>
 	);
 }
 
@@ -401,7 +465,7 @@ const styles = StyleSheet.create({
 	},
 
 	imageModalScreen: {
-		height: 400,
+		height: 525,
 		width: '85%',
 		borderRadius: 20,
 		justifyContent: 'center',
@@ -419,11 +483,11 @@ const styles = StyleSheet.create({
 	},
 
 	cardImage: {
-		height: 80,
-		width: 80,
-		marginVertical: 20,
-		resizeMode: 'contain',
-		justifyContent: 'center',
+		height: 100,
+		width: 100,
+		marginTop: 20,
+		resizeMode: 'contain',	
+		alignSelf:'center'
 	},
 
 	cardModalScreen: {
@@ -447,6 +511,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white'
 	},
 	modalButtonContainer: {
+		zIndex:0,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		marginVertical: 15,

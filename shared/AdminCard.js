@@ -27,7 +27,6 @@ const Card = props => {
                                 </TouchableOpacity>
                             </View>
                         )}
-                        numColumns={2}
                         scrollEnabled={true} />
                 </View>
             </View>
