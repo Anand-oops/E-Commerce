@@ -8,8 +8,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from './DrawerItemsStack';
-//import CustomerOrder from './navigation/CustomerOrdersStack'
 import CustomerOrdersStack from './CustomerOrdersStack'
+import RegisteredCustomersStack from './RegisteredCustomersStack'
+import RegisteredDealersStack from './RegisteredDealersStack'
 import React from "react";
 import { View, SafeAreaView, StyleSheet, Text, ScrollView, Dimensions, TouchableOpacity, Alert } from "react-native";
 
@@ -59,7 +60,9 @@ const screens = {
     PendingList: { screen: pendingListStack },
     DrawerItemsList: {screen:DrawerItemsStack} ,
     Profile: { screen: profileStack },
-    CustomerOrder: { screen: CustomerOrdersStack } 
+    CustomerOrder: { screen: CustomerOrdersStack }, 
+    Users : { screen : RegisteredCustomersStack },
+    Dealers : {screen : RegisteredDealersStack }
 }
 
 const RootNavigationDrawer = createDrawerNavigator(screens, { contentComponent: customComponent });

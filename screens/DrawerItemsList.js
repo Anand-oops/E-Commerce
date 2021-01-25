@@ -12,12 +12,9 @@ export default function DrawerItemsList() {
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
-	const [visibleModalEdit, setVisibleModalEdit] = useState(false);
 	const [items, setItems] = useState([]);
-	const [itemName, setItemName] = useState('');
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
-	const [key, setKey] = useState('');
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((data) => {
 		if (listenCheck) {
@@ -47,17 +44,6 @@ export default function DrawerItemsList() {
 		saveToDatabase();
 	}
 
-	const editName = (itemName, key) => {
-		console.log("key", key)
-		console.log("name", itemName)
-		const newArray = items;
-		newArray.splice(key, 1, { itemName: itemName })
-		console.log("new: ", newArray);
-		setItems(newArray);
-		setChanged(true);
-	}
-
-
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
@@ -75,10 +61,6 @@ export default function DrawerItemsList() {
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
-				<TouchableOpacity style={{ position: 'absolute', right: 50 }}
-					onPress={() => { setVisibleModalEdit(true); setKey(items.indexOf(item)) }}>
-					<Entypo name="edit" size={30} color="blue" />
-				</TouchableOpacity>
 				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -122,30 +104,6 @@ export default function DrawerItemsList() {
 							<View style={{ padding: 10, width: '30%' }}>
 								<Button title='OK' onPress={() => addItem(text)} />
 
-							</View>
-						</View>
-					</View>
-				</View>
-			</Modal>
-			<Modal
-				key={key}
-				visible={visibleModalEdit}
-				position='center'
-				transparent={true}
-				onRequestClose={() => setVisibleModalEdit(!visibleModalEdit)}>
-				<View style={styles.modalContainer}>
-					<View style={styles.cardModalScreen}>
-						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Edit Item</Text>
-						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
-							<TextInput style={styles.modalTextInput} onChangeText={(val) => setItemName(val)}
-								/*value={text}*/ placeholder={'Enter item name'} />
-						</View>
-						<View style={styles.modalButtonContainer}>
-							<View style={{ padding: 10, width: '30%' }}>
-								<Button title='Cancel' onPress={() => setVisibleModalEdit(!visibleModalEdit)} />
-							</View>
-							<View style={{ padding: 10, width: '30%' }}>
-								<Button title='OK' onPress={() => { editName(itemName, key); setVisibleModalEdit(!visibleModalEdit); }} />
 							</View>
 						</View>
 					</View>
