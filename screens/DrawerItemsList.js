@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, Text
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { Entypo } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-simple-toast'
 
 
-export default function DrawerItemsList() {
+export default function DrawerItemsList({navigation}) {
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
@@ -54,6 +55,12 @@ export default function DrawerItemsList() {
 			})
 		}
 	}
+
+	const moveAhead=(item)=>{
+		// console.log("naviagtion",navigation);
+		// console.log("clicked");
+     navigation.navigate('SubCategory',{item:item});
+	}
 	return (
 
 		<View style={styles.main}>
@@ -61,7 +68,7 @@ export default function DrawerItemsList() {
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
-				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => {
+				<TouchableOpacity style={{ position: 'absolute', right: 45 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
 							{ text: "No" },
@@ -70,6 +77,9 @@ export default function DrawerItemsList() {
 					);
 				}}>
 					<MaterialIcons name="delete" size={35} color="red" />
+				</TouchableOpacity>
+				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => moveAhead(item)}>
+				<AntDesign name="caretright" size={35} color="green" />
 				</TouchableOpacity>
 			</Card>)}>
 
