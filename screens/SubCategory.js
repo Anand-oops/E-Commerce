@@ -96,7 +96,7 @@ export default function SubCategory({navigation}) {
 			
 		// }];
 		
-		setItems([...items,{itemName:text,uri:image.uri}])
+		setItems([...items,{subitemName:text,uri:image.uri}])
 		setVisibleModalAdd(false)
 		setChanged(true);
 		setImage(require('../assets/images/add.png'))

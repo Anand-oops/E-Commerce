@@ -11,6 +11,8 @@ export default function Customers() {
     const [listenCheck, setListenCheck] = useState(true);
     const [collapsed, setCollapsed] = useState([])
 
+    const status = [];
+
     Firebase.database().ref('Customers/').on('value',(data) => {
         if (listenCheck) {
             if (data.val()) {
@@ -24,16 +26,20 @@ export default function Customers() {
                 }
                 setItems(temp);
                 setCollapsed(coll);
+                status = coll;
+                console.log("Status",status)
                 setListenCheck(false);
             }
         }
     });
 
     const pressHandler = (index) => {
-        let status = collapsed;
-        status.splice(index,1,!status[index])
+        //let status = collapsed;
         console.log("Status",status)
-        setCollapsed(status)
+        console.log("Pressed",collapsed)
+        //status.splice(index,1,!status[index])
+        status
+        //setCollapsed(status)
     }
 
     return (

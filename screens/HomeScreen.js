@@ -31,7 +31,6 @@ const HomeScreen = () => {
 	const [showImageModal, setShowImageModal] = useState(false)
 	const [smallText, setSmallText] = useState('')
 	const [bigText, setBigText] = useState('')
-	const [productKey, setProductKey] = useState('')
 	const [image, setImage] = useState(require('../assets/images/add.png'))
 	const [cardListenStatus, setCardListenStatus] = useState(true)
 	const [isCardChanged, setCardChanged] = useState(false)
@@ -39,6 +38,7 @@ const HomeScreen = () => {
 	const [productListCall, setProductListCall] = useState(false)
 	const [products, setProducts] = useState([])
 	const [productImage, setProductImage] = useState('')
+	const [cardProduct, setCardProduct] = useState([])
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
 		if (drawerItemsCall) {
@@ -64,7 +64,7 @@ const HomeScreen = () => {
 				for (var i = 0; i < keys.length; i++) {
 					var key = keys[i]
 					var prod = snapshot.val()[key]
-					prods.push({ label: prod.productName, value: prod})
+					prods.push({ label: prod.productName, value: prod })
 				}
 				setProducts(prods);
 				setProductListCall(false)
@@ -131,16 +131,17 @@ const HomeScreen = () => {
 		}
 	}
 
-	const AddCardContent = (header, key, image, smallText, bigText) => {
-		console.log("AddCardContent", header, key, smallText, bigText)
+	const AddCardContent = (header, prod, image, smallText, bigText) => {
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
-		console.log("Card Index:", cardIndex)
+		prod.saleDiscount = bigText+" %";
+		prod.salePrice = prod.finalPrice - (parseFloat(bigText)*prod.finalPrice)/100;
 		cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
-			key: key,
+			key: prod.key,
 			image: image,
 			textItem: smallText,
 			textOff: bigText,
+			product: prod,
 		}];
 		setCards(cardArray)
 		setCardChanged(true)
@@ -149,8 +150,8 @@ const HomeScreen = () => {
 		setImage(require('../assets/images/add.png'))
 		setSmallText('')
 		setBigText('')
-		setProductKey('')
-		
+		setCardProduct([])
+		setProductImage('')
 	}
 
 	const AddImageHandler = async (key) => {
@@ -320,7 +321,7 @@ const HomeScreen = () => {
 					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
 						deleteImage={(index) => { DeleteCardImageHandler(index, card.header) }}
 						deleteCard={() => { DeleteCardHandler(card.header) }}
-						addImage={() => { setHeader(card.header),setProductListCall(true) ,setShowImageModal(true)}} />)}
+						addImage={() => { setHeader(card.header), setProductListCall(true), setShowImageModal(true) }} />)}
 
 					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true) }}>
 						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
@@ -369,7 +370,7 @@ const HomeScreen = () => {
 							<TouchableOpacity onPress={() => AddImageHandler('cardImage')} style={styles.cardImageContainer}>
 								<Image source={image} style={styles.cardImage} />
 							</TouchableOpacity>
-							<DropDownPicker 
+							<DropDownPicker
 								items={products}
 								placeholder="Select the product "
 								containerStyle={{ height: 40, margin: 10, }}
@@ -377,9 +378,9 @@ const HomeScreen = () => {
 								style={{ backgroundColor: 'white' }}
 								labelStyle={{ color: 'blue' }}
 								activeLabelStyle={{ color: 'red' }}
-								onChangeItem={item => { setProductKey(item.value.key) , setProductImage(item.value.image.uri)}}
+								onChangeItem={item => { setProductImage(item.value.image.uri), setCardProduct(item.value) }}
 							/>
-							<Image source={{uri: productImage}} placeholder={require('../assets/grad.png')} style={{height:80, width:80, alignSelf:'center',resizeMode:'contain'}}/>
+							<Image source={{ uri: productImage }} placeholder={require('../assets/grad.png')} style={{ height: 80, width: 80, alignSelf: 'center', resizeMode: 'contain' }} />
 							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sale Text:</Text>
 							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 								<TextInput style={styles.modalTextInput} onChangeText={(smallText) => setSmallText(smallText)} value={smallText} />
@@ -396,12 +397,15 @@ const HomeScreen = () => {
 									<Button title='OK' onPress={() => {
 										if (!image.uri) {
 											Toast.show("Pick Image from gallery", Toast.SHORT)
-										} else if (!productKey) {
+										} else if (!cardProduct) {
 											Toast.show("Select the Product", Toast.SHORT)
 										} else if (!smallText || !bigText) {
 											Toast.show("Input sale values", Toast.SHORT)
 										} else {
-											AddCardContent(header, productKey, image, smallText, bigText)
+											if (parseFloat(bigText) >= 0 && parseFloat(bigText) < 100) {
+												AddCardContent(header, cardProduct, image, smallText, bigText)
+											} else
+												Toast.show("Input valid discount", Toast.SHORT)
 										}
 
 									}} />
@@ -486,8 +490,8 @@ const styles = StyleSheet.create({
 		height: 100,
 		width: 100,
 		marginTop: 20,
-		resizeMode: 'contain',	
-		alignSelf:'center'
+		resizeMode: 'contain',
+		alignSelf: 'center'
 	},
 
 	cardModalScreen: {
@@ -511,7 +515,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white'
 	},
 	modalButtonContainer: {
-		zIndex:0,
+		zIndex: 0,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		marginVertical: 15,
