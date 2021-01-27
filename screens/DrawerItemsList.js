@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
-import { Entypo } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-simple-toast'
 
 
-export default function DrawerItemsList({navigation}) {
+export default function DrawerItemsList({ navigation }) {
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
@@ -30,7 +29,7 @@ export default function DrawerItemsList({navigation}) {
 	const addItem = (text) => {
 		console.log("add", text)
 		setItems([...items, { itemName: text }]);
-		setVisibleModalAdd(!visibleModalAdd);
+		setVisibleModalAdd(false);
 		setChanged(true);
 		onTextChange('');
 	};
@@ -56,12 +55,11 @@ export default function DrawerItemsList({navigation}) {
 		}
 	}
 
-	const moveAhead=(item)=>{
-		// console.log("naviagtion",navigation);
-		// console.log("clicked");
-		var index=items.indexOf(item);
-     navigation.navigate('SubCategory',{item:item,id:index});
+	const moveAhead = (item) => {
+		var index = items.indexOf(item);
+		navigation.navigate('SubCategory', { item: item, id: index });
 	}
+
 	return (
 
 		<View style={styles.main}>
@@ -80,14 +78,14 @@ export default function DrawerItemsList({navigation}) {
 					<MaterialIcons name="delete" size={35} color="red" />
 				</TouchableOpacity>
 				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => moveAhead(item)}>
-				<AntDesign name="caretright" size={35} color="green" />
+					<AntDesign name="caretright" size={35} color="black" />
 				</TouchableOpacity>
 			</Card>)}>
 
 			</FlatList>
 
 			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
-				onPress={() => setVisibleModalAdd(!visibleModalAdd)}>
+				onPress={() => setVisibleModalAdd(true)}>
 				<Ionicons name="add-circle" size={30} color="black" />
 			</TouchableOpacity>
 

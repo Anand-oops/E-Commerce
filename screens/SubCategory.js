@@ -23,7 +23,7 @@ export default function SubCategory({navigation}) {
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
 
-	Firebase.database().ref(`DrawerItemsList/${id}`).once('value').then((data) => {
+	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).once('value').then((data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
@@ -32,14 +32,6 @@ export default function SubCategory({navigation}) {
 			}
 		}
 	})
-
-	// const addItem = (text) => {
-	// 	console.log("add", text)
-	// 	setItems([...items, { itemName: text }]);
-	// 	setVisibleModalAdd(!visibleModalAdd);
-	// 	setChanged(true);
-	// 	onTextChange('');
-    // };
     
     const AddImageHandler = async () => {
 		const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -64,17 +56,6 @@ export default function SubCategory({navigation}) {
 			.then((snapshot) => {
 				console.log(`${imageName} has been successfully uploaded.`);
 				snapshot.ref.getDownloadURL().then((url) => {
-					// if (key == 'deck') {
-					// 	setDeckChanged(true);
-					// 	setImagesDeck([...imagesDeck, { imageName: imageName, uri: url }])
-					// }
-					// else if (key == 'cardImage') {
-					// 	setCardChanged(true);
-					// 	setImage({
-					// 		imageName: imageName,
-					// 		uri: url,
-					// 	})
-                    // }
                     	setImage({
 							imageName: imageName,
 							uri: url,
@@ -86,16 +67,6 @@ export default function SubCategory({navigation}) {
 	};
     const AddCardContent = ( image, text) => {
 		console.log("AddCardContent",  text)
-		// const cardArray = cards;
-		// const cardIndex = cardArray.findIndex((card) => card.header === header);
-		// console.log("Card Index:", cardIndex)
-		// cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
-			
-		// 	image: image,
-		// 	textItem: smallText,
-			
-		// }];
-		
 		setItems([...items,{subitemName:text,uri:image.uri}])
 		setVisibleModalAdd(false)
 		setChanged(true);
@@ -116,10 +87,11 @@ export default function SubCategory({navigation}) {
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
-			Firebase.database().ref(`DrawerItemsList/${id}`).set(items).then(() => {
+			console.log("Id",id);
+			Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(items).then(() => {
 				setListenCheck(true)
 				setChanged(false)
-				Toast.show(" sub Categories Updated", Toast.SHORT);
+				Toast.show("Sub-Categories Updated", Toast.SHORT);
 			})
 		}
 	}
@@ -130,10 +102,10 @@ export default function SubCategory({navigation}) {
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
                 <Image
-                      style={{padding:2,height:120,width:100,resizeMode:'contain',alignSelf:'center',}}
+                      style={{padding:2,height:'125%', width:100,resizeMode:'contain',alignSelf:'center',}}
                       source={{uri:item.uri}}
                       />
-				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
+				<Text style={{ color: 'black', fontSize: 20, marginStart:5}}>{item.subitemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -163,7 +135,7 @@ export default function SubCategory({navigation}) {
 					visible={visibleModalAdd}
 					position='center'
 					transparent={true}
-					onRequestClose={() => closeModal()}>
+					onRequestClose={() => setVisibleModalAdd(false)}>
 					<View style={styles.modalContainer}>
 						<View style={styles.imageModalScreen}>
 							<TouchableOpacity onPress={() => AddImageHandler()} style={styles.cardImageContainer}>
@@ -177,13 +149,13 @@ export default function SubCategory({navigation}) {
 							
 							<View style={styles.modalButtonContainer}>
 								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='Cancel' onPress={() => closeModal()} />
+									<Button title='Cancel' onPress={() => setVisibleModalAdd(false)} />
 								</View>
 								<View style={{ padding: 10, width: '30%' }}>
 									<Button title='OK' onPress={() => {
 										if (!image.uri) {
 											Toast.show("Pick Image from gallery", Toast.SHORT)
-										}  else if (!text ) {
+										} else if (!text ) {
 											Toast.show("Input value", Toast.SHORT)
 										} else {
 											AddCardContent(image,text);
@@ -248,7 +220,7 @@ const styles = StyleSheet.create({
 		marginVertical: 15,
     },
 	imageModalScreen: {
-		height: 525,
+		height: 300,
 		width: '85%',
 		borderRadius: 20,
 		justifyContent: 'center',
@@ -272,6 +244,3 @@ const styles = StyleSheet.create({
 		alignSelf:'center'
 	},
 });
-
-
-
