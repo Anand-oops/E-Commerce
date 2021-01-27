@@ -13,6 +13,8 @@ export default function SubCategory({navigation}) {
 
     
     var name =navigation.getParam('item').itemName;
+    var id =navigation.getParam('id');
+    console.log("id",id);
     console.log("name",name);
     const [listenCheck, setListenCheck] = useState(true);
     const [visibleModalAdd, setVisibleModalAdd] = useState(false);
@@ -21,7 +23,7 @@ export default function SubCategory({navigation}) {
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
 
-	Firebase.database().ref(`DrawerItemsList/${name}`).once('value').then((data) => {
+	Firebase.database().ref(`DrawerItemsList/${id}`).once('value').then((data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
@@ -114,7 +116,7 @@ export default function SubCategory({navigation}) {
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
-			Firebase.database().ref(`DrawerItemsList/${name}`).set(items).then(() => {
+			Firebase.database().ref(`DrawerItemsList/${id}`).set(items).then(() => {
 				setListenCheck(true)
 				setChanged(false)
 				Toast.show(" sub Categories Updated", Toast.SHORT);
@@ -124,7 +126,7 @@ export default function SubCategory({navigation}) {
 	return (
 
 		<View style={styles.main}>
-             <Text>{"Screen is sub category"}</Text>
+             
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
                 <Image

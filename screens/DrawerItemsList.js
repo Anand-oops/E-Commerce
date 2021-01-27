@@ -59,7 +59,8 @@ export default function DrawerItemsList({navigation}) {
 	const moveAhead=(item)=>{
 		// console.log("naviagtion",navigation);
 		// console.log("clicked");
-     navigation.navigate('SubCategory',{item:item});
+		var index=items.indexOf(item);
+     navigation.navigate('SubCategory',{item:item,id:index});
 	}
 	return (
 
