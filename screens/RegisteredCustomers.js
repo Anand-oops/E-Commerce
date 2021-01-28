@@ -18,16 +18,16 @@ export default function Customers() {
             if (data.val()) {
                 var keys = Object.keys(data.val());
                 var temp = []
-                var coll = []
+                //var coll = []
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i]
                     temp.push(data.val()[key])
-                    coll.push(true)
+                    //coll.push(true)
                 }
                 setItems(temp);
-                setCollapsed(coll);
-                status = coll;
-                console.log("Status",status)
+                //setCollapsed(coll);
+                //status = coll;
+                //console.log("Status",status)
                 setListenCheck(false);
             }
         }
@@ -38,7 +38,7 @@ export default function Customers() {
         console.log("Status",status)
         console.log("Pressed",collapsed)
         //status.splice(index,1,!status[index])
-        status
+        //status
         //setCollapsed(status)
     }
 
