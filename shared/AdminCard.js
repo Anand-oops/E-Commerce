@@ -22,6 +22,7 @@ const Card = props => {
                             <View style={styles.Container}>
                                 <TouchableOpacity onLongPress={props.deleteImage.bind(this, itemData.index)}>
                                     <Image style={styles.image} source={itemData.item.image} />
+                                    <Text style={{color:'blue'}}>{itemData.item.product.subCategory}</Text>
                                     <Text style={styles.text}>{itemData.item.textItem}</Text>
                                     <Text style={styles.offerText}>{itemData.item.textOff + " % off !"}</Text>
                                 </TouchableOpacity>

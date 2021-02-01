@@ -39,24 +39,31 @@ const HomeScreen = () => {
 	const [products, setProducts] = useState([])
 	const [productImage, setProductImage] = useState('')
 	const [cardProduct, setCardProduct] = useState([])
+	const [subCategories, setSubCategories] = useState([])
+	const [productSubCategory, setProductSubCategory] = useState('')
+	const [dropDownSubCat, setDropDownSubCat] = useState([])
+	const [disabled, setDisabled] = useState(true)
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
 		if (drawerItemsCall) {
 			if (snapshot.val()) {
 				var cats = [];
+				var subCats = [];
 				var keys = Object.keys(snapshot.val())
 				for (var i = 0; i < keys.length; i++) {
 					var key = keys[i]
 					var cat = snapshot.val()[key].itemName
 					cats.push({ label: cat, value: cat })
+					subCats.push(snapshot.val()[key])
 				}
+				setSubCategories(subCats);
 				setCategories(cats);
 				setDrawerItemsCall(false)
 			}
 		}
 	})
 
-	Firebase.database().ref(`ProductList/${header}`).once('value').then((snapshot) => {
+	Firebase.database().ref(`ProductList/${header}/${productSubCategory}`).once('value').then((snapshot) => {
 		if (productListCall) {
 			if (snapshot.val()) {
 				var prods = [];
@@ -67,7 +74,11 @@ const HomeScreen = () => {
 					prods.push({ label: prod.productName, value: prod })
 				}
 				setProducts(prods);
-				setProductListCall(false)
+				setDisabled(false);
+				setProductListCall(false);
+			} else {
+				Toast.show('No Products found', Toast.SHORT);
+				setProductListCall(false);
 			}
 		}
 	})
@@ -132,16 +143,22 @@ const HomeScreen = () => {
 	}
 
 	const AddCardContent = (header, prod, image, smallText, bigText) => {
+		console.log(header,prod,image,smallText,bigText);
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
-		prod.saleDiscount = bigText+" %";
-		prod.salePrice = prod.finalPrice - (parseFloat(bigText)*prod.finalPrice)/100;
+		prod.saleDiscount = bigText + " %";
+		prod.salePrice = prod.finalPrice - (parseFloat(bigText) * prod.finalPrice) / 100;
+		Firebase.database().ref(`ProductList/${prod.category}/${prod.subCategory}/${prod.key}`).set(prod);
 		cardArray[cardIndex].images = [...cardArray[cardIndex].images, {
 			key: prod.key,
 			image: image,
 			textItem: smallText,
 			textOff: bigText,
-			product: prod,
+			product: {
+				productKey: prod.key,
+				category: prod.category,
+				subCategory: prod.subCategory
+			},
 		}];
 		setCards(cardArray)
 		setCardChanged(true)
@@ -152,6 +169,7 @@ const HomeScreen = () => {
 		setBigText('')
 		setCardProduct([])
 		setProductImage('')
+		setDisabled(true)
 	}
 
 	const AddImageHandler = async (key) => {
@@ -240,7 +258,22 @@ const HomeScreen = () => {
 		}]);
 	}
 
-	const closeModal = () => { setShowCardModel(false), setShowImageModal(false) }
+	const closeModal = () => { setShowCardModel(false), setShowImageModal(false), setDisabled(true) }
+
+	const populateSubCats = (category) => {
+		subCategories.map(subcat => {
+			if (subcat.itemName === category) {
+				var temp = [];
+				var keys = Object.keys(subcat.SubCategories)
+				for (var i = 0; i < keys.length; i++) {
+					var key = keys[i];
+					var entry = subcat.SubCategories[key].subitemName
+					temp.push({ label: entry, value: entry })
+				}
+				setDropDownSubCat(temp);
+			}
+		})
+	}
 
 	function SaveToDatabase() {
 		let Imageflag = true;
@@ -321,7 +354,7 @@ const HomeScreen = () => {
 					{cards.map(card => <Card key={card.key} images={card.images} header={card.header}
 						deleteImage={(index) => { DeleteCardImageHandler(index, card.header) }}
 						deleteCard={() => { DeleteCardHandler(card.header) }}
-						addImage={() => { setHeader(card.header), setProductListCall(true), setShowImageModal(true) }} />)}
+						addImage={() => { setHeader(card.header), populateSubCats(card.header), setShowImageModal(true), setProductImage('') }} />)}
 
 					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true) }}>
 						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
@@ -371,7 +404,18 @@ const HomeScreen = () => {
 								<Image source={image} style={styles.cardImage} />
 							</TouchableOpacity>
 							<DropDownPicker
+								items={dropDownSubCat}
+								placeholder="Select the product sub category"
+								containerStyle={{ height: 40, margin: 10, }}
+								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, marginBottom: 20, zIndex: 5 }}
+								style={{ backgroundColor: 'white' }}
+								labelStyle={{ color: 'blue' }}
+								activeLabelStyle={{ color: 'red' }}
+								onChangeItem={item => { setProductSubCategory(item.value), setDisabled(true), setProductImage(''), setProducts([]), setProductListCall(true), setCardProduct([]) }}
+							/>
+							<DropDownPicker
 								items={products}
+								disabled={disabled}
 								placeholder="Select the product "
 								containerStyle={{ height: 40, margin: 10, }}
 								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
@@ -397,7 +441,7 @@ const HomeScreen = () => {
 									<Button title='OK' onPress={() => {
 										if (!image.uri) {
 											Toast.show("Pick Image from gallery", Toast.SHORT)
-										} else if (!cardProduct) {
+										} else if (productImage.length == 0) {
 											Toast.show("Select the Product", Toast.SHORT)
 										} else if (!smallText || !bigText) {
 											Toast.show("Input sale values", Toast.SHORT)
@@ -469,7 +513,7 @@ const styles = StyleSheet.create({
 	},
 
 	imageModalScreen: {
-		height: 525,
+		height: 600,
 		width: '85%',
 		borderRadius: 20,
 		justifyContent: 'center',
