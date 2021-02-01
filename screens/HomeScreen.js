@@ -31,7 +31,7 @@ const HomeScreen = () => {
 	const [showImageModal, setShowImageModal] = useState(false)
 	const [smallText, setSmallText] = useState('')
 	const [bigText, setBigText] = useState('')
-	const [image, setImage] = useState(require('../assets/images/add.png'))
+	const [image, setImage] = useState(require('../assets/images/add-pic.png'))
 	const [cardListenStatus, setCardListenStatus] = useState(true)
 	const [isCardChanged, setCardChanged] = useState(false)
 	const [drawerItemsCall, setDrawerItemsCall] = useState(true)
@@ -164,7 +164,7 @@ const HomeScreen = () => {
 		setCardChanged(true)
 		setShowImageModal(false)
 		setHeader('')
-		setImage(require('../assets/images/add.png'))
+		setImage(require('../assets/images/add-pic.png'))
 		setSmallText('')
 		setBigText('')
 		setCardProduct([])
@@ -329,7 +329,6 @@ const HomeScreen = () => {
 			<StatusBar style="light" />
 			<ScrollView keyboardShouldPersistTaps='always'>
 				<View style={styles.iconContainer}>
-
 					<TouchableOpacity onPress={() => DeleteImageHandler(imageIndex)}>
 						<Image source={require('../assets/images/delete.png')} style={styles.image} />
 					</TouchableOpacity>
@@ -357,7 +356,7 @@ const HomeScreen = () => {
 						addImage={() => { setHeader(card.header), populateSubCats(card.header), setShowImageModal(true), setProductImage('') }} />)}
 
 					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true) }}>
-						<Image source={require('../assets/images/add.png')} style={{ height: 50, width: 50, }} />
+						<Image source={require('../assets/images/add-card.png')} style={{ height: 60, width: 60 }} />
 					</TouchableOpacity>
 				</View>
 
@@ -424,7 +423,7 @@ const HomeScreen = () => {
 								activeLabelStyle={{ color: 'red' }}
 								onChangeItem={item => { setProductImage(item.value.image.uri), setCardProduct(item.value) }}
 							/>
-							<Image source={{ uri: productImage }} placeholder={require('../assets/grad.png')} style={{ height: 80, width: 80, alignSelf: 'center', resizeMode: 'contain' }} />
+							<Image source={{ uri: productImage }} style={{ height: 80, width: 80, alignSelf: 'center', resizeMode: 'contain' }} />
 							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sale Text:</Text>
 							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 								<TextInput style={styles.modalTextInput} onChangeText={(smallText) => setSmallText(smallText)} value={smallText} />
@@ -474,10 +473,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginVertical: 40,
 		marginBottom: 60,
+		elevation:5
 	},
 	iconContainer: {
 		flexDirection: 'row',
-		padding: 10,
+		padding: 5,
 		paddingHorizontal: 20,
 		borderWidth: 1,
 		borderColor: 'black',
@@ -486,16 +486,15 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		height: 30,
-		width: 30,
-		paddingHorizontal: 10
+		height: 35,
+		width: 35,
 	},
 
 	imageDeck: {
-		elevation: 5,
 		height: 175,
 		borderColor: 'black',
 		borderWidth: 1,
+		backgroundColor:'gray'
 	},
 
 	saveButton: {

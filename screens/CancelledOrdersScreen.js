@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar';
 
-export default function PendingOrders() {
+export default function CancelledOrders() {
 
     const [searchText, setSearchText] = useState('')
 
@@ -30,12 +30,12 @@ export default function PendingOrders() {
 
 const styles = StyleSheet.create({
     main: {
-        height:'100%',
-        width:'100%'
+        height: '100%',
+        width: '100%'
     },
     container: {
         flex: 1,
         alignItems: "center",
-        paddingTop:'50%'
+        paddingTop: '50%'
     },
 });

@@ -13,11 +13,10 @@ export default function AllRegistrations() {
 
         <View style={styles.main}>
             <Tab.Navigator
-                //initialRouteName="Feed"
                 tabBarOptions={{
                     activeTintColor: 'white',
                     labelStyle: { fontSize: 15 },
-                    style: { backgroundColor: 'gray', elevation: 5 },
+                    style: { backgroundColor: 'black', elevation: 5 },
                 }}
             >
                 <Tab.Screen

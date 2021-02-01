@@ -7,11 +7,11 @@ const Card = props => {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                 <TouchableOpacity onPress={props.deleteCard.bind()}>
-                        <Image source={require('../assets/images/delete.png')} style={styles.icon} />
+                        <Image source={require('../assets/images/delete-card.png')} style={styles.icon} />
                     </TouchableOpacity>
                     <Text style={{fontSize:18, fontWeight: 'bold'}}>{props.header}</Text>
                     <TouchableOpacity onPress={props.addImage.bind()}>
-                        <Image source={require('../assets/images/add.png')} style={styles.icon} />
+                        <Image source={require('../assets/images/add-item.png')} style={styles.icon} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 
     headerContainer: {
         width: '90%',
-        marginTop: 40,
+        marginTop: 30,
         backgroundColor: 'white',
         flexDirection: 'row',
         padding: 10,
@@ -52,7 +52,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderTopLeftRadius:30,
+        borderTopRightRadius:30
     },
 
     cardContainer: {
@@ -66,12 +68,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         backgroundColor: 'white',
+        borderBottomLeftRadius:30,
+        borderBottomRightRadius:30
     },
 
     Container: {
         flex: 1,
         flexDirection: 'column',
-        borderColor: 'black',
+        borderColor: 'transparent',
         borderWidth: 0.3,
         padding: 10,
         alignItems: 'center',
