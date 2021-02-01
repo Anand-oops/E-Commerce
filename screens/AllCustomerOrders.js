@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import DeliveredOrders from '../screens/DeliveredOrdersScreen'
 import CancelledOrders from "../screens/CancelledOrdersScreen";
-import PendingOrders from "../screens/PendingOrders";
+import PendingOrders from "../screens/PendingOrdersScreen";
 
 
 export default function AllCustomerOrders() {
