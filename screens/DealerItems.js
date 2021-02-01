@@ -177,7 +177,7 @@ export default function PendingListScreen({ navigation }) {
                                 </View>
                                 <View style={{padding: 10,width: '30%'}}>
                                     <Button title='OK' onPress={() => {
-                                        if (adminPrice.size != 0 && parseFloat(discountRate) > 0 && parseFloat(discountRate) < 100) {
+                                        if (adminPrice.size != 0 && parseFloat(discountRate) >= 0 && parseFloat(discountRate) < 100) {
                                             addProduct()
                                         } else Toast.show("Enter valid valued", Toast.SHORT);
                                     }} />
