@@ -42,7 +42,7 @@ export default function PendingListScreen({ navigation }) {
                 </View>
                 <TouchableOpacity style={{ position: 'absolute', right: 10 }}
                     onPress={item.pendingStatus ? () => pressHandler(item) : () => {Toast.show("No Pending Products",Toast.SHORT)}}>
-                    <AntDesign name="doubleright" size={30} color={item.pendingStatus ? 'red' : 'black'} />
+                    <AntDesign name="doubleright" size={30}  color={item.pendingStatus ? 'red' : 'black'} />
                 </TouchableOpacity>
 
             </Card>)}>
