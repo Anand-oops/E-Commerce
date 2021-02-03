@@ -5,6 +5,7 @@ import Firebase from '../firebaseConfig';
 import Collapsible from 'react-native-collapsible'
 import { SearchBar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
+import DropDownPicker from 'react-native-dropdown-picker'
 
 export default function Customers() {
 
@@ -14,6 +15,7 @@ export default function Customers() {
     const [searchText, setSearchText] = useState('')
     const [searchedItems, setSearchedItems] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
+    const [searchBy, setSearchBy] = useState('name')
 
     Firebase.database().ref('Customers/').on('value', (data) => {
         if (listenCheck) {
@@ -42,14 +44,26 @@ export default function Customers() {
             filter = items;
             status = collapsed;
         } else {
-            items.map(item => {
-                if(item.firstName != null && item.lastName != null){
-                    if ((item.firstName.toLowerCase()).includes(text.toLowerCase()) || (item.lastName.toLowerCase()).includes(text.toLowerCase())) {
-                        filter.push(item);
-                        status.push(collapsed[items.indexOf(item)])
+            if (searchBy === 'name') {
+                items.map(item => {
+                    if (item.firstName != null && item.lastName != null) {
+                        if ((item.firstName.toLowerCase()).includes(text.toLowerCase()) || (item.lastName.toLowerCase()).includes(text.toLowerCase())) {
+                            filter.push(item);
+                            status.push(collapsed[items.indexOf(item)])
+                        }
                     }
-                }
-            })
+                })
+            }
+            else {
+                items.map(item => {
+                    if (item.mobile != null) {
+                        if ((item.mobile).includes(text)) {
+                            filter.push(item);
+                            status.push(collapsed[items.indexOf(item)])
+                        }
+                    }
+                })
+            }
         }
         setSearchedItems(filter);
         setSearchedColl(status);
@@ -70,18 +84,40 @@ export default function Customers() {
 
             <StatusBar style='light' />
             <SearchBar
-                placeholder="Search by Name"
+                placeholder="Search "
                 inputContainerStyle={{ height: 30 }}
                 onChangeText={(text) => { setSearchText(text), performSearch(text) }}
                 value={searchText}
+                keyboardType={(searchBy === 'number') ? 'number-pad' : 'default'}
             />
+            <View style={{ flexDirection: 'row-reverse' }}>
+                <DropDownPicker
+                    items={[{ label: 'By Name', value: 'name' },
+                    { label: 'By Mobile No.', value: 'number' }]}
+                    defaultValue="name"
+                    containerStyle={{ height: 30, width: '50%' }}
+                    dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, zIndex: 5 }}
+                    style={{ backgroundColor: 'white' }}
+                    labelStyle={{ color: 'black' }}
+                    activeLabelStyle={{ color: 'blue' }}
+                    onChangeItem={item => {
+                        setSearchBy(item.value), setSearchText(''), performSearch('')
+                    }}
+                />
+            </View>
             <FlatList data={searchedItems} renderItem={({ item, index }) =>
             (<Card>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => pressHandler(index)}>
                     <Text style={{ color: 'black', fontSize: 16 }}>{"Customer ID : " + item.id}</Text>
                     <Text style={{ color: 'black', fontSize: 16 }}>Customer Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
+                    <Text style={{ color: 'black', fontSize: 16 }}>Customer Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
                     <Collapsible collapsed={searchedColl[index]} >
-                        <Text style={{ color: 'black', fontSize: 16 }}>Customer Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
+                        <Text>More Details...</Text>
+                        <Text>More Details...</Text>
+                        <Text>More Details...</Text>
+                        <Text>More Details...</Text>
+                        <Text>More Details...</Text>
+                        <Text>More Details...</Text>
                     </Collapsible>
                 </TouchableOpacity>
             </Card>)}>
