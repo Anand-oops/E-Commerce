@@ -12,6 +12,8 @@ import CustomerOrdersStack from './CustomerOrdersStack'
 import AllRegistrationsStack from './AllRegistrationsStack'
 import React from "react";
 import { View, SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+// import AllCustomerOrdersTabStack from './AllCustomerOrdersTabStack';
+// import AllRegistrationsTabStack from './AllRegistrationsTabStack';
 
 
 const customComponent = (props) => {

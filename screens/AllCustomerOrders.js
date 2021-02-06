@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import DeliveredOrders from '../screens/DeliveredOrdersScreen'
+import DeliveredOrders from '../screens/DeliveredOrdersScreen';
 import CancelledOrders from "../screens/CancelledOrdersScreen";
 import PendingOrders from "../screens/PendingOrdersScreen";
 
@@ -12,7 +12,7 @@ export default function AllCustomerOrders() {
 
 	return (
 
-		<View style={styles.main}>
+		
 			<Tab.Navigator
 				tabBarOptions={{
 					activeTintColor: 'white',
@@ -36,7 +36,7 @@ export default function AllCustomerOrders() {
 					options={{ tabBarLabel: 'Cancelled Orders' }}
 				/>
 			</Tab.Navigator>
-		</View>
+		
 	);
 }
 

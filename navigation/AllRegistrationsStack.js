@@ -4,7 +4,7 @@ import React from 'react';
 import AllRegistrations from '../screens/AllRegistrations'
 
 const screens = {
-    AllRegistration: {
+    AllCustomerOrder: {
         screen: AllRegistrations, navigationOptions: ({ navigation }) => {
             return {
                 headerTitle: () => <Header navigation={navigation} title='Registrations' />,
@@ -13,7 +13,7 @@ const screens = {
     }
 }
 
-const AllRegistrationsStack = createStackNavigator(screens, {
+const CustomerOrdersStack = createStackNavigator(screens, {
     defaultNavigationOptions: {
         headerTintColor: 'white',
         headerStyle: {
@@ -22,5 +22,5 @@ const AllRegistrationsStack = createStackNavigator(screens, {
     }
 });
 
-export default AllRegistrationsStack;
+export default CustomerOrdersStack;
 
