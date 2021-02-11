@@ -6,6 +6,7 @@ import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 
 export default function PendingListScreen({ navigation }) {
+    
     const [items, setItems] = useState([]);
 
     const [listenCheck, setListenCheck] = useState(true);
