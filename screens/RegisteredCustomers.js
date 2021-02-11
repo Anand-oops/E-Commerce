@@ -7,8 +7,8 @@ import { SearchBar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import DropDownPicker from 'react-native-dropdown-picker'
 
-export default function Customers() {
-
+export default function Customers({navigation}) {
+// console.log("navigation of reg cus",navigation);
     const [items, setItems] = useState([]);
     const [listenCheck, setListenCheck] = useState(true);
     const [collapsed, setCollapsed] = useState([])

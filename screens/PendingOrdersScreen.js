@@ -8,8 +8,8 @@ import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function PendingOrders() {
-
+export default function PendingOrders({navigation}) {
+console.log('pending ordre',navigation);
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
     const [filtered, setFiltered] = useState([])

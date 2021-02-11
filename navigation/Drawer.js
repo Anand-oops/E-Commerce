@@ -9,10 +9,10 @@ import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from './DrawerItemsStack';
 import CustomerOrdersStack from './CustomerOrdersStack'
-import AllRegistrationsStack from './AllRegistrationsStack'
+import RegisteredCustomersStack from "./RegisteredCustomersStack";
+import RegisteredDealersStack from "./RegisteredDealersStack";
 import React from "react";
 import { View, SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-
 
 const customComponent = (props) => {
 
@@ -54,6 +54,8 @@ const customComponent = (props) => {
 }
 
 
+
+
 const screens = {
 
     Home: { screen: AppStack },
@@ -61,7 +63,8 @@ const screens = {
     DrawerItemsList: { screen: DrawerItemsStack },
     Profile: { screen: profileStack },
     CustomerOrder: { screen: CustomerOrdersStack },
-    Registrations: { screen: AllRegistrationsStack }
+    RegisteredCustomers:{screen:RegisteredCustomersStack},
+    RegisteredDealers:{screen:RegisteredDealersStack}
 }
 
 const RootNavigationDrawer = createDrawerNavigator(screens, { contentComponent: customComponent });

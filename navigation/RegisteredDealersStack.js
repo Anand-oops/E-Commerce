@@ -1,19 +1,19 @@
 import { createStackNavigator } from "react-navigation-stack";
 import Header from '../shared/Header';
 import React from 'react';
-import AllRegistrations from '../screens/AllRegistrations'
+import RegisteredDealers from '../screens/RegisteredDealers';
 
 const screens = {
-    AllRegistration: {
-        screen: AllRegistrations, navigationOptions: ({ navigation }) => {
+    RegisteredDealers: {
+        screen: RegisteredDealers, navigationOptions: ({ navigation }) => {
             return {
-                headerTitle: () => <Header navigation={navigation} title='Registrations' />,
+                headerTitle: () => <Header navigation={navigation} title='Registered Dealers' />,
             }
         }
     }
 }
 
-const AllRegistrationsStack = createStackNavigator(screens, {
+const Stack = createStackNavigator(screens, {
     defaultNavigationOptions: {
         headerTintColor: 'white',
         headerStyle: {
@@ -22,5 +22,4 @@ const AllRegistrationsStack = createStackNavigator(screens, {
     }
 });
 
-export default AllRegistrationsStack;
-
+export default Stack;

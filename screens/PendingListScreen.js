@@ -6,6 +6,7 @@ import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 
 export default function PendingListScreen({ navigation }) {
+    
     const [items, setItems] = useState([]);
 
     const [listenCheck, setListenCheck] = useState(true);
@@ -42,7 +43,7 @@ export default function PendingListScreen({ navigation }) {
                 </View>
                 <TouchableOpacity style={{ position: 'absolute', right: 10 }}
                     onPress={item.pendingStatus ? () => pressHandler(item) : () => {Toast.show("No Pending Products",Toast.SHORT)}}>
-                    <AntDesign name="doubleright" size={30} color={item.pendingStatus ? 'red' : 'black'} />
+                    <AntDesign name="doubleright" size={30}  color={item.pendingStatus ? 'red' : 'black'} />
                 </TouchableOpacity>
 
             </Card>)}>

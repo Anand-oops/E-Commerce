@@ -8,8 +8,8 @@ import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function CancelledOrders() {
-
+export default function CancelledOrders({navigation}) {
+console.log('can order',navigation);
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
     const [filtered, setFiltered] = useState([])

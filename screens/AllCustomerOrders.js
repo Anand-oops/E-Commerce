@@ -1,13 +1,15 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import DeliveredOrders from '../screens/DeliveredOrdersScreen'
+import DeliveredOrders from '../screens/DeliveredOrdersScreen';
 import CancelledOrders from "../screens/CancelledOrdersScreen";
 import PendingOrders from "../screens/PendingOrdersScreen";
 
 
-export default function AllCustomerOrders() {
+export default function AllCustomerOrders({navigation}) {
 
+	console.log('nv of all cus order',navigation);
 	const Tab = createMaterialTopTabNavigator();
+	
 
 	return (
 		<Tab.Navigator
