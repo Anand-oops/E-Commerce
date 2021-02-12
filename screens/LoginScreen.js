@@ -17,6 +17,8 @@ import firebase from 'firebase';
 const LoginScreen = ({ navigation }) => {
 
 	const { login } = useContext(AuthContext);
+	const [call, setCall] = useState(true)
+	const [adminUsers, setAdminUsers] = useState([])
 	const [data, setData] = useState({
 		email: '',
 		password: '',
@@ -33,17 +35,21 @@ const LoginScreen = ({ navigation }) => {
 			securityStatus: !data.securityStatus
 		});
 	}
-	var adminUsers = []
 
 	Firebase.database().ref('Admin/').once('value').then(snapshot => {
-		if (snapshot.val()) {
-			var keys = Object.keys(snapshot.val())
-			for (var i = 0; i < keys.length; i++) {
-				var key = keys[i]
-				adminUsers.push(snapshot.val()[key].email)
+		if (call) {
+			if (snapshot.val()) {
+				var list = []
+				var keys = Object.keys(snapshot.val())
+				for (var i = 0; i < keys.length; i++) {
+					var key = keys[i]
+					list.push(snapshot.val()[key].email)
+				}
+				setAdminUsers(list);
+				setCall(false);
 			}
-			console.log("Emails", adminUsers)
 		}
+
 	})
 
 	function loginWithEmail() {

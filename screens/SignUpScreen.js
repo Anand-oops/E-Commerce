@@ -12,30 +12,43 @@ import Firebase from '../firebaseConfig'
 export default function SignUpScreen({ navigation }) {
 
     const { register, googleLogin } = useContext(AuthContext);
+    const [dealerCall, setDealerCall] = useState(true);
+    const [registeredEmails, setRegisteredEmails] = useState([])
+    const [customerCall, setCustomerCall] = useState(true);
     const [data, setData] = useState({
         email: '',
         password: '',
     });
-    var registeredEmails = []
 
     Firebase.database().ref('Dealers/').once('value').then(snapshot => {
-        if (snapshot.val()) {
-            var keys = Object.keys(snapshot.val())
-            for (var i = 0; i < keys.length; i++) {
-                var key = keys[i]
-                registeredEmails.push(snapshot.val()[key].email)
+        if (dealerCall) {
+            if (snapshot.val()) {
+                var list = [...registeredEmails]
+                var keys = Object.keys(snapshot.val())
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i]
+                    list.push(snapshot.val()[key].email)
+                }
+                setRegisteredEmails(list);
+                setDealerCall(false);
             }
         }
     })
 
     Firebase.database().ref('Customers/').once('value').then(snapshot => {
-        if (snapshot.val()) {
-            var keys = Object.keys(snapshot.val())
-            for (var i = 0; i < keys.length; i++) {
-                var key = keys[i]
-                registeredEmails.push(snapshot.val()[key].email)
+        if (customerCall) {
+            if (snapshot.val()) {
+                var list = [...registeredEmails];
+                var keys = Object.keys(snapshot.val())
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i]
+                    list.push(snapshot.val()[key].email)
+                }
+                setRegisteredEmails(list);
+                setCustomerCall(false);
             }
         }
+
     })
 
     function registerWithEmail() {
@@ -43,14 +56,14 @@ export default function SignUpScreen({ navigation }) {
             Alert.alert("Credentials error",
                 "Invalid E-mail",
                 [
-                    { text: "Retry"}
+                    { text: "Retry" }
                 ], { cancelable: false });
         }
         else if (data.password.length < 6) {
             Alert.alert("Credentials error",
                 "Password should be at least 6 characters",
                 [
-                    { text: "Retry"}
+                    { text: "Retry" }
                 ], { cancelable: false });
         }
         else {
@@ -61,7 +74,7 @@ export default function SignUpScreen({ navigation }) {
                 Alert.alert("Registration Error !",
                     "This e-mail is already registered with us. Try Logging In...",
                     [
-                        { text: "OK"}
+                        { text: "OK" }
                     ], { cancelable: false });
         }
     }
