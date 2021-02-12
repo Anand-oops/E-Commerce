@@ -7,9 +7,9 @@ import Collapsible from 'react-native-collapsible'
 import { StatusBar } from 'expo-status-bar';
 import DropDownPicker from 'react-native-dropdown-picker'
 
-export default function Dealers({navigation}) {
+export default function Dealers({ navigation }) {
 
-    console.log("reg deal",navigation);
+    console.log("reg deal", navigation);
     const [items, setItems] = useState([]);
     const [listenCheck, setListenCheck] = useState(true);
     const [collapsed, setCollapsed] = useState([])
@@ -112,12 +112,8 @@ export default function Dealers({navigation}) {
                     <Text style={{ color: 'black', fontSize: 16 }}>Dealer Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
                     <Text style={{ color: 'black', fontSize: 16 }}>Dealer Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
                     <Collapsible collapsed={searchedColl[index]} >
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
+                        <Text style={{ color: 'black', fontSize: 16 }}>Email : {item.email}</Text>
+                        <Text style={{ color: 'black', fontSize: 16 }}>City : {item.city ? item.city : 'Not provided'}</Text>
                     </Collapsible>
                 </TouchableOpacity>
             </Card>)}>

@@ -8,15 +8,15 @@ import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function DeliveredOrders({navigation}) {
-console.log('del order',navigation);
+export default function DeliveredOrders({ }) {
+
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
     const [filtered, setFiltered] = useState([])
     const [searchText, setSearchText] = useState('')
     const [collapsed, setCollapsed] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
-    const [searchBy, setSearchBy] = useState('name')
+    const [searchBy, setSearchBy] = useState('order')
 
     Firebase.database().ref(`CustomerOrders`).on('value', data => {
         if (listen) {
@@ -55,7 +55,7 @@ console.log('del order',navigation);
         } else {
             if (searchBy === 'order') {
                 orders.map(item => {
-                    if ((item.orderId).includes(text.toLowerCase())) {
+                    if ((item.orderId.toString()).includes(text.toLowerCase())) {
                         filter.push(item);
                         status.push(collapsed[orders.indexOf(item)])
                     }
@@ -70,7 +70,7 @@ console.log('del order',navigation);
             }
             else {
                 orders.map(item => {
-                    if ((item.customer.customerId).includes(text.toLowerCase())) {
+                    if ((item.customer.customerId.toLowerCase()).includes(text.toLowerCase())) {
                         filter.push(item);
                         status.push(collapsed[orders.indexOf(item)])
                     }
@@ -86,7 +86,7 @@ console.log('del order',navigation);
         status.splice(index, 1, !status[index])
         setSearchedColl(status)
         let final = [...collapsed]
-        let ind = orders.findIndex(item => item.id === filtered[index].id)
+        let ind = orders.findIndex(item => item.orderId === filtered[index].orderId)
         final.splice(ind, 1, !final[ind])
         setCollapsed(final);
     }
@@ -97,6 +97,7 @@ console.log('del order',navigation);
             <SearchBar
                 placeholder="Search "
                 inputContainerStyle={{ height: 30 }}
+                keyboardType={(searchBy === 'order') ? 'number-pad' : 'default'}
                 onChangeText={(text) => { setSearchText(text), performSearch(text) }}
                 value={searchText}
             />
@@ -118,6 +119,7 @@ console.log('del order',navigation);
             </View>
 
             <FlatList data={filtered}
+                keyExtractor={(item) => item.orderId}
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />

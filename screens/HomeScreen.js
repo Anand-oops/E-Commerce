@@ -103,7 +103,7 @@ const HomeScreen = () => {
 
 	const DeleteImageHandler = index => {
 		console.log("DeleteImageHandler : ", index)
-		if (imagesDeck.length > 0) {
+		if (imagesDeck.length >= 0) {
 			const imageDeckArray = imagesDeck;
 			const imageRef = imageDeckArray.splice(index, 1);
 			if (imageRef[0]) {

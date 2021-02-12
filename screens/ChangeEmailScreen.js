@@ -91,7 +91,7 @@ const ChangeEmailScreen = ({ navigation }) => {
                             fontSize={18}
                             value={newMail}
                             leftComponent={
-                                <MaterialCommunityIcons name='account-lock' color={'purple'} size={20} />
+                                <MaterialCommunityIcons name='email-lock' color={'purple'} size={20} />
                             }
                             onChangeText={(val) => setNewMail(val)} />
                     </View>

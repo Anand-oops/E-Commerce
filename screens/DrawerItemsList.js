@@ -66,7 +66,7 @@ export default function DrawerItemsList({ navigation }) {
 
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
-				<Text style={{ color: 'black', fontSize: 20 }}>{item.itemName}</Text>
+				<Text style={{ color: 'black', fontSize: 20,padding:20 }}>{item.itemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 45 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
