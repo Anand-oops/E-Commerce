@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar';
@@ -16,7 +16,8 @@ console.log('del order',navigation);
     const [searchText, setSearchText] = useState('')
     const [collapsed, setCollapsed] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
-    const [searchBy, setSearchBy] = useState('name')
+    const [searchBy, setSearchBy] = useState('name');
+    const [loader,setLoader]=useState(true);
 
     Firebase.database().ref(`CustomerOrders`).on('value', data => {
         if (listen) {
@@ -43,6 +44,7 @@ console.log('del order',navigation);
             } else
                 Toast.show("No Delivered Products", Toast.SHORT);
             setListen(false)
+            setLoader(false)
         }
     })
 
@@ -134,6 +136,15 @@ console.log('del order',navigation);
                         </View>
                     </TouchableOpacity>
                 )} />
+                <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+                <ActivityIndicator
+
+                    size='large'
+                    color="grey"
+                    animating={loader}
+
+                />
+            </View>
         </View>
     );
 }

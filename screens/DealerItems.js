@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button,ActivityIndicator } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import Firebase from '../firebaseConfig';
 import { AntDesign } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ export default function PendingListScreen({ navigation }) {
     const [product, setProduct] = useState()
     const [itemIndex, setItemIndex] = useState(-1)
     var id = navigation.getParam('id');
+    const [loader,setLoader]=useState(true);
     
 
     Firebase.database().ref(`Dealers/${id}`).once('value').then((data) => {
@@ -40,6 +41,7 @@ export default function PendingListScreen({ navigation }) {
                 setFilteredItems(filtered)
                 setItems(allItems)
                 setDealerCall(false);
+                setLoader(false);
 
             }
         }
@@ -187,6 +189,15 @@ export default function PendingListScreen({ navigation }) {
                     </View>
                 </Modal>
             </SafeAreaView>
+            <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+                <ActivityIndicator
+
+                    size='large'
+                    color="grey"
+                    animating={loader}
+
+                />
+            </View>
 
         </View>
     );
