@@ -2,14 +2,26 @@ import { createStackNavigator } from "react-navigation-stack";
 import Header from '../shared/Header';
 import React from 'react';
 import Profile from '../screens/ProfileScreen';
+import ProfileDisplayScreen from '../screens/ProfileDisplayScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen'
+import ChangeEmailScreen from "../screens/ChangeEmailScreen";
 
 const screens = {
-    Profile: {
-        screen: Profile, navigationOptions: ({ navigation }) => {
+    ProfileDisplayScreen: {
+        screen: ProfileDisplayScreen, navigationOptions: ({ navigation }) => {
             return {
-                headerTitle: () => <Header navigation={navigation} title='Profile' />,
+                headerTitle: () => <Header navigation={navigation} title='Profile' />
             }
         }
+    },
+    'Edit Profile': {
+        screen: Profile
+    },
+    'Change Password': {
+        screen: ChangePasswordScreen
+    },
+    'Change Email': {
+        screen: ChangeEmailScreen
     }
 }
 

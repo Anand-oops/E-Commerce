@@ -6,18 +6,18 @@ import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 
 export default function PendingListScreen({ navigation }) {
-    
+
     const [items, setItems] = useState([]);
     const [loader,setLoader]=useState(true);
 
     const [listenCheck, setListenCheck] = useState(true);
-    
+
     const pressHandler = (item) => {
         console.log("clicked");
         navigation.navigate('DealerItems', { id: item.id });
     }
 
-    Firebase.database().ref('Dealers/').on('value',(data) => {
+    Firebase.database().ref('Dealers/').on('value', (data) => {
         if (listenCheck) {
             if (data.val()) {
                 var keys = Object.keys(data.val());
@@ -38,14 +38,14 @@ export default function PendingListScreen({ navigation }) {
 
             <FlatList data={items} keyExtractor={(item) => item.id} renderItem={({ item }) =>
             (<Card>
-                <View styles={{flex:1}}>
-                <Text style={{ color: 'black', fontSize: 16 }}>{"Dealer ID : " + item.id}</Text>
-                <Text style={{ color: 'black', fontSize: 16 }}>Dealer Name : {item.firstName ?  item.firstName +" "+(item.lastName ? item.lastName : " ") : "No name provided"}</Text>
-                
+                <View styles={{ flex: 1 }}>
+                    <Text style={{ color: 'black', fontSize: 16, marginTop: 10, marginBottom: 5 }}>{"Dealer ID : " + item.id}</Text>
+                    <Text style={{ color: 'black', fontSize: 16, marginBottom: 10 }}>Dealer Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
+
                 </View>
                 <TouchableOpacity style={{ position: 'absolute', right: 10 }}
-                    onPress={item.pendingStatus ? () => pressHandler(item) : () => {Toast.show("No Pending Products",Toast.SHORT)}}>
-                    <AntDesign name="doubleright" size={30}  color={item.pendingStatus ? 'red' : 'black'} />
+                    onPress={item.pendingStatus ? () => pressHandler(item) : () => { Toast.show("No Pending Products", Toast.SHORT) }}>
+                    <AntDesign name="doubleright" size={30} color={item.pendingStatus ? 'red' : 'black'} />
                 </TouchableOpacity>
 
             </Card>)}>

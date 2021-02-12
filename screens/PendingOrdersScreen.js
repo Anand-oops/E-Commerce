@@ -8,15 +8,15 @@ import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function PendingOrders({navigation}) {
-console.log('pending ordre',navigation);
+export default function PendingOrders({ }) {
+
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
     const [filtered, setFiltered] = useState([])
     const [searchText, setSearchText] = useState('')
     const [collapsed, setCollapsed] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
-    const [searchBy, setSearchBy] = useState('name');
+    const [searchBy, setSearchBy] = useState('order')
     const [loader,setLoader]=useState(true);
 
     Firebase.database().ref(`CustomerOrders`).on('value', data => {
@@ -28,7 +28,6 @@ console.log('pending ordre',navigation);
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
                     var items = Object.keys(data.val()[key])
-                    console.log(items)
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
                         if (data.val()[key][item].deliveryStatus === 'Pending') {
@@ -72,7 +71,7 @@ console.log('pending ordre',navigation);
             }
             else {
                 orders.map(item => {
-                    if ((item.customer.customerId).includes(text.toLowerCase())) {
+                    if ((item.customer.customerId.toLowerCase()).includes(text.toLowerCase())) {
                         filter.push(item);
                         status.push(collapsed[orders.indexOf(item)])
                     }
@@ -88,7 +87,7 @@ console.log('pending ordre',navigation);
         status.splice(index, 1, !status[index])
         setSearchedColl(status)
         let final = [...collapsed]
-        let ind = orders.findIndex(item => item.id === filtered[index].id)
+        let ind = orders.findIndex(item => item.orderId === filtered[index].orderId)
         final.splice(ind, 1, !final[ind])
         setCollapsed(final);
     }
@@ -98,6 +97,7 @@ console.log('pending ordre',navigation);
             <StatusBar style='light' />
             <SearchBar
                 placeholder="Search "
+                keyboardType={(searchBy === 'order') ? 'number-pad' : 'default'}
                 inputContainerStyle={{ height: 30 }}
                 onChangeText={(text) => { setSearchText(text), performSearch(text) }}
                 value={searchText}
@@ -120,6 +120,7 @@ console.log('pending ordre',navigation);
             </View>
 
             <FlatList data={filtered}
+                keyExtractor={(item) => item.orderId}
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />

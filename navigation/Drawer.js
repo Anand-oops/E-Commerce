@@ -38,7 +38,7 @@ const customComponent = (props) => {
             </ScrollView>
             <TouchableOpacity >
                 <Text
-                    style={{ width: '100%', backgroundColor: '#eee', color: 'black', fontSize: 20, fontWeight: 'bold', height: 50, textAlign: 'center', paddingTop: 10 }}
+                    style={{ width: '100%', backgroundColor: '#778899', color: 'black', fontSize: 20, fontWeight: 'bold', height: 50, textAlign: 'center', paddingTop: 10 }}
                     onPress={() => {
                         Alert.alert("Logout", "You will be logged out...",
                             [
@@ -59,12 +59,12 @@ const customComponent = (props) => {
 const screens = {
 
     Home: { screen: AppStack },
-    PendingList: { screen: pendingListStack },
-    DrawerItemsList: { screen: DrawerItemsStack },
+    'Pending List': { screen: pendingListStack },
+    'Drawer Items': { screen: DrawerItemsStack },
     Profile: { screen: profileStack },
-    CustomerOrder: { screen: CustomerOrdersStack },
-    RegisteredCustomers:{screen:RegisteredCustomersStack},
-    RegisteredDealers:{screen:RegisteredDealersStack}
+    'Customer Orders': { screen: CustomerOrdersStack },
+    'Registered Customers': { screen: RegisteredCustomersStack },
+    'Registered Dealers': { screen: RegisteredDealersStack }
 }
 
 const RootNavigationDrawer = createDrawerNavigator(screens, { contentComponent: customComponent });

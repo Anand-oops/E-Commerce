@@ -7,8 +7,8 @@ import { SearchBar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import DropDownPicker from 'react-native-dropdown-picker'
 
-export default function Customers({navigation}) {
-// console.log("navigation of reg cus",navigation);
+export default function Customers({ navigation }) {
+
     const [items, setItems] = useState([]);
     const [listenCheck, setListenCheck] = useState(true);
     const [collapsed, setCollapsed] = useState([])
@@ -114,12 +114,8 @@ export default function Customers({navigation}) {
                     <Text style={{ color: 'black', fontSize: 16 }}>Customer Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
                     <Text style={{ color: 'black', fontSize: 16 }}>Customer Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
                     <Collapsible collapsed={searchedColl[index]} >
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
-                        <Text>More Details...</Text>
+                        <Text style={{ color: 'black', fontSize: 16 }}>Email : {item.email}</Text>
+                        <Text style={{ color: 'black', fontSize: 16 }}>City : {item.city ? item.city : 'Not provided'}</Text>
                     </Collapsible>
                 </TouchableOpacity>
             </Card>)}>

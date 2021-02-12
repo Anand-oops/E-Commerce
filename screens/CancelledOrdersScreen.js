@@ -8,17 +8,16 @@ import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function CancelledOrders({navigation}) {
-console.log('can order',navigation);
+export default function CancelledOrders({ }) {
+
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
     const [filtered, setFiltered] = useState([])
     const [searchText, setSearchText] = useState('')
     const [collapsed, setCollapsed] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
-    const [searchBy, setSearchBy] = useState('name');
+    const [searchBy, setSearchBy] = useState('order')
     const [loader,setLoader]=useState(true);
-
     Firebase.database().ref(`CustomerOrders`).on('value', data => {
         if (listen) {
             if (data.val()) {
@@ -88,7 +87,7 @@ console.log('can order',navigation);
         status.splice(index, 1, !status[index])
         setSearchedColl(status)
         let final = [...collapsed]
-        let ind = orders.findIndex(item => item.id === filtered[index].id)
+        let ind = orders.findIndex(item => item.orderId === filtered[index].orderId)
         final.splice(ind, 1, !final[ind])
         setCollapsed(final);
     }
@@ -98,6 +97,7 @@ console.log('can order',navigation);
             <StatusBar style='light' />
             <SearchBar
                 placeholder="Search "
+                keyboardType={(searchBy === 'order') ? 'number-pad' : 'default'}
                 inputContainerStyle={{ height: 30 }}
                 onChangeText={(text) => { setSearchText(text), performSearch(text) }}
                 value={searchText}
@@ -120,6 +120,7 @@ console.log('can order',navigation);
             </View>
 
             <FlatList data={filtered}
+                keyExtractor={(item) => item.orderId}
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
