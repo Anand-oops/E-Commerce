@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard, SafeAreaView ,ActivityIndicator} from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
 import { StatusBar } from 'expo-status-bar';
@@ -42,7 +42,8 @@ const HomeScreen = () => {
 	const [subCategories, setSubCategories] = useState([])
 	const [productSubCategory, setProductSubCategory] = useState('')
 	const [dropDownSubCat, setDropDownSubCat] = useState([])
-	const [disabled, setDisabled] = useState(true)
+	const [disabled, setDisabled] = useState(true);
+	const [loader,setLoader]=useState(true);
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
 		if (drawerItemsCall) {
@@ -58,7 +59,8 @@ const HomeScreen = () => {
 				}
 				setSubCategories(subCats);
 				setCategories(cats);
-				setDrawerItemsCall(false)
+				setDrawerItemsCall(false);
+				setLoader(false);
 			}
 		}
 	})
@@ -462,6 +464,15 @@ const HomeScreen = () => {
 			<TouchableOpacity style={styles.saveButton} onPress={() => SaveToDatabase()}>
 				<Text style={{ color: 'white' }}>SAVE CHANGES</Text>
 			</TouchableOpacity>
+			<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+                <ActivityIndicator
+
+                    size='large'
+                    color="grey"
+                    animating={loader}
+
+                />
+            </View>
 		</SafeAreaView>
 	);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert,Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert,Image ,ActivityIndicator} from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,6 +22,7 @@ export default function SubCategory({navigation}) {
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
+	const [loader,setLoader]=useState(true);
 
 	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).once('value').then((data) => {
 		if (listenCheck) {
@@ -29,6 +30,7 @@ export default function SubCategory({navigation}) {
 				setItems(data.val());
 				console.log("Items", items);
 				setListenCheck(false);
+				setLoader(false);
 			}
 		}
 	})
@@ -168,6 +170,15 @@ export default function SubCategory({navigation}) {
 						</View>
 					</View>
 				</Modal>
+				<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+                <ActivityIndicator
+
+                    size='large'
+                    color="grey"
+                    animating={loader}
+
+                />
+            </View>
 		</View>
 	);
 }
