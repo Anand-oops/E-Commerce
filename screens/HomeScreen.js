@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard, SafeAreaView ,ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Button, Alert, Modal, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../navigation/AuthProvider';
 import Firebase from '../firebaseConfig'
 import { StatusBar } from 'expo-status-bar';
@@ -43,7 +43,7 @@ const HomeScreen = () => {
 	const [productSubCategory, setProductSubCategory] = useState('')
 	const [dropDownSubCat, setDropDownSubCat] = useState([])
 	const [disabled, setDisabled] = useState(true);
-	const [loader,setLoader]=useState(true);
+	const [loader, setLoader] = useState(true);
 
 	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
 		if (drawerItemsCall) {
@@ -145,7 +145,7 @@ const HomeScreen = () => {
 	}
 
 	const AddCardContent = (header, prod, image, smallText, bigText) => {
-		console.log(header,prod,image,smallText,bigText);
+		console.log(header, prod, image, smallText, bigText);
 		const cardArray = cards;
 		const cardIndex = cardArray.findIndex((card) => card.header === header);
 		prod.saleDiscount = bigText + " %";
@@ -245,7 +245,7 @@ const HomeScreen = () => {
 		}, {
 			text: 'OK',
 			onPress: () => {
-				const cardArray = cards;
+				const cardArray = [...cards];
 				const cardIndex = cardArray.findIndex(card => card.header === header);
 				const card = cardArray.splice(cardIndex, 1);
 				const Images = card[0].images;
@@ -253,9 +253,9 @@ const HomeScreen = () => {
 					Images.map(Image => {
 						setDeleteImageNames([...deleteImageNames, Image.image.imageName])
 					})
-					setCards(cardArray)
-					setCardChanged(true)
 				}
+				setCards(cardArray)
+				setCardChanged(true)
 			}
 		}]);
 	}
@@ -357,12 +357,13 @@ const HomeScreen = () => {
 						deleteCard={() => { DeleteCardHandler(card.header) }}
 						addImage={() => { setHeader(card.header), populateSubCats(card.header), setShowImageModal(true), setProductImage('') }} />)}
 
-					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true) }}>
+					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true),setHeader('') }}>
 						<Image source={require('../assets/images/add-card.png')} style={{ height: 60, width: 60 }} />
 					</TouchableOpacity>
 				</View>
 
 				<Modal
+					animationType='fade'
 					visible={showCardModal}
 					position='center'
 					transparent={true}
@@ -395,6 +396,7 @@ const HomeScreen = () => {
 				</Modal>
 
 				<Modal
+					animationType='fade'
 					visible={showImageModal}
 					position='center'
 					transparent={true}
@@ -465,14 +467,14 @@ const HomeScreen = () => {
 				<Text style={{ color: 'white' }}>SAVE CHANGES</Text>
 			</TouchableOpacity>
 			<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
-                <ActivityIndicator
+				<ActivityIndicator
 
-                    size='large'
-                    color="grey"
-                    animating={loader}
+					size='large'
+					color="grey"
+					animating={loader}
 
-                />
-            </View>
+				/>
+			</View>
 		</SafeAreaView>
 	);
 }
@@ -484,7 +486,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginVertical: 40,
 		marginBottom: 60,
-		elevation:5
+		elevation: 5
 	},
 	iconContainer: {
 		flexDirection: 'row',
@@ -505,7 +507,7 @@ const styles = StyleSheet.create({
 		height: 175,
 		borderColor: 'black',
 		borderWidth: 1,
-		backgroundColor:'gray'
+		backgroundColor: '#778899'
 	},
 
 	saveButton: {
@@ -520,6 +522,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor:'rgba(52, 52, 52, 0.8)'
 	},
 
 	imageModalScreen: {
