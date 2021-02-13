@@ -489,6 +489,7 @@ const styles = StyleSheet.create({
 		elevation: 5
 	},
 	iconContainer: {
+		backgroundColor:'#778899',
 		flexDirection: 'row',
 		padding: 5,
 		paddingHorizontal: 20,
