@@ -33,9 +33,9 @@ export default function Customers({ navigation }) {
                 setSearchedItems(temp);
                 setSearchedColl(coll);
                 setCollapsed(coll);
-                setListenCheck(false);
-                setLoader(false);
             }
+            setListenCheck(false);
+            setLoader(false);
         }
     });
 

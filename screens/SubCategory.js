@@ -1,41 +1,38 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert,Image ,ActivityIndicator} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert, Image, ActivityIndicator } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-simple-toast';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'; 
 
-export default function SubCategory({navigation}) {
+export default function SubCategory({ navigation }) {
 
-
-    
-    var name =navigation.getParam('item').itemName;
-    var id =navigation.getParam('id');
-    console.log("id",id);
-    console.log("name",name);
-    const [listenCheck, setListenCheck] = useState(true);
-    const [visibleModalAdd, setVisibleModalAdd] = useState(false);
-    const [image, setImage] = useState(require('../assets/images/add.png'))
+	var name = navigation.getParam('item').itemName;
+	var id = navigation.getParam('id');
+	console.log("id", id);
+	console.log("name", name);
+	const [listenCheck, setListenCheck] = useState(true);
+	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
+	const [image, setImage] = useState(require('../assets/images/add.png'))
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
-	const [loader,setLoader]=useState(true);
+	const [loader, setLoader] = useState(true);
 
-	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).once('value').then((data) => {
+	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).on('value', (data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
 				console.log("Items", items);
-				setListenCheck(false);
-				setLoader(false);
 			}
+			setListenCheck(false);
+			setLoader(false);
 		}
 	})
-    
-    const AddImageHandler = async () => {
+
+	const AddImageHandler = async () => {
 		const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
 		if (permissionResult.granted === false) {
@@ -58,23 +55,22 @@ export default function SubCategory({navigation}) {
 			.then((snapshot) => {
 				console.log(`${imageName} has been successfully uploaded.`);
 				snapshot.ref.getDownloadURL().then((url) => {
-                    	setImage({
-							imageName: imageName,
-							uri: url,
-						})
+					setImage({
+						imageName: imageName,
+						uri: url,
+					})
 				});
 			})
 			.catch((e) => console.log('uploading image error', e));
 
 	};
-    const AddCardContent = ( image, text) => {
-		console.log("AddCardContent",  text)
-		setItems([...items,{subitemName:text,uri:image.uri}])
+	const AddCardContent = (image, text) => {
+		console.log("AddCardContent", text)
+		setItems([...items, { subitemName: text, uri: image.uri }])
 		setVisibleModalAdd(false)
 		setChanged(true);
 		setImage(require('../assets/images/add.png'))
 		onTextChange('')
-		
 	}
 
 	function deleteItem(index) {
@@ -89,7 +85,7 @@ export default function SubCategory({navigation}) {
 	function saveToDatabase() {
 		console.log("save", items);
 		if (isChanged) {
-			console.log("Id",id);
+			console.log("Id", id);
 			Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(items).then(() => {
 				setListenCheck(true)
 				setChanged(false)
@@ -100,14 +96,14 @@ export default function SubCategory({navigation}) {
 	return (
 
 		<View style={styles.main}>
-             
+
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
-                <Image
-                      style={{padding:2,height:'125%', width:100,resizeMode:'contain',alignSelf:'center',}}
-                      source={{uri:item.uri}}
-                      />
-				<Text style={{ color: 'black', fontSize: 20, marginStart:5}}>{item.subitemName}</Text>
+				<Image
+					style={{ padding: 2, height: '125%', width: 100, resizeMode: 'contain', alignSelf: 'center', }}
+					source={{ uri: item.uri }}
+				/>
+				<Text style={{ color: 'black', fontSize: 20, marginStart: 5 }}>{item.subitemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -116,8 +112,8 @@ export default function SubCategory({navigation}) {
 						], { cancelable: false }
 					);
 				}}>
-                    <MaterialIcons name="delete" size={35} color="red" />
-                </TouchableOpacity>
+					<MaterialIcons name="delete" size={35} color="red" />
+				</TouchableOpacity>
 			</Card>)}>
 
 			</FlatList>
@@ -132,53 +128,53 @@ export default function SubCategory({navigation}) {
 				<Text style={{ color: 'white', fontSize: 20 }} >Submit</Text>
 			</TouchableOpacity>
 
-			
-            <Modal
-					visible={visibleModalAdd}
-					position='center'
-					transparent={true}
-					onRequestClose={() => setVisibleModalAdd(false)}>
-					<View style={styles.modalContainer}>
-						<View style={styles.imageModalScreen}>
-							<TouchableOpacity onPress={() => AddImageHandler()} style={styles.cardImageContainer}>
-								<Image source={image} style={styles.cardImage} />
-							</TouchableOpacity>
 
-							<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter subcategory Name:</Text>
-							<View style={{ alignItems: 'center', justifyContent: 'center', }}>
-								<TextInput style={styles.modalTextInput} onChangeText={(Text) => onTextChange(Text)} value={text} />
+			<Modal
+				visible={visibleModalAdd}
+				position='center'
+				transparent={true}
+				onRequestClose={() => setVisibleModalAdd(false)}>
+				<View style={styles.modalContainer}>
+					<View style={styles.imageModalScreen}>
+						<TouchableOpacity onPress={() => AddImageHandler()} style={styles.cardImageContainer}>
+							<Image source={image} style={styles.cardImage} />
+						</TouchableOpacity>
+
+						<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter subcategory Name:</Text>
+						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+							<TextInput style={styles.modalTextInput} onChangeText={(Text) => onTextChange(Text)} value={text} />
+						</View>
+
+						<View style={styles.modalButtonContainer}>
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='Cancel' onPress={() => setVisibleModalAdd(false)} />
 							</View>
-							
-							<View style={styles.modalButtonContainer}>
-								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='Cancel' onPress={() => setVisibleModalAdd(false)} />
-								</View>
-								<View style={{ padding: 10, width: '30%' }}>
-									<Button title='OK' onPress={() => {
-										if (!image.uri) {
-											Toast.show("Pick Image from gallery", Toast.SHORT)
-										} else if (!text ) {
-											Toast.show("Input value", Toast.SHORT)
-										} else {
-											AddCardContent(image,text);
-										}
+							<View style={{ padding: 10, width: '30%' }}>
+								<Button title='OK' onPress={() => {
+									if (!image.uri) {
+										Toast.show("Pick Image from gallery", Toast.SHORT)
+									} else if (!text) {
+										Toast.show("Input value", Toast.SHORT)
+									} else {
+										AddCardContent(image, text);
+									}
 
-									}} />
-								</View>
-
+								}} />
 							</View>
+
 						</View>
 					</View>
-				</Modal>
-				<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
-                <ActivityIndicator
+				</View>
+			</Modal>
+			<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+				<ActivityIndicator
 
-                    size='large'
-                    color="grey"
-                    animating={loader}
+					size='large'
+					color="grey"
+					animating={loader}
 
-                />
-            </View>
+				/>
+			</View>
 		</View>
 	);
 }
@@ -229,7 +225,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		marginVertical: 15,
-    },
+	},
 	imageModalScreen: {
 		height: 300,
 		width: '85%',
@@ -239,8 +235,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 'black',
 		backgroundColor: 'white'
-    },
-    cardImageContainer: {
+	},
+	cardImageContainer: {
 		flex: 1,
 		padding: 10,
 		alignItems: 'center',
@@ -251,7 +247,7 @@ const styles = StyleSheet.create({
 		height: 100,
 		width: 100,
 		marginTop: 20,
-		resizeMode: 'contain',	
-		alignSelf:'center'
+		resizeMode: 'contain',
+		alignSelf: 'center'
 	},
 });

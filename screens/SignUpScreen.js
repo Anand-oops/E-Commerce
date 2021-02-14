@@ -20,7 +20,7 @@ export default function SignUpScreen({ navigation }) {
         password: '',
     });
 
-    Firebase.database().ref('Dealers/').once('value').then(snapshot => {
+    Firebase.database().ref('Dealers/').on('value', snapshot => {
         if (dealerCall) {
             if (snapshot.val()) {
                 var list = [...registeredEmails]
@@ -30,12 +30,12 @@ export default function SignUpScreen({ navigation }) {
                     list.push(snapshot.val()[key].email)
                 }
                 setRegisteredEmails(list);
-                setDealerCall(false);
             }
+            setDealerCall(false);
         }
     })
 
-    Firebase.database().ref('Customers/').once('value').then(snapshot => {
+    Firebase.database().ref('Customers/').on('value', snapshot => {
         if (customerCall) {
             if (snapshot.val()) {
                 var list = [...registeredEmails];
@@ -45,8 +45,8 @@ export default function SignUpScreen({ navigation }) {
                     list.push(snapshot.val()[key].email)
                 }
                 setRegisteredEmails(list);
-                setCustomerCall(false);
             }
+            setCustomerCall(false);
         }
 
     })

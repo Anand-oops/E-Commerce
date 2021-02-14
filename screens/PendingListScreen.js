@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Card from "../shared/Card";
 import { AntDesign } from '@expo/vector-icons';
 import Firebase from '../firebaseConfig';
@@ -8,7 +8,7 @@ import Toast from 'react-native-simple-toast';
 export default function PendingListScreen({ navigation }) {
 
     const [items, setItems] = useState([]);
-    const [loader,setLoader]=useState(true);
+    const [loader, setLoader] = useState(true);
 
     const [listenCheck, setListenCheck] = useState(true);
 
@@ -27,9 +27,9 @@ export default function PendingListScreen({ navigation }) {
                     temp.push(data.val()[key])
                 }
                 setItems(temp);
-                setListenCheck(false);
-                setLoader(false);
             }
+            setListenCheck(false);
+            setLoader(false);
         }
     });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button, ActivityIndicator } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import Firebase from '../firebaseConfig';
 import { AntDesign } from '@expo/vector-icons';
@@ -18,10 +18,10 @@ export default function PendingListScreen({ navigation }) {
     const [product, setProduct] = useState()
     const [itemIndex, setItemIndex] = useState(-1)
     var id = navigation.getParam('id');
-    const [loader,setLoader]=useState(true);
-    
+    const [loader, setLoader] = useState(true);
 
-    Firebase.database().ref(`Dealers/${id}`).once('value').then((data) => {
+
+    Firebase.database().ref(`Dealers/${id}`).once('value', (data) => {
         if (dealerCall) {
             if (data.val()) {
                 setDealer(data.val());
@@ -29,21 +29,20 @@ export default function PendingListScreen({ navigation }) {
                 var key = keys[0];
                 var filtered = [];
                 var allItems = [];
-                for(var i=0;i<data.val()[key].length;i++){
+                for (var i = 0; i < data.val()[key].length; i++) {
                     allItems.push(data.val()[key][i]);
-                    if(data.val()[key][i].status==='Pending'){
+                    if (data.val()[key][i].status === 'Pending') {
                         filtered.push(data.val()[key][i]);
                     }
-                }if (filtered.length==0) {
+                } if (filtered.length == 0) {
                     Firebase.database().ref(`Dealers/${id}/pendingStatus`).set(false)
-                    .then(navigation.goBack())
+                        .then(navigation.goBack())
                 }
                 setFilteredItems(filtered)
                 setItems(allItems)
-                setDealerCall(false);
-                setLoader(false);
-
             }
+            setDealerCall(false);
+            setLoader(false);
         }
     })
 
@@ -52,11 +51,11 @@ export default function PendingListScreen({ navigation }) {
     const acceptProduct = (item) => {
         var index = -1;
         items.map((i) => {
-            if (i.key==item.key) {
+            if (i.key == item.key) {
                 index = items.indexOf(i);
             }
         })
-        console.log("IndexAdd",index)
+        console.log("IndexAdd", index)
         Alert.alert('Accept Product', 'Are you sure you want to add this product to the inventory list?', [{
             text: 'Cancel',
             style: 'cancel',
@@ -75,11 +74,11 @@ export default function PendingListScreen({ navigation }) {
     function deleteProduct(item) {
         var index = -1;
         items.map((i) => {
-            if (i.key==item.key) {
+            if (i.key == item.key) {
                 index = items.indexOf(i);
             }
         })
-        console.log("IndexDel",index)
+        console.log("IndexDel", index)
         Alert.alert('Delete Product', 'Are you sure you want to reject this product?', [{
             text: 'Cancel',
             style: 'cancel',
@@ -87,7 +86,7 @@ export default function PendingListScreen({ navigation }) {
             text: 'OK',
             onPress: () => {
                 Firebase.database().ref(`Dealers/${id}/DealerProducts/${index}`).update({ status: 'Rejected' });
-                Toast.show("Product Rejected",Toast.SHORT)
+                Toast.show("Product Rejected", Toast.SHORT)
                 setDealerCall(true);
             }
         }]);
@@ -99,11 +98,11 @@ export default function PendingListScreen({ navigation }) {
         var temp = product;
         temp.status = "Accepted"
         temp.finalPrice = finalPrice;
-        temp.discount = discountRate+" %";
+        temp.discount = discountRate + " %";
         Firebase.database().ref(`ProductList/${temp.category}/${temp.subCategory}/${temp.key}`).set(temp).then(() => {
             Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
-            Toast.show("Product Accepted",Toast.SHORT)
-            setDealerCall(true);  
+            Toast.show("Product Accepted", Toast.SHORT)
+            setDealerCall(true);
         }).catch((error) => {
             console.log(error);
         });
@@ -116,11 +115,11 @@ export default function PendingListScreen({ navigation }) {
 
         <View style={styles.main}>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + (dealer.firstName ?  dealer.firstName +" "+(dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
             <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "")}</Text>
 
-            <SafeAreaView style={{flex:1}}>
+            <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={filteredItems} renderItem={({ item }) =>
                 (<View style={styles.card}>
 
@@ -138,7 +137,7 @@ export default function PendingListScreen({ navigation }) {
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Description : {item.description}</Text>
                     <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Specs : {item.specs}</Text>
                     <View style={{ flexDirection: 'row', width: '100%' }}
-                     >
+                    >
                         <View style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(item)}>
                                 <Text style={{ fontSize: 24, paddingLeft: 5 }}>Discard</Text>
@@ -157,7 +156,7 @@ export default function PendingListScreen({ navigation }) {
                 )}>
 
                 </FlatList>
-    
+
                 <Modal
                     visible={showModal}
                     position='center'
@@ -165,19 +164,19 @@ export default function PendingListScreen({ navigation }) {
                     onRequestClose={() => setShowModal(false)}>
                     <View style={styles.modalContainer}>
                         <View style={styles.cardModalScreen}>
-                            <Text style={{paddingLeft: 15,marginTop: 10}}>Enter Product Price:</Text>
-                            <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                            <Text style={{ paddingLeft: 15, marginTop: 10 }}>Enter Product Price:</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(price) => setAdminPrice(price)} value={adminPrice} />
                             </View>
-                            <Text style={{paddingLeft: 15,marginTop: 10}}>Enter Product Discount Percentage:</Text>
-                            <View style={{alignItems: 'center',justifyContent: 'center'}}>
+                            <Text style={{ paddingLeft: 15, marginTop: 10 }}>Enter Product Discount Percentage:</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 <TextInput style={styles.modalTextInput} keyboardType={'number-pad'} onChangeText={(discount) => setDiscountRate(discount)} value={discountRate} />
                             </View>
                             <View style={styles.modalButtonContainer}>
-                                <View style={{padding: 10,width: '30%'}}>
+                                <View style={{ padding: 10, width: '30%' }}>
                                     <Button title='Cancel' style={styles.modalButton} onPress={() => setShowModal(false)} />
                                 </View>
-                                <View style={{padding: 10,width: '30%'}}>
+                                <View style={{ padding: 10, width: '30%' }}>
                                     <Button title='OK' onPress={() => {
                                         if (adminPrice.size != 0 && parseFloat(discountRate) >= 0 && parseFloat(discountRate) < 100) {
                                             addProduct()

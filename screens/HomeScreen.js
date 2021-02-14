@@ -45,7 +45,7 @@ const HomeScreen = () => {
 	const [disabled, setDisabled] = useState(true);
 	const [loader, setLoader] = useState(true);
 
-	Firebase.database().ref('DrawerItemsList/').once('value').then((snapshot) => {
+	Firebase.database().ref('DrawerItemsList/').on('value', (snapshot) => {
 		if (drawerItemsCall) {
 			if (snapshot.val()) {
 				var cats = [];
@@ -59,13 +59,13 @@ const HomeScreen = () => {
 				}
 				setSubCategories(subCats);
 				setCategories(cats);
-				setDrawerItemsCall(false);
-				setLoader(false);
 			}
+			setDrawerItemsCall(false);
+			setLoader(false);
 		}
 	})
 
-	Firebase.database().ref(`ProductList/${header}/${productSubCategory}`).once('value').then((snapshot) => {
+	Firebase.database().ref(`ProductList/${header}/${productSubCategory}`).on('value').then((snapshot) => {
 		if (productListCall) {
 			if (snapshot.val()) {
 				var prods = [];
@@ -85,21 +85,21 @@ const HomeScreen = () => {
 		}
 	})
 
-	Firebase.database().ref(`/ImagesDeck/`).once('value').then((data) => {
+	Firebase.database().ref(`/ImagesDeck/`).on('value').then((data) => {
 		if (deckListenStatus) {
 			if (data.val()) {
 				setImagesDeck(data.val())
-				setDeckListenStatus(false)
 			}
+			setDeckListenStatus(false)
 		}
 	})
 
-	Firebase.database().ref(`/Cards`).once('value').then((data) => {
+	Firebase.database().ref(`/Cards`).on('value').then((data) => {
 		if (cardListenStatus) {
 			if (data.val()) {
 				setCards(data.val())
-				setCardListenStatus(false)
 			}
+			setCardListenStatus(false)
 		}
 	})
 
@@ -357,7 +357,7 @@ const HomeScreen = () => {
 						deleteCard={() => { DeleteCardHandler(card.header) }}
 						addImage={() => { setHeader(card.header), populateSubCats(card.header), setShowImageModal(true), setProductImage('') }} />)}
 
-					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true),setHeader('') }}>
+					<TouchableOpacity style={styles.bottomContainer} onPress={() => { setShowCardModel(true), setHeader('') }}>
 						<Image source={require('../assets/images/add-card.png')} style={{ height: 60, width: 60 }} />
 					</TouchableOpacity>
 				</View>
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
 		elevation: 5
 	},
 	iconContainer: {
-		backgroundColor:'#778899',
+		backgroundColor: '#778899',
 		flexDirection: 'row',
 		padding: 5,
 		paddingHorizontal: 20,
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor:'rgba(52, 52, 52, 0.8)'
+		backgroundColor: 'rgba(52, 52, 52, 0.8)'
 	},
 
 	imageModalScreen: {

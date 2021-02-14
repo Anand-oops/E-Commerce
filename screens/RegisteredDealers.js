@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { SearchBar } from 'react-native-elements'
@@ -17,7 +17,7 @@ export default function Dealers({ navigation }) {
     const [searchedItems, setSearchedItems] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
     const [searchBy, setSearchBy] = useState('name');
-    const [loader,setLoader]=useState(true);
+    const [loader, setLoader] = useState(true);
 
     Firebase.database().ref('Dealers/').on('value', (data) => {
         if (listenCheck) {
@@ -34,9 +34,9 @@ export default function Dealers({ navigation }) {
                 setSearchedItems(temp);
                 setSearchedColl(coll);
                 setCollapsed(coll);
-                setListenCheck(false);
-                setLoader(false);
             }
+            setListenCheck(false);
+            setLoader(false);
         }
     });
 

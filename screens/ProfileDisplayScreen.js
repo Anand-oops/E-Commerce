@@ -29,8 +29,8 @@ const ProfileDisplayScreen = ({ navigation }) => {
                     setMobile(data.val().mobile);
                 if (data.val().city)
                     setCity(data.val().city);
-                setListen(false);
             }
+            setListen(false);
         }
     })
 
