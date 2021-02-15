@@ -65,7 +65,7 @@ const HomeScreen = () => {
 		}
 	})
 
-	Firebase.database().ref(`ProductList/${header}/${productSubCategory}`).on('value').then((snapshot) => {
+	Firebase.database().ref(`ProductList/${header}/${productSubCategory}`).on('value', (snapshot) => {
 		if (productListCall) {
 			if (snapshot.val()) {
 				var prods = [];
@@ -85,7 +85,7 @@ const HomeScreen = () => {
 		}
 	})
 
-	Firebase.database().ref(`/ImagesDeck/`).on('value').then((data) => {
+	Firebase.database().ref(`/ImagesDeck/`).on('value', (data) => {
 		if (deckListenStatus) {
 			if (data.val()) {
 				setImagesDeck(data.val())
@@ -94,7 +94,7 @@ const HomeScreen = () => {
 		}
 	})
 
-	Firebase.database().ref(`/Cards`).on('value').then((data) => {
+	Firebase.database().ref(`/Cards`).on('value', (data) => {
 		if (cardListenStatus) {
 			if (data.val()) {
 				setCards(data.val())
@@ -263,18 +263,20 @@ const HomeScreen = () => {
 	const closeModal = () => { setShowCardModel(false), setShowImageModal(false), setDisabled(true) }
 
 	const populateSubCats = (category) => {
-		subCategories.map(subcat => {
-			if (subcat.itemName === category) {
-				var temp = [];
-				var keys = Object.keys(subcat.SubCategories)
-				for (var i = 0; i < keys.length; i++) {
-					var key = keys[i];
-					var entry = subcat.SubCategories[key].subitemName
-					temp.push({ label: entry, value: entry })
+		if (!subCategories) {
+			subCategories.map(subcat => {
+				if (subcat.itemName === category) {
+					var temp = [];
+					var keys = Object.keys(subcat.SubCategories)
+					for (var i = 0; i < keys.length; i++) {
+						var key = keys[i];
+						var entry = subcat.SubCategories[key].subitemName
+						temp.push({ label: entry, value: entry })
+					}
+					setDropDownSubCat(temp);
 				}
-				setDropDownSubCat(temp);
-			}
-		})
+			})
+		}
 	}
 
 	function SaveToDatabase() {

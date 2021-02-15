@@ -12,10 +12,9 @@ import CustomerOrdersStack from './CustomerOrdersStack'
 import RegisteredCustomersStack from "./RegisteredCustomersStack";
 import RegisteredDealersStack from "./RegisteredDealersStack";
 import React from "react";
-import { View, SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 
 const customComponent = (props) => {
-
 
     const { user, logout } = useContext(AuthContext);
     var name = "Admin"
@@ -25,13 +24,15 @@ const customComponent = (props) => {
         name = data.firstName;
 
     })
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
-            <View style={{ flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center', marginTop: 10, paddingTop: 15, paddingLeft: 15 }}>
+            <TouchableOpacity onPress={() => console.log("Props")}
+            style={{ flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center', marginTop: 10, paddingTop: 15, paddingLeft: 15 }}>
                 <AntDesign name="user" size={40} color="black" />
                 <Text style={{ marginTop: 10, fontSize: 20 }}> {"Hey " + name + "!!"}</Text>
-            </View>
+            </TouchableOpacity>
 
             <ScrollView>
                 <DrawerItems  {...props} />
