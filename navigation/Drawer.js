@@ -12,25 +12,41 @@ import CustomerOrdersStack from './CustomerOrdersStack'
 import RegisteredCustomersStack from "./RegisteredCustomersStack";
 import RegisteredDealersStack from "./RegisteredDealersStack";
 import React from "react";
-import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert,Image } from "react-native";
+import dummyImage from "../assets/avatar.png";
 
 const customComponent = (props) => {
 
     const { user, logout } = useContext(AuthContext);
-    var name = "Admin"
+    var name = "Admin";
+    var profileImage=Image.resolveAssetSource(dummyImage).uri;
     const ref = Firebase.database().ref(`Admin/${user.uid}`);
     ref.on('value', function (snapshot) {
         var data = snapshot.val();
-        name = data.firstName;
+        if(data.firstName){
+            name = data.firstName;
+        }
+        
+        if (data.profileImage) {
+            profileImage=data.profileImage;
+        }
 
     })
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
 
-            <TouchableOpacity onPress={() => console.log("Props")}
+            <TouchableOpacity onPress={() => {props.navigation.navigate('Profile')}}
             style={{ flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center', marginTop: 10, paddingTop: 15, paddingLeft: 15 }}>
-                <AntDesign name="user" size={40} color="black" />
+                <Image style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: 63,
+                        borderWidth: 4,
+                        borderColor: "white",
+                        marginTop: 10,
+                    }}
+                        source={{ uri: profileImage }} />
                 <Text style={{ marginTop: 10, fontSize: 20 }}> {"Hey " + name + "!!"}</Text>
             </TouchableOpacity>
 
@@ -62,7 +78,7 @@ const screens = {
     Home: { screen: AppStack },
     'Pending List': { screen: pendingListStack },
     'Drawer Items': { screen: DrawerItemsStack },
-    Profile: { screen: profileStack },
+    Profile : { screen: profileStack },
     'Customer Orders': { screen: CustomerOrdersStack },
     'Registered Customers': { screen: RegisteredCustomersStack },
     'Registered Dealers': { screen: RegisteredDealersStack }

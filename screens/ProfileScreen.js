@@ -17,7 +17,9 @@ const ProfileScreen = ({ navigation}) => {
 		firstName: '',
 		lastName: '',
 		mobile: '',
-		city:''
+		city:'',
+		AccountNumber:'',
+		IfscCode:''
 	})
 
 	const ref = Firebase.database().ref(`Admin/${user.uid}`);
@@ -27,7 +29,9 @@ const ProfileScreen = ({ navigation}) => {
 				firstName: snapshot.val().firstName,
 				lastName: snapshot.val().lastName,
 				mobile: snapshot.val().mobile,
-				city:snapshot.val().city
+				city:snapshot.val().city,
+				AccountNumber:snapshot.val().AccountNumber,
+				IfscCode:snapshot.val().IfscCode
 			})
 			setListen(false);
 		}
@@ -45,6 +49,8 @@ const ProfileScreen = ({ navigation}) => {
 				lastName: value.lastName,
 				mobile: value.mobile,
 				city:value.city,
+				AccountNumber:value.AccountNumber,
+				IfscCode:value.IfscCode
 			}, Toast.show("Successfully Updated", Toast.SHORT))
 			navigation.goBack();
 		}
@@ -115,6 +121,32 @@ const ProfileScreen = ({ navigation}) => {
 								<FontAwesome5 name="city" color={'purple'} size={20} />
 							}
 							onChangeText={(val) => setValue({ ...value, city: val })} />
+					</View>
+					<View style={{ marginVertical: 10, width: '90%' }}>
+						<FloatingLabelInput
+							label={'Account Number'}
+							value={value.AccountNumber}
+							blurOnSubmit={true}
+							padding={10}
+                            fontSize={18}
+							autoCapitalize={'words'}
+							leftComponent={
+								<FontAwesome5 name="Account Number" color={'purple'} size={20} />
+							}
+							onChangeText={(val) => setValue({ ...value, AccountNumber: val })} />
+					</View>
+					<View style={{ marginVertical: 10, width: '90%' }}>
+						<FloatingLabelInput
+							label={'Ifsc Code'}
+							value={value.IfscCode}
+							blurOnSubmit={true}
+							padding={10}
+                            fontSize={18}
+							autoCapitalize={'words'}
+							leftComponent={
+								<FontAwesome5 name="Ifsc Code" color={'purple'} size={20} />
+							}
+							onChangeText={(val) => setValue({ ...value, IfscCode: val })} />
 					</View>
 
 				</View>
