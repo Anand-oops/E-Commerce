@@ -61,7 +61,7 @@ const screens = {
     Home: { screen: AppStack },
     'Pending List': { screen: pendingListStack },
     'Drawer Items': { screen: DrawerItemsStack },
-    Profile: { screen: profileStack },
+    Profile : { screen: profileStack },
     'Customer Orders': { screen: CustomerOrdersStack },
     'Registered Customers': { screen: RegisteredCustomersStack },
     'Registered Dealers': { screen: RegisteredDealersStack }
