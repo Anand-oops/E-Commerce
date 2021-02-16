@@ -32,7 +32,7 @@ export default function DrawerItemsList({ navigation }) {
 		setItems(list);
 		setVisibleModalAdd(false);
 		onTextChange('');
-		Firebase.database().ref('DrawerItemsList/').set(newArray).then(() => {
+		Firebase.database().ref('DrawerItemsList/').set(list).then(() => {
 			setListenCheck(true)
 			Toast.show("Category Added", Toast.SHORT);
 		})
@@ -79,19 +79,20 @@ export default function DrawerItemsList({ navigation }) {
 
 			</FlatList>
 
-			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
+			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
 				onPress={() => setVisibleModalAdd(true)}>
-				<Ionicons name="add-circle" size={30} color="black" />
+				<Ionicons name="add-circle" size={50} color="black" />
 			</TouchableOpacity>
 
 			<Modal
 				visible={visibleModalAdd}
+				animationType='fade'
 				position='center'
 				transparent={true}
 				onRequestClose={() => setVisibleModalAdd(!visibleModalAdd)}>
 				<View style={styles.modalContainer}>
 					<View style={styles.cardModalScreen}>
-						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Item</Text>
+						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Category</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 							<TextInput style={styles.modalTextInput} onChangeText={(val) => onTextChange(val)}
 								value={text} placeholder={'Enter item name'} />
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: 'rgba(52, 52, 52, 0.8)'
 	},
 	cardModalScreen: {
 		height: 200,

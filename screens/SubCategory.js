@@ -92,10 +92,10 @@ export default function SubCategory({ navigation }) {
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Image
-					style={{ padding: 2, height: '125%', width: 100, resizeMode: 'contain', alignSelf: 'center', }}
+					style={{ padding: 20, height: 100, width: 100, resizeMode: 'contain', alignSelf: 'center', }}
 					source={{ uri: item.uri }}
 				/>
-				<Text style={{ color: 'black', fontSize: 20, marginStart: 5 }}>{item.subitemName}</Text>
+				<Text style={{ color: 'black', fontSize: 20, marginLeft: 10 }}>{item.subitemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -110,12 +110,13 @@ export default function SubCategory({ navigation }) {
 
 			</FlatList>
 
-			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
+			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
 				onPress={() => setVisibleModalAdd(!visibleModalAdd)}>
-				<Ionicons name="add-circle" size={30} color="black" />
+				<Ionicons name="add-circle" size={50} color="black" />
 			</TouchableOpacity>
 
 			<Modal
+				animationType='fade'
 				visible={visibleModalAdd}
 				position='center'
 				transparent={true}
@@ -126,7 +127,7 @@ export default function SubCategory({ navigation }) {
 							<Image source={image} style={styles.cardImage} />
 						</TouchableOpacity>
 
-						<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter subcategory Name:</Text>
+						<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sub-Category Name:</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 							<TextInput style={styles.modalTextInput} onChangeText={(Text) => onTextChange(Text)} value={text} />
 						</View>
@@ -179,6 +180,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: 'rgba(52, 52, 52, 0.8)'
 	},
 	cardModalScreen: {
 		height: 200,
