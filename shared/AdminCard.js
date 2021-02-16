@@ -19,13 +19,15 @@ const Card = props => {
                 <View style={styles.card}>
                     <FlatList data={props.images}
                         renderItem={ (itemData) => (
-                            <View style={styles.Container}>
-                                <TouchableOpacity onLongPress={props.deleteImage.bind(this, itemData.index)}>
-                                    <Image style={styles.image} source={itemData.item.image} />
-                                    <Text style={{color:'blue'}}>{itemData.item.product.subCategory}</Text>
-                                    <Text style={{color:'purple'}}>{itemData.item.product.productName}</Text>
-                                    <Text style={styles.text}>{itemData.item.textItem}</Text>
-                                    <Text style={styles.offerText}>{itemData.item.textOff + " % off !"}</Text>
+                            <View >
+                                <TouchableOpacity style={styles.Container} onLongPress={props.deleteImage.bind(this, itemData.index)}>
+                                <Image style={styles.image} source={itemData.item.image} />
+                                    <View style={{marginLeft:20}}>
+                                        <Text style={{ color: 'blue' }}>Sub-Category : {itemData.item.product.subCategory}</Text>
+                                        <Text style={{ color: 'purple' }}>Product Id : {itemData.item.product.productKey}</Text>
+                                        <Text style={styles.text}>Sale : {itemData.item.textItem}</Text>
+                                        <Text style={styles.offerText}>Sale discount : {itemData.item.textOff + " % off !"}</Text>
+                                    </View>
                                 </TouchableOpacity>
                             </View>
                         )}
@@ -46,16 +48,17 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: '90%',
         marginTop: 30,
-        backgroundColor: 'white',
+        backgroundColor: '#778899',
         flexDirection: 'row',
         padding: 10,
         paddingHorizontal: 20,
         borderWidth: 1,
+        alignSelf: 'center',
         borderColor: 'black',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderTopLeftRadius:30,
-        borderTopRightRadius:30
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 50
     },
 
     cardContainer: {
@@ -68,17 +71,16 @@ const styles = StyleSheet.create({
         elevation: 10,
         borderWidth: 1,
         borderColor: 'black',
-        backgroundColor: 'white',
-        borderBottomLeftRadius:30,
-        borderBottomRightRadius:30
+        backgroundColor: '#DCDCDC',
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 20
     },
 
     Container: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'row',
         borderColor: 'transparent',
         borderWidth: 0.3,
-        padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -90,8 +92,8 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        height: 80,
-        width: 80,
+        height: 100,
+        width: 100,
         marginVertical: 20,
         resizeMode: 'contain',
         justifyContent: 'center',

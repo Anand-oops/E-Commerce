@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button, Modal, TextInput, Alert, ActivityIndicator } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { AntDesign } from '@expo/vector-icons';
@@ -15,16 +15,15 @@ export default function DrawerItemsList({ navigation }) {
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
 	const [isChanged, setChanged] = useState(false);
-	const [loader,setLoader]=useState(true);
+	const [loader, setLoader] = useState(true);
 
-	Firebase.database().ref('DrawerItemsList/').once('value').then((data) => {
+	Firebase.database().ref('DrawerItemsList/').on('value', (data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
-				console.log("Items", items);
-				setListenCheck(false);
-				setLoader(false);
 			}
+			setListenCheck(false);
+			setLoader(false);
 		}
 	})
 
@@ -68,7 +67,7 @@ export default function DrawerItemsList({ navigation }) {
 
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
-				<Text style={{ color: 'black', fontSize: 20,padding:20 }}>{item.itemName}</Text>
+				<Text style={{ color: 'black', fontSize: 20, padding: 20 }}>{item.itemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 45 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -121,14 +120,14 @@ export default function DrawerItemsList({ navigation }) {
 				</View>
 			</Modal>
 			<View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
-                <ActivityIndicator
+				<ActivityIndicator
 
-                    size='large'
-                    color="grey"
-                    animating={loader}
+					size='large'
+					color="grey"
+					animating={loader}
 
-                />
-            </View>
+				/>
+			</View>
 		</View>
 	);
 }

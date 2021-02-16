@@ -32,6 +32,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-animated-loader": "0.0.9",
     "react-native-collapsible": "^1.5.3",
+    "react-native-date-picker": "^3.2.9",
     "react-native-dropdown-picker": "^3.7.8",
     "react-native-elements": "^3.1.0",
     "react-native-fbsdk": "^3.0.0",
@@ -51,7 +52,9 @@
     "react-navigation": "^4.4.3",
     "react-navigation-drawer": "^2.6.0",
     "react-navigation-stack": "^2.10.2",
-    "react-timeout": "^2.0.0"
+    "react-refresh": "^0.9.0",
+    "react-timeout": "^2.0.0",
+    "@react-native-community/datetimepicker": "3.0.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

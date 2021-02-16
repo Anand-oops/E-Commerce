@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity,ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar';
@@ -7,6 +7,9 @@ import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
 
 export default function PendingOrders({ }) {
 
@@ -17,7 +20,10 @@ export default function PendingOrders({ }) {
     const [collapsed, setCollapsed] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
     const [searchBy, setSearchBy] = useState('order')
-    const [loader,setLoader]=useState(true);
+    const [loader, setLoader] = useState(true);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [show, setShow] = useState(false);
+    const [buttonText, setButtonText] = useState('Select Date')
 
     Firebase.database().ref(`CustomerOrders`).on('value', data => {
         if (listen) {
@@ -36,8 +42,8 @@ export default function PendingOrders({ }) {
                         }
                     }
                 }
-                setOrders(list);
-                setFiltered(list);
+                setOrders(list.reverse());
+                setFiltered(list.reverse());
                 setCollapsed(coll);
                 setSearchedColl(coll);
             } else
@@ -47,7 +53,14 @@ export default function PendingOrders({ }) {
         }
     })
 
+    const changeStatus = (item) => {
+        Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
+        setListen(true);
+    }
+
     const performSearch = (text) => {
+        setButtonText('Select Date')
         var filter = [];
         var status = [];
         if (text.length == 0 || text === '') {
@@ -92,6 +105,32 @@ export default function PendingOrders({ }) {
         setCollapsed(final);
     }
 
+    const onChange = (event, selectedDate) => {
+        setShow(false)
+        setSearchText('');
+        setSearchBy('order')
+        if (event.type === 'dismissed') {
+            setSelectedDate(new Date());
+            setButtonText('Select Date');
+            setFiltered(orders);
+            setCollapsed(collapsed);
+        } else {
+            setSelectedDate(selectedDate);
+            var date = selectedDate.getDate() + "-" + (selectedDate.getMonth() + 1) + "-" + selectedDate.getFullYear();
+            setButtonText(date);
+            var list = [];
+            var coll = [];
+            orders.map(item => {
+                if (item.orderDate == date) {
+                    list.push(item);
+                    coll.push(collapsed[orders.indexOf(item)])
+                }
+            })
+            setFiltered(list);
+            setSearchedColl(coll);
+        }
+    }
+
     return (
         <View style={styles.main}>
             <StatusBar style='light' />
@@ -102,7 +141,19 @@ export default function PendingOrders({ }) {
                 onChangeText={(text) => { setSearchText(text), performSearch(text) }}
                 value={searchText}
             />
-            <View style={{ flexDirection: 'row-reverse' }}>
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{ width: '50%', borderRadius: 10, borderWidth: 1, borderColor: 'white', padding: 2, backgroundColor: 'white', justifyContent: 'center' }}
+                    onPress={() => { setShow(true) }} >
+                    <Text style={{ color: 'black', textAlign: 'center' }}>{buttonText}</Text>
+                </TouchableOpacity>
+                {show && (
+                    <DateTimePicker
+                        value={selectedDate}
+                        maximumDate={new Date()}
+                        onChange={onChange}
+                    />
+                )}
+
                 <DropDownPicker
                     items={[{ label: 'By Order Id', value: 'order' },
                     { label: 'By Customer Id', value: 'customer' },
@@ -128,16 +179,26 @@ export default function PendingOrders({ }) {
                             <Text style={{ color: 'black', fontWeight: 'bold' }}>Order Id: {data.item.orderId}</Text>
                             <Text style={{ color: 'gray' }}>Dealer Id: {data.item.dealerId}</Text>
                             <Text style={{ color: 'gray' }}>Customer Id: {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'blue' }}>Order Date: {data.item.orderDate}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
                                 <Text style={{ color: 'black' }}>Product : {data.item.productName}</Text>
                                 <Text style={{ color: 'purple' }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'blue' }}>Price: {data.item.finalPrice}</Text>
+                                <Text style={{ color: 'blue' }}>Ordered On: {data.item.orderDate}</Text>
                                 <Text style={{ color: 'black' }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <TouchableOpacity style={{ flexDirection: 'row', alignContent: 'space-around', marginTop: 5 }}
+                                    onPress={() => {
+                                        Alert.alert("Delivered ?", "Product will be marked Delivered !",
+                                            [{ text: 'Cancel' },
+                                            { text: 'Proceed', onPress: () => changeStatus(data.item) }])
+                                    }}>
+                                    <Text style={{ color: 'red' }}>Mark as Delivered</Text>
+                                    <MaterialCommunityIcons style={{ marginLeft: 20 }} name="truck-delivery-outline" size={24} color="red" />
+                                </TouchableOpacity>
                             </Collapsible>
                         </View>
                     </TouchableOpacity>
                 )} />
-                <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+            <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
                 <ActivityIndicator
 
                     size='large'
