@@ -3,13 +3,14 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import DeliveredOrders from '../screens/DeliveredOrdersScreen';
 import CancelledOrders from "../screens/CancelledOrdersScreen";
 import PendingOrders from "../screens/PendingOrdersScreen";
+import ReturnedOrders from '../screens/ReturnedOrdersScreen';
 
 
-export default function AllCustomerOrders({navigation}) {
+export default function AllCustomerOrders({ navigation }) {
 
-	console.log('nv of all cus order',navigation);
+	console.log('nv of all cus order', navigation);
 	const Tab = createMaterialTopTabNavigator();
-	
+
 
 	return (
 		<Tab.Navigator
@@ -36,6 +37,12 @@ export default function AllCustomerOrders({navigation}) {
 				name="Cancelled Orders"
 				component={CancelledOrders}
 				options={{ tabBarLabel: 'Cancelled Orders' }}
+			/>
+
+			<Tab.Screen
+				name="Returned Orders"
+				component={ReturnedOrders}
+				options={{ tabBarLabel: 'Returned Orders' }}
 			/>
 		</Tab.Navigator>
 	);
