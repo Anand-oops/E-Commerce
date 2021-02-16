@@ -9,23 +9,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SubCategory({ navigation }) {
 
-	var name = navigation.getParam('item').itemName;
-	var id = navigation.getParam('id');
-	console.log("id", id);
-	console.log("name", name);
+	const name = navigation.getParam('item').itemName;
+	const id = navigation.getParam('id');
+
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 	const [image, setImage] = useState(require('../assets/images/add.png'))
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
-	const [isChanged, setChanged] = useState(false);
 	const [loader, setLoader] = useState(true);
 
 	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).on('value', (data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
-				console.log("Items", items);
 			}
 			setListenCheck(false);
 			setLoader(false);
@@ -66,11 +63,15 @@ export default function SubCategory({ navigation }) {
 	};
 	const AddCardContent = (image, text) => {
 		console.log("AddCardContent", text)
-		setItems([...items, { subitemName: text, uri: image.uri }])
+		var list = [...items, { subitemName: text, uri: image.uri }];
+		setItems(list)
 		setVisibleModalAdd(false)
-		setChanged(true);
 		setImage(require('../assets/images/add.png'))
 		onTextChange('')
+		Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(list).then(() => {
+			setListenCheck(true)
+			Toast.show("Sub-Category Added", Toast.SHORT);
+		})
 	}
 
 	function deleteItem(index) {
@@ -78,21 +79,12 @@ export default function SubCategory({ navigation }) {
 		const newArray = items;
 		newArray.splice(index, 1);
 		setItems(newArray);
-		setChanged(true);
-		saveToDatabase();
+		Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(newArray).then(() => {
+			setListenCheck(true)
+			Toast.show("Sub-Category Deleted", Toast.SHORT);
+		})
 	}
 
-	function saveToDatabase() {
-		console.log("save", items);
-		if (isChanged) {
-			console.log("Id", id);
-			Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(items).then(() => {
-				setListenCheck(true)
-				setChanged(false)
-				Toast.show("Sub-Categories Updated", Toast.SHORT);
-			})
-		}
-	}
 	return (
 
 		<View style={styles.main}>
@@ -122,12 +114,6 @@ export default function SubCategory({ navigation }) {
 				onPress={() => setVisibleModalAdd(!visibleModalAdd)}>
 				<Ionicons name="add-circle" size={30} color="black" />
 			</TouchableOpacity>
-
-			<TouchableOpacity style={styles.saveButton}
-				onPress={() => saveToDatabase()}>
-				<Text style={{ color: 'white', fontSize: 20 }} >Submit</Text>
-			</TouchableOpacity>
-
 
 			<Modal
 				visible={visibleModalAdd}
@@ -183,14 +169,6 @@ const styles = StyleSheet.create({
 	main: {
 		height: '100%',
 		width: '100%'
-	},
-	saveButton: {
-		borderTopLeftRadius: 30,
-		borderTopRightRadius: 30,
-		alignItems: 'center',
-		backgroundColor: 'black',
-		padding: 15,
-		elevation: 10,
 	},
 	container: {
 		flex: 1,
