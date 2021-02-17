@@ -1,27 +1,54 @@
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import { View,Text } from "react-native";
+import { Entypo } from '@expo/vector-icons';
 import Header from '../shared/Header';
 import React from 'react';
 import DrawerItemsList from '../screens/DrawerItemsList';
 import SubCategory from "../screens/SubCategory";
 
-const screens = {
-    DrawerItemsList: {
-        screen: DrawerItemsList, navigationOptions: ({ navigation }) => {
-            return {
-                headerTitle: () => <Header navigation={navigation} title='Drawer List' />,
-            }
-        }
-    },
-    SubCategory: { screen: SubCategory }
+const Stack = createStackNavigator();
+
+export default function DrawerItemsStack({navigation}){
+return(
+    <Stack.Navigator screenOptions={{
+		headerTintColor: 'white',
+		headerTitleStyle: {
+			fontWeight: 'bold',
+			alignSelf: 'center'
+		},
+	}}>
+		<Stack.Screen name="Drawer List" component={DrawerItemsList} options={{
+			title: 'Drawer List',
+			headerStyle: {
+				backgroundColor: 'black'
+			},
+			headerTitle: () => (
+				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+					<Entypo name="menu" size={24} color="white" onPress={() => navigation.openDrawer()} style={{ position: 'absolute', left: 3 }} />
+					<View>
+						<Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Drawer List</Text>
+					</View>
+				</View>
+			),
+		}} />
+
+		<Stack.Screen name="Sub Category" component={SubCategory} options={{
+			title: 'Sub Category',
+			headerStyle: {
+				backgroundColor: 'black'
+			},
+			headerTitle: () => (
+				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>
+
+					<View>
+						<Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Sub Category</Text>
+					</View>
+
+				</View>
+			),
+		}} />
+
+	</Stack.Navigator>
+)
+
 }
-
-const drawerStack = createStackNavigator(screens, {
-    defaultNavigationOptions: {
-        headerTintColor: 'white',
-        headerStyle: {
-            backgroundColor: 'black', height: 70
-        }
-    }
-});
-
-export default drawerStack;
