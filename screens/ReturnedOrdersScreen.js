@@ -9,7 +9,7 @@ import Collapsible from 'react-native-collapsible';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function CancelledOrders({ }) {
+export default function ReturnedOrders({ }) {
 
     const [listen, setListen] = useState(true)
     const [orders, setOrders] = useState([])
@@ -35,7 +35,7 @@ export default function CancelledOrders({ }) {
                     console.log(items)
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
-                        if (data.val()[key][item].deliveryStatus === 'Cancelled') {
+                        if (data.val()[key][item].deliveryStatus === 'Returned') {
                             list.push(data.val()[key][item])
                             coll.push(true)
                         }
@@ -46,7 +46,7 @@ export default function CancelledOrders({ }) {
                 setCollapsed(coll);
                 setSearchedColl(coll);
             } else
-                Toast.show("No Cancelled Products", Toast.SHORT);
+                Toast.show("No Returned Products", Toast.SHORT);
             setListen(false)
             setLoader(false);
         }

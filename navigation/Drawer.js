@@ -5,7 +5,6 @@ import { createAppContainer } from "react-navigation";
 import AppStack from './AppStack';
 import profileStack from './ProfileStack';
 import pendingListStack from './PendingListStack';
-import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from './AuthProvider';
 import Firebase from '../firebaseConfig';
 import DrawerItemsStack from './DrawerItemsStack';
@@ -94,7 +93,7 @@ const DrawerNav = createDrawerNavigator();
 
 function DrawerContent(props) {
     const { user, logout } = useContext(AuthContext);
-    var name = "Guest";
+    var name = "Admin";
     var profileImage = Image.resolveAssetSource(dummyImage).uri;
     const ref = Firebase.database().ref(`Admin/${user.uid}`);
     ref.on('value', function (snapshot) {
@@ -110,19 +109,19 @@ function DrawerContent(props) {
     })
     return (
         <SafeAreaView style={{ flex: 1, }}>
-            <TouchableOpacity onPress={() => { props.navigation.navigate('Profile') }}>
-                <View style={{ flexDirection: 'row', height: 100, backgroundColor: 'white', alignItems: 'center', marginTop: 10, paddingTop: 15, paddingLeft: 15 }}>
-                    <Image style={{
-                        width: 24,
-                        height: 24,
-                        borderRadius: 63,
-                        borderWidth: 4,
-                        borderColor: "white",
-                        marginTop: 10,
-                    }}
-                        source={{ uri: profileImage }} />
-                    <Text style={{ marginTop: 10, fontSize: 20 }}> {"Hey " + name + "!!"}</Text>
-                </View>
+
+            <TouchableOpacity onPress={() => { props.navigation.navigate('Profile') }}
+                style={{ flexDirection: 'row', height: 100, backgroundColor: '#778899', alignItems: 'center', padding: 15, paddingTop:20 }}>
+                <Image style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 63,
+                    borderWidth: 4,
+                    borderColor: "white",
+                    marginTop: 10,
+                }}
+                    source={{ uri: profileImage }} />
+                <Text style={{ marginTop: 10, fontSize: 20 }}> {"Hey " + name + "!!"}</Text>
             </TouchableOpacity>
 
             <ScrollView>

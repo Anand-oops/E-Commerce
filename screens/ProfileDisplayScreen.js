@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, } from 'react';
 import { AuthContext } from '../navigation/AuthProvider';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -16,13 +16,12 @@ const ProfileDisplayScreen = ({ navigation }) => {
     const [email, setEmail] = useState('email@example.com')
     const [first, setFirst] = useState('FirstName')
     const [last, setLast] = useState('LastName')
-    const [mobile, setMobile] = useState('Mobile No.')
-    const [city, setCity] = useState('City');
-    const [accNo, setAccNO] = useState('0')
-    const [ifsc, setIfsc] = useState('0');
-    var profileImage = Image.resolveAssetSource(dummyImage).uri;
+    const [mobile, setMobile] = useState('Mobile No. ?')
+    const [city, setCity] = useState('City ?')
+    const [accNo, setAccNO] = useState('Account No. ?')
+    const [ifsc, setIfsc] = useState('IFSC Code ?');
+    const [profileImage,setProfileImage]=useState(Image.resolveAssetSource(dummyImage).uri);
     
-
     Firebase.database().ref(`Admin/${user.uid}`).on('value', function (data) {
         if (listen) {
             if (data.val()) {
@@ -40,12 +39,10 @@ const ProfileDisplayScreen = ({ navigation }) => {
                     setAccNO(data.val().AccountNumber);
                 if (data.val().IfscCode)
                     setIfsc(data.val().IfscCode);
-                if (data.val().profileImage)
-                    profileImage = data.val().profileImage;
-
-                    console.log("fbhjbd",profileImage);
+                    if(data.val().profileImage)
+                    setProfileImage(data.val().profileImage);
+                setListen(false);
             }
-            setListen(false);
         }
     })
 
@@ -72,12 +69,11 @@ const ProfileDisplayScreen = ({ navigation }) => {
             .put(blob)
             .then((snapshot) => {
                 snapshot.ref.getDownloadURL().then((url) => {
-                    profileImage=url;
-                    console.log("image set",profileImage);
-                    Firebase.database().ref(`/Admin/${user.uid}`).update({
-                        profileImage:profileImage
+                    setProfileImage(url);
+                    Firebase.database().ref(`Admin/${user.uid}`).update({
+                        profileImage:url
                     }, Toast.show("Successfully Updated", Toast.SHORT))
-                    
+                    setListen(true);
                 });
             })
             .catch((e) => console.log('uploading image error => ', e));
@@ -88,9 +84,9 @@ const ProfileDisplayScreen = ({ navigation }) => {
             <StatusBar style='light' />
             <View style={styles.header}>
                 <View style={styles.headerContent}>
-                <TouchableOpacity onPress={()=>AddImageHandler()}>
+                    <TouchableOpacity onPress={()=>AddImageHandler()}>
                     <Image style={styles.avatar}
-                        source={{ uri: profileImage } }  />
+                        source={{uri:profileImage}}  />
                         </TouchableOpacity>
                     <Text style={styles.name}>{first + " " + last} </Text>
                     <Text style={styles.userInfo}>{email}</Text>

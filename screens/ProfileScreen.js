@@ -63,12 +63,12 @@ const ProfileScreen = ({ navigation}) => {
 				<StatusBar style="light" />
 				<View style={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1, }}>
 
-					<Text style={{ marginTop: -100, marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>
+					<Text style={{ marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>
 						Edit Your Profile </Text>
 
 					<View style={{ marginVertical: 10, width: '90%'}}>
 						<FloatingLabelInput
-							padding={10}
+							padding={6}
 							fontSize={18}
 							label={'First Name'}
 							value={value.firstName}
@@ -83,7 +83,7 @@ const ProfileScreen = ({ navigation}) => {
 					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							label={'Last Name'}
-							padding={10}
+							padding={6}
                             fontSize={18}
 							value={value.lastName}
 							blurOnSubmit={true}
@@ -99,7 +99,7 @@ const ProfileScreen = ({ navigation}) => {
 							label={'Mobile'}
 							value={value.mobile}
 							blurOnSubmit={true}
-							padding={10}
+							padding={6}
                             fontSize={18}
 							maxLength={10}
 							keyboardType={'number-pad'}
@@ -114,7 +114,7 @@ const ProfileScreen = ({ navigation}) => {
 							label={'City'}
 							value={value.city}
 							blurOnSubmit={true}
-							padding={10}
+							padding={6}
                             fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
@@ -127,11 +127,11 @@ const ProfileScreen = ({ navigation}) => {
 							label={'Account Number'}
 							value={value.AccountNumber}
 							blurOnSubmit={true}
-							padding={10}
+							padding={6}
                             fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
-								<FontAwesome5 name="Account Number" color={'purple'} size={20} />
+								<FontAwesome name="bank" color={'purple'} size={20} />
 							}
 							onChangeText={(val) => setValue({ ...value, AccountNumber: val })} />
 					</View>
@@ -140,11 +140,11 @@ const ProfileScreen = ({ navigation}) => {
 							label={'Ifsc Code'}
 							value={value.IfscCode}
 							blurOnSubmit={true}
-							padding={10}
+							padding={6}
                             fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
-								<FontAwesome5 name="Ifsc Code" color={'purple'} size={20} />
+								<FontAwesome name="qrcode" color={'purple'} size={20} />
 							}
 							onChangeText={(val) => setValue({ ...value, IfscCode: val })} />
 					</View>

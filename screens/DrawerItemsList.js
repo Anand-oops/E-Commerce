@@ -14,7 +14,6 @@ export default function DrawerItemsList({ navigation }) {
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
-	const [isChanged, setChanged] = useState(false);
 	const [loader, setLoader] = useState(true);
 
 	Firebase.database().ref('DrawerItemsList/').on('value', (data) => {
@@ -29,10 +28,14 @@ export default function DrawerItemsList({ navigation }) {
 
 	const addItem = (text) => {
 		console.log("add", text)
-		setItems([...items, { itemName: text }]);
+		var list = [...items, { itemName: text }]
+		setItems(list);
 		setVisibleModalAdd(false);
-		setChanged(true);
 		onTextChange('');
+		Firebase.database().ref('DrawerItemsList/').set(list).then(() => {
+			setListenCheck(true)
+			Toast.show("Category Added", Toast.SHORT);
+		})
 	};
 
 
@@ -41,19 +44,10 @@ export default function DrawerItemsList({ navigation }) {
 		const newArray = items;
 		newArray.splice(index, 1);
 		setItems(newArray);
-		setChanged(true);
-		saveToDatabase();
-	}
-
-	function saveToDatabase() {
-		console.log("save", items);
-		if (isChanged) {
-			Firebase.database().ref('DrawerItemsList/').set(items).then(() => {
-				setListenCheck(true)
-				setChanged(false)
-				Toast.show("Categories Updated", Toast.SHORT);
-			})
-		}
+		Firebase.database().ref('DrawerItemsList/').set(newArray).then(() => {
+			setListenCheck(true)
+			Toast.show("Category Deleted", Toast.SHORT);
+		})
 	}
 
 	const moveAhead = (item) => {
@@ -85,24 +79,20 @@ export default function DrawerItemsList({ navigation }) {
 
 			</FlatList>
 
-			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
+			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
 				onPress={() => setVisibleModalAdd(true)}>
-				<Ionicons name="add-circle" size={30} color="black" />
-			</TouchableOpacity>
-
-			<TouchableOpacity style={styles.saveButton}
-				onPress={() => saveToDatabase()}>
-				<Text style={{ color: 'white', fontSize: 20 }} >Submit</Text>
+				<Ionicons name="add-circle" size={50} color="black" />
 			</TouchableOpacity>
 
 			<Modal
 				visible={visibleModalAdd}
+				animationType='fade'
 				position='center'
 				transparent={true}
 				onRequestClose={() => setVisibleModalAdd(!visibleModalAdd)}>
 				<View style={styles.modalContainer}>
 					<View style={styles.cardModalScreen}>
-						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Item</Text>
+						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Category</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 							<TextInput style={styles.modalTextInput} onChangeText={(val) => onTextChange(val)}
 								value={text} placeholder={'Enter item name'} />
@@ -137,14 +127,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 		width: '100%'
 	},
-	saveButton: {
-		borderTopLeftRadius: 30,
-		borderTopRightRadius: 30,
-		alignItems: 'center',
-		backgroundColor: 'black',
-		padding: 15,
-		elevation: 10,
-	},
 	container: {
 		flex: 1,
 		alignItems: "center",
@@ -154,6 +136,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: 'rgba(52, 52, 52, 0.8)'
 	},
 	cardModalScreen: {
 		height: 200,

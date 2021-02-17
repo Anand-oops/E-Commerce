@@ -9,23 +9,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SubCategory({ navigation }) {
 
-	var name = navigation.getParam('item').itemName;
-	var id = navigation.getParam('id');
-	console.log("id", id);
-	console.log("name", name);
+	const name = navigation.getParam('item').itemName;
+	const id = navigation.getParam('id');
+
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
 	const [image, setImage] = useState(require('../assets/images/add.png'))
 	const [items, setItems] = useState([]);
 	const [text, onTextChange] = useState('');
-	const [isChanged, setChanged] = useState(false);
 	const [loader, setLoader] = useState(true);
 
 	Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).on('value', (data) => {
 		if (listenCheck) {
 			if (data.val()) {
 				setItems(data.val());
-				console.log("Items", items);
 			}
 			setListenCheck(false);
 			setLoader(false);
@@ -66,11 +63,15 @@ export default function SubCategory({ navigation }) {
 	};
 	const AddCardContent = (image, text) => {
 		console.log("AddCardContent", text)
-		setItems([...items, { subitemName: text, uri: image.uri }])
+		var list = [...items, { subitemName: text, uri: image.uri }];
+		setItems(list)
 		setVisibleModalAdd(false)
-		setChanged(true);
 		setImage(require('../assets/images/add.png'))
 		onTextChange('')
+		Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(list).then(() => {
+			setListenCheck(true)
+			Toast.show("Sub-Category Added", Toast.SHORT);
+		})
 	}
 
 	function deleteItem(index) {
@@ -78,21 +79,12 @@ export default function SubCategory({ navigation }) {
 		const newArray = items;
 		newArray.splice(index, 1);
 		setItems(newArray);
-		setChanged(true);
-		saveToDatabase();
+		Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(newArray).then(() => {
+			setListenCheck(true)
+			Toast.show("Sub-Category Deleted", Toast.SHORT);
+		})
 	}
 
-	function saveToDatabase() {
-		console.log("save", items);
-		if (isChanged) {
-			console.log("Id", id);
-			Firebase.database().ref(`DrawerItemsList/${id}/SubCategories`).set(items).then(() => {
-				setListenCheck(true)
-				setChanged(false)
-				Toast.show("Sub-Categories Updated", Toast.SHORT);
-			})
-		}
-	}
 	return (
 
 		<View style={styles.main}>
@@ -100,10 +92,10 @@ export default function SubCategory({ navigation }) {
 			<FlatList data={items} renderItem={({ item }) =>
 			(<Card>
 				<Image
-					style={{ padding: 2, height: '125%', width: 100, resizeMode: 'contain', alignSelf: 'center', }}
+					style={{ padding: 20, height: 100, width: 100, resizeMode: 'contain', alignSelf: 'center', }}
 					source={{ uri: item.uri }}
 				/>
-				<Text style={{ color: 'black', fontSize: 20, marginStart: 5 }}>{item.subitemName}</Text>
+				<Text style={{ color: 'black', fontSize: 20, marginLeft: 10 }}>{item.subitemName}</Text>
 				<TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => {
 					Alert.alert("Delete", "Are you sure ?",
 						[
@@ -118,18 +110,13 @@ export default function SubCategory({ navigation }) {
 
 			</FlatList>
 
-			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50 }}
+			<TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}
 				onPress={() => setVisibleModalAdd(!visibleModalAdd)}>
-				<Ionicons name="add-circle" size={30} color="black" />
+				<Ionicons name="add-circle" size={50} color="black" />
 			</TouchableOpacity>
-
-			<TouchableOpacity style={styles.saveButton}
-				onPress={() => saveToDatabase()}>
-				<Text style={{ color: 'white', fontSize: 20 }} >Submit</Text>
-			</TouchableOpacity>
-
 
 			<Modal
+				animationType='fade'
 				visible={visibleModalAdd}
 				position='center'
 				transparent={true}
@@ -140,7 +127,7 @@ export default function SubCategory({ navigation }) {
 							<Image source={image} style={styles.cardImage} />
 						</TouchableOpacity>
 
-						<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter subcategory Name:</Text>
+						<Text style={{ paddingLeft: 15, marginTop: 10, }}>Enter Sub-Category Name:</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 							<TextInput style={styles.modalTextInput} onChangeText={(Text) => onTextChange(Text)} value={text} />
 						</View>
@@ -184,14 +171,6 @@ const styles = StyleSheet.create({
 		height: '100%',
 		width: '100%'
 	},
-	saveButton: {
-		borderTopLeftRadius: 30,
-		borderTopRightRadius: 30,
-		alignItems: 'center',
-		backgroundColor: 'black',
-		padding: 15,
-		elevation: 10,
-	},
 	container: {
 		flex: 1,
 		alignItems: "center",
@@ -201,6 +180,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: 'rgba(52, 52, 52, 0.8)'
 	},
 	cardModalScreen: {
 		height: 200,
