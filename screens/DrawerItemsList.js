@@ -73,7 +73,7 @@ export default function DrawerItemsList({ navigation }) {
 					<MaterialIcons name="delete" size={35} color="red" />
 				</TouchableOpacity>
 				<TouchableOpacity style={{ position: 'absolute', right: 5 }} onPress={() => moveAhead(item)}>
-					<AntDesign name="caretright" size={35} color="black" />
+					<AntDesign name="doubleright" size={35} color="black" />
 				</TouchableOpacity>
 			</Card>)}>
 
