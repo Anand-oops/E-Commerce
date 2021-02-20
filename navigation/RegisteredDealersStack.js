@@ -42,6 +42,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ActiveDealers from "../screens/ActiveDealers";
 import InactiveDealers from "../screens/InactiveDealers";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 const Tab = createBottomTabNavigator();
 
 const RegisteredDealersStack = () => {
@@ -51,7 +52,7 @@ const RegisteredDealersStack = () => {
       options={{
       tabBarLabel: 'Active',
       tabBarIcon: ({ color, size }) => (
-        <MaterialCommunityIcons name="home" color={color} size={size} />
+        <FontAwesome5 name="user-alt" size={20} color={color} />
       ),
     }}
        />
@@ -61,7 +62,7 @@ const RegisteredDealersStack = () => {
       options={{
                 tabBarLabel: 'Inactive',
                 tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="account" color={color} size={size} />
+                  <FontAwesome5 name="user-alt-slash" size={20} color={color} />
                 ),
               }}
        />

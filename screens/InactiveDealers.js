@@ -10,6 +10,7 @@ const Stack = createStackNavigator();
 export default function InactiveDealers({ navigation }) {
     return (
         <Stack.Navigator screenOptions={{
+            headerShown:false,
             headerTintColor: 'white',
             headerTitleStyle: {
                 fontWeight: 'bold',

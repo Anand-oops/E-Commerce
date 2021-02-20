@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity,ActivityIndicator,Alert } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import Collapsible from 'react-native-collapsible'
 import { SearchBar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import DropDownPicker from 'react-native-dropdown-picker'
+import { AntDesign } from '@expo/vector-icons'; 
 
 export default function Customers({ navigation }) {
 
@@ -81,6 +82,10 @@ export default function Customers({ navigation }) {
         setCollapsed(final);
     }
 
+    const addtoBlackList=()=>{
+        console.log('clicked');
+    }
+
     return (
         <View style={styles.main}>
 
@@ -109,15 +114,35 @@ export default function Customers({ navigation }) {
             </View>
             <FlatList data={searchedItems} renderItem={({ item, index }) =>
             (<Card>
+                <View style={{flex:1}}>
+                <View style={{flexDirection:'row',flex:1}}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => pressHandler(index)}>
-                    <Text style={{ color: 'black', fontSize: 16 }}>{"Customer ID : " + item.id}</Text>
-                    <Text style={{ color: 'black', fontSize: 16 }}>Customer Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
-                    <Text style={{ color: 'black', fontSize: 16 }}>Customer Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
+                    <Text style={{ color: 'black', fontSize: 16 }}>{"ID : " + item.id}</Text>
+                    <Text style={{ color: 'black', fontSize: 16 }}>Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
+                    <Text style={{ color: 'black', fontSize: 16 }}>Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
                     <Collapsible collapsed={searchedColl[index]} >
                         <Text style={{ color: 'black', fontSize: 16 }}>Email : {item.email}</Text>
                         <Text style={{ color: 'black', fontSize: 16 }}>City : {item.city ? item.city : 'Not provided'}</Text>
                     </Collapsible>
+                </TouchableOpacity >
+                <TouchableOpacity style={{alignSelf:'center'}} onPress={()=>{navigation.navigate('InsideRegCus',{id:item.id})}}>
+                <AntDesign name="rightcircle" size={24} color="black" />
                 </TouchableOpacity>
+                
+                </View>
+                <TouchableOpacity onPress={()=>{
+                    Alert.alert("Blacklist", "Are you sure ?",
+                    [
+                        { text: "Cancel" },
+                        { text: "Proceed", onPress: () => addtoBlackList() }
+                    ], { cancelable: false }
+                );
+                }}>
+                    <View style={{borderRadius:1,elevation:1,padding:4,margin:4,backgroundColor:'pink'}}>
+                        <Text style={{fontSize:20,fontWeight:'bold',alignSelf:'center'}}>Add to Blacklist</Text>
+                    </View>
+                </TouchableOpacity>
+                </View>
             </Card>)}>
 
             </FlatList>

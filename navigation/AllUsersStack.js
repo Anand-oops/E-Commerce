@@ -17,6 +17,7 @@ return(
 		},
 	}}>
 		<Stack.Screen name="All Users" component={AllUsersTabStack} options={{
+			
 			title: 'All Users',
 			headerStyle: {
 				backgroundColor: 'black'

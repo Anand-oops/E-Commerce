@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 
-export default function PendingListScreen({ navigation }) {
+export default function DealerItems({ navigation }) {
 
     const [dealerCall, setDealerCall] = useState(true);
     const [dealer, setDealer] = useState([]);

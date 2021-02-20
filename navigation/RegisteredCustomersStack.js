@@ -38,6 +38,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons'; 
 import ActiveCustomers from "../screens/ActiveCustomers";
 import InactiveCustomers from "../screens/InactiveCustomers";
 const Tab = createBottomTabNavigator();
@@ -49,7 +50,8 @@ const RegisteredCustomersStack = () => {
       options={{
       tabBarLabel: 'Active',
       tabBarIcon: ({ color, size }) => (
-        <MaterialCommunityIcons name="home" color={color} size={size} />
+        // <MaterialCommunityIcons name="home" color={color} size={size} />
+        <FontAwesome5 name="user-alt" size={20} color={color} />
       ),
     }}
        />
@@ -59,7 +61,8 @@ const RegisteredCustomersStack = () => {
       options={{
                 tabBarLabel: 'Inactive',
                 tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="account" color={color} size={size} />
+                  // <MaterialCommunityIcons name="account" color={color} size={size} />
+                  <FontAwesome5 name="user-alt-slash" size={20} color={color} />
                 ),
               }}
        />
