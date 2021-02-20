@@ -30,8 +30,11 @@ export default function Dealers({ navigation }) {
                 var coll = []
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i]
-                    temp.push(data.val()[key])
-                    coll.push(true)
+                    if(!data.val()[key].activity){
+                        temp.push(data.val()[key])
+                        coll.push(true)
+                    }
+                    
                 }
                 setItems(temp);
                 setSearchedItems(temp);
@@ -43,14 +46,14 @@ export default function Dealers({ navigation }) {
             setLoader(false);
         }
     });
-    Firebase.database().ref(`BlackList/Dealers`).on('value',(data)=>{
-           if(check2){
-               if(data.val()){
-                setBlackList(data.val());
-               }
-           }
-           setCheck2(false);
-    });
+    // Firebase.database().ref(`BlackList/Dealers`).on('value',(data)=>{
+    //        if(check2){
+    //            if(data.val()){
+    //             setBlackList(data.val());
+    //            }
+    //        }
+    //        setCheck2(false);
+    // });
 
     const performSearch = (text) => {
         var filter = [];
@@ -95,25 +98,11 @@ export default function Dealers({ navigation }) {
     }
     const addtoBlackList=(item)=>{
         console.log('clicked');
-        var list = [...Blacklist];
 
-        var present = false;
-
-        for (var i = 0; i < list.length; i++) {
-            if (list[i].id == item.id) {
-                present = true;
-                break;
-            }
-        }
-        if (present) {
-            Toast.show("Already blacklisted !! ", Toast.SHORT);
-        } else {
-            list.push(item);
-            setBlackList(list);
-            Firebase.database().ref(`Blacklist/Dealers`).set(list).then(() => {
-                Toast.show("Blacklisted", Toast.SHORT);
-            })
-        }
+        Firebase.database().ref(`Dealers/${item.id}`).update({
+            activity:'Inactive'
+        })
+        setListenCheck(true);
     }
     return (
         <View style={styles.main}>

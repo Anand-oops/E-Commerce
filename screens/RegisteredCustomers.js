@@ -27,8 +27,11 @@ export default function Customers({ navigation }) {
                 var coll = []
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i]
-                    temp.push(data.val()[key])
-                    coll.push(true)
+                    if(!data.val()[key].activity){
+                        temp.push(data.val()[key])
+                        coll.push(true)
+                    }
+                    
                 }
                 setItems(temp);
                 setSearchedItems(temp);
@@ -82,8 +85,13 @@ export default function Customers({ navigation }) {
         setCollapsed(final);
     }
 
-    const addtoBlackList=()=>{
-        console.log('clicked');
+    const addtoBlackList=(item)=>{
+        
+        Firebase.database().ref(`Customers/${item.id}`).update({
+            activity:'Inactive'
+        })
+        setListenCheck(true);
+
     }
 
     return (
@@ -134,7 +142,7 @@ export default function Customers({ navigation }) {
                     Alert.alert("Blacklist", "Are you sure ?",
                     [
                         { text: "Cancel" },
-                        { text: "Proceed", onPress: () => addtoBlackList() }
+                        { text: "Proceed", onPress: () => addtoBlackList(item) }
                     ], { cancelable: false }
                 );
                 }}>
