@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator,Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { SearchBar } from 'react-native-elements'
 import Collapsible from 'react-native-collapsible'
 import { StatusBar } from 'expo-status-bar';
 import DropDownPicker from 'react-native-dropdown-picker'
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
+import Toast from 'react-native-simple-toast';
 
 export default function Dealers({ navigation }) {
 
-    console.log("reg deal", navigation);
     const [items, setItems] = useState([]);
     const [listenCheck, setListenCheck] = useState(true);
-    const [check2, setCheck2] = useState(true);
     const [collapsed, setCollapsed] = useState([])
     const [searchText, setSearchText] = useState('')
     const [searchedItems, setSearchedItems] = useState([])
     const [searchedColl, setSearchedColl] = useState([])
     const [searchBy, setSearchBy] = useState('name');
     const [loader, setLoader] = useState(true);
-    const [Blacklist,setBlackList]=useState([]);
 
     Firebase.database().ref('Dealers/').on('value', (data) => {
         if (listenCheck) {
@@ -30,30 +28,22 @@ export default function Dealers({ navigation }) {
                 var coll = []
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i]
-                    if(!data.val()[key].activity){
+                    if (!data.val()[key].activity) {
                         temp.push(data.val()[key])
                         coll.push(true)
                     }
-                    
+
                 }
                 setItems(temp);
                 setSearchedItems(temp);
                 setSearchedColl(coll);
                 setCollapsed(coll);
-            }
-            
+            } else
+                Toast.show("No Registered Dealer", Toast.SHORT);
             setListenCheck(false);
             setLoader(false);
         }
     });
-    // Firebase.database().ref(`BlackList/Dealers`).on('value',(data)=>{
-    //        if(check2){
-    //            if(data.val()){
-    //             setBlackList(data.val());
-    //            }
-    //        }
-    //        setCheck2(false);
-    // });
 
     const performSearch = (text) => {
         var filter = [];
@@ -96,11 +86,11 @@ export default function Dealers({ navigation }) {
         final.splice(ind, 1, !final[ind])
         setCollapsed(final);
     }
-    const addtoBlackList=(item)=>{
+    const addtoBlackList = (item) => {
         console.log('clicked');
 
         Firebase.database().ref(`Dealers/${item.id}`).update({
-            activity:'Inactive'
+            activity: 'Inactive'
         })
         setListenCheck(true);
     }
@@ -131,33 +121,35 @@ export default function Dealers({ navigation }) {
             </View>
             <FlatList data={searchedItems} renderItem={({ item, index }) =>
             (<Card>
-                <View style={{flex:1}}>
-                <View style={{flexDirection:'row',flex:1}}>
-                <TouchableOpacity style={{ flex: 1 }} onPress={() => pressHandler(index)}>
-                    <Text style={{ color: 'black', fontSize: 16 }}>{"ID : " + item.id}</Text>
-                    <Text style={{ color: 'black', fontSize: 16 }}>Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
-                    <Text style={{ color: 'black', fontSize: 16 }}>Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
-                    <Collapsible collapsed={searchedColl[index]} >
-                        <Text style={{ color: 'black', fontSize: 16 }}>Email : {item.email}</Text>
-                        <Text style={{ color: 'black', fontSize: 16 }}>City : {item.city ? item.city : 'Not provided'}</Text>
-                    </Collapsible>
-                </TouchableOpacity>
-                <TouchableOpacity style={{alignSelf:'center'} } onPress={()=>{navigation.navigate('InsideRegDea',{id:item.id})}}>
-                <AntDesign name="rightcircle" size={24} color="black" />
-                </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={()=>{
-                    Alert.alert("Blacklist", "Are you sure ?",
-                    [
-                        { text: "Cancel" },
-                        { text: "Proceed", onPress: () => addtoBlackList(item) }
-                    ], { cancelable: false }
-                );
-                }}>
-                    <View style={{borderRadius:1,elevation:1,padding:4,margin:4,backgroundColor:'pink'}}>
-                        <Text style={{fontSize:20,fontWeight:'bold',alignSelf:'center'}}>Add to Blacklist</Text>
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => pressHandler(index)}>
+                            <Text style={{ color: 'black', fontSize: 16 }}>{"ID : " + item.id}</Text>
+                            <Text style={{ color: 'black', fontSize: 16 }}>Name : {item.firstName ? item.firstName + " " + (item.lastName ? item.lastName : " ") : "No name provided"}</Text>
+                            <Text style={{ color: 'black', fontSize: 16 }}>Mobile No. : {item.mobile ? item.mobile : "No number provided"}</Text>
+                            <Collapsible collapsed={searchedColl[index]} >
+                                <Text style={{ color: 'black', fontSize: 16 }}>Email : {item.email}</Text>
+                                <Text style={{ color: 'black', fontSize: 16 }}>City : {item.city ? item.city : 'Not provided'}</Text>
+                                <Text style={{ color: 'black', fontSize: 16 }}>Bank Account : {item.AccountNumber ? item.AccountNumber : 'Not provided'}</Text>
+                                <Text style={{ color: 'black', fontSize: 16 }}>IFSC Code : {item.IfscCode ? item.IfscCode : 'Not provided'}</Text>
+                            </Collapsible>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { navigation.navigate('InsideRegDea', { id: item.id }) }}>
+                            <AntDesign name="rightcircle" size={30} color="#000a1a" />
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                        Alert.alert("Blacklist", "Are you sure ?",
+                            [
+                                { text: "Cancel" },
+                                { text: "Proceed", onPress: () => addtoBlackList(item) }
+                            ], { cancelable: false }
+                        );
+                    }}>
+                        <View style={{ borderRadius: 5, elevation: 4, padding: 4, margin: 4, backgroundColor: 'pink' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', alignSelf: 'center' }}>Add to Blacklist</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </Card>)}>
 
@@ -166,7 +158,7 @@ export default function Dealers({ navigation }) {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -179,7 +171,8 @@ export default function Dealers({ navigation }) {
 const styles = StyleSheet.create({
     main: {
         height: '100%',
-        width: '100%'
+        width: '100%',
+        backgroundColor: '#a6b8ca'
     },
     container: {
         flex: 1,

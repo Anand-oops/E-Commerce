@@ -176,15 +176,15 @@ export default function PendingOrders({ }) {
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
                         <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold' }}>Order Id: {data.item.orderId}</Text>
-                            <Text style={{ color: 'gray' }}>Dealer Id: {data.item.dealerId}</Text>
-                            <Text style={{ color: 'gray' }}>Customer Id: {data.item.customer.customerId}</Text>
-                            <Text style={{ color: 'blue' }}>Order Date: {data.item.orderDate}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id: {data.item.dealerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id: {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date: {data.item.orderDate}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
-                                <Text style={{ color: 'black' }}>Product : {data.item.productName}</Text>
-                                <Text style={{ color: 'purple' }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'blue' }}>Ordered On: {data.item.orderDate}</Text>
-                                <Text style={{ color: 'black' }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Ordered On: {data.item.orderDate}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
                                 <TouchableOpacity style={{ flexDirection: 'row', alignContent: 'space-around', marginTop: 5 }}
                                     onPress={() => {
                                         Alert.alert("Delivered ?", "Product will be marked Delivered !",
@@ -202,7 +202,7 @@ export default function PendingOrders({ }) {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -214,19 +214,15 @@ export default function PendingOrders({ }) {
 const styles = StyleSheet.create({
     main: {
         height: '100%',
-        width: '100%'
-    },
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
+        width: '100%',
+        backgroundColor: '#a6b8ca'
     },
     listContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 0.5,
-        borderColor: 'black',
+        borderColor: '#000a1a',
         paddingHorizontal: 20,
         paddingVertical: 10
     },

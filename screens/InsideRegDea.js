@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, SafeAreaView, Alert, Modal, TextInput, Button, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import Firebase from '../firebaseConfig';
-import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-simple-toast'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function DealerItems(props) {
 
@@ -19,17 +18,17 @@ export default function DealerItems(props) {
         if (dealerCall) {
             if (data.val()) {
                 setDealer(data.val());
-                var keys = Object.keys(data.val())
-                var key = keys[0];
                 var allItems = [];
-                for (var i = 0; i < data.val()[key].length; i++) {
-                    allItems.push(data.val()[key][i]);
-                    
-                } 
-                
+                var key = 'DealerProducts';
+                if (data.val()[key]) {
+                    for (var i = 0; i < data.val()[key].length; i++) {
+                        allItems.push(data.val()[key][i]);
+                    }
+                }
                 setItems(allItems)
+            } if (allItems.length == 0) {
+                Toast.show("No Dealer Products found", Toast.SHORT);
             }
-            console.log('items',items)
             setDealerCall(false);
             setLoader(false);
         }
@@ -37,34 +36,35 @@ export default function DealerItems(props) {
 
     return (
 
-        <View style={styles.main}>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "")}</Text>
+        <ScrollView style={styles.main}>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Mobile No. : " + (dealer.mobile ? dealer.mobile : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"City : " + (dealer.city ? dealer.city : "Not provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank Account No. : " + (dealer.AccountNumber ? dealer.AccountNumber : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank IFSC Code : " + (dealer.IfscCode ? dealer.IfscCode : "Not Provided")}</Text>
 
             <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={items} renderItem={({ item }) =>
-                (<View style={styles.card}>
+                (
+                    <View style={styles.card}>
 
-                    <SliderBox
-                        images={item.images}
-                        autoplay={true}
-                        sliderBoxHeight={175}
-                        circleLoop={true}
-                        resizeMode={'contain'}
-                    />
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Category : {item.category}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Description : {item.description}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Specs : {item.specs}</Text>
-                    <View style={{ flexDirection: 'row', width: '100%' }}
-                    >
-
+                        <SliderBox
+                            images={item.images}
+                            autoplay={true}
+                            sliderBoxHeight={175}
+                            circleLoop={true}
+                            resizeMode={'contain'}
+                        />
+                       <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Category : {item.category}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Description : {item.description}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Specs : {item.specs}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Date : {item.productDate}</Text>
                     </View>
-                </View>
 
                 )}>
 
@@ -81,14 +81,17 @@ export default function DealerItems(props) {
                 />
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     main: {
+        padding: 10,
+        flex: 1,
         height: '100%',
-        width: '100%'
+        width: '100%',
+        backgroundColor: '#a6b8ca'
     },
     container: {
         flex: 1,
@@ -97,14 +100,17 @@ const styles = StyleSheet.create({
     },
     card: {
         marginTop: 8,
-        borderRadius: 6,
+        padding: 5,
+        borderRadius: 10,
         elevation: 3,
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#778899',
         shadowOffset: { width: 1, height: 1 },
         shadowColor: '#333',
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.3, 
         shadowRadius: 2,
+        borderWidth: 2,
+        borderColor: '#DCDCDC',
         marginHorizontal: 4,
         marginVertical: 6,
     },

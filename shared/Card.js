@@ -17,17 +17,19 @@ export default function card(props) {
 const styles = StyleSheet.create({
     card: {
         marginTop: 8,
-        
-        borderRadius: 6,
+        padding: 5,
+        borderRadius: 10,
         elevation: 3,
-        backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#778899',
         shadowOffset: { width: 1, height: 1 },
         shadowColor: '#333',
         shadowOpacity: 0.3,
         shadowRadius: 2,
+        borderWidth: 2,
+        borderColor: '#DCDCDC',
         marginHorizontal: 4,
         marginVertical: 6,
-
     },
     cardItems: {
         flexDirection: 'row',

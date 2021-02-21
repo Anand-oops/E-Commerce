@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 
-export default function DealerItems({ navigation }) {
+export default function DealerItems(props) {
 
     const [dealerCall, setDealerCall] = useState(true);
     const [dealer, setDealer] = useState([]);
@@ -17,7 +17,7 @@ export default function DealerItems({ navigation }) {
     const [discountRate, setDiscountRate] = useState()
     const [product, setProduct] = useState()
     const [itemIndex, setItemIndex] = useState(-1)
-    var id = navigation.getParam('id');
+    const id = props.route.params.id;
     const [loader, setLoader] = useState(true);
 
 
@@ -36,7 +36,7 @@ export default function DealerItems({ navigation }) {
                     }
                 } if (filtered.length == 0) {
                     Firebase.database().ref(`Dealers/${id}/pendingStatus`).set(false)
-                        .then(navigation.goBack())
+                        .then(props.navigation.goBack())
                 }
                 setFilteredItems(filtered)
                 setItems(allItems)
@@ -114,41 +114,80 @@ export default function DealerItems({ navigation }) {
     return (
 
         <View style={styles.main}>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 18, padding: 4 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"City :" + (dealer.city ? dealer.city : "Not provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank Account No. :" + (dealer.AccountNumber ? dealer.AccountNumber : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank IFSC Code :" + (dealer.IfscCode ? dealer.IfscCode : "Not Provided")}</Text>
+
 
             <SafeAreaView style={{ flex: 1 }}>
                 <FlatList data={filteredItems} renderItem={({ item }) =>
                 (<View style={styles.card}>
 
                     <SliderBox
+                        style={{ height: 150, marginBottom: 10 }}
                         images={item.images}
                         autoplay={true}
-                        sliderBoxHeight={175}
                         circleLoop={true}
                         resizeMode={'contain'}
                     />
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Category : {item.category}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Description : {item.description}</Text>
-                    <Text style={{ color: 'black', fontSize: 18, alignSelf: 'center' }}>Specs : {item.specs}</Text>
-                    <View style={{ flexDirection: 'row', width: '100%' }}
-                    >
-                        <View style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => deleteProduct(item)}>
-                                <Text style={{ fontSize: 24, paddingLeft: 5 }}>Discard</Text>
-                                <AntDesign name="close" size={34} color="red" />
-                            </TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Category : {item.category}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Description : {item.description}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Specs : {item.specs}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Date : {item.productDate}</Text>
                         </View>
-                        <View style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => acceptProduct(item)}>
-                                <Text style={{ fontSize: 24, paddingLeft: 5 }}>Accept</Text>
-                                <AntDesign name="check" size={34} color="green" />
-                            </TouchableOpacity>
+                        <View style={{ flexDirection: 'column', width: 150,justifyContent:'space-evenly' }}
+                        >
+                            <View style={{
+                                marginTop: 8,
+                                borderRadius: 10,
+                                elevation: 3,
+                                flex: 1,
+                                backgroundColor: '#d8eafd',
+                                shadowOffset: { width: 1, height: 1 },
+                                shadowColor: '#333',
+                                shadowOpacity: 0.3,
+                                shadowRadius: 2,
+                                borderWidth: 2,
+                                borderColor: '#DCDCDC',
+                                marginHorizontal: 4,
+                                marginVertical: 10,
+                                justifyContent: 'center'
+                            }}>
+                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-around' }} onPress={() => deleteProduct(item)}>
+                                    <Text style={{ fontSize: 20 }}>Discard</Text>
+                                    <AntDesign name="close" size={30} color="red" />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                marginTop: 8,
+                                borderRadius: 10,
+                                elevation: 3,
+                                flex: 1,
+                                backgroundColor: '#d8eafd',
+                                shadowOffset: { width: 1, height: 1 },
+                                shadowColor: '#333',
+                                shadowOpacity: 0.3,
+                                shadowRadius: 2,
+                                borderWidth: 2,
+                                borderColor: '#DCDCDC',
+                                marginHorizontal: 4,
+                                marginVertical: 10,
+                                justifyContent: 'center'
+                            }}>
+                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-around' }} onPress={() => acceptProduct(item)}>
+                                    <Text style={{ fontSize: 20 }}>Accept</Text>
+                                    <AntDesign name="check" size={30} color="green" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -192,7 +231,7 @@ export default function DealerItems({ navigation }) {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -204,24 +243,24 @@ export default function DealerItems({ navigation }) {
 
 const styles = StyleSheet.create({
     main: {
+        padding: 5,
         height: '100%',
-        width: '100%'
-    },
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
+        width: '100%',
+        backgroundColor: '#a6b8ca'
     },
     card: {
         marginTop: 8,
-        borderRadius: 6,
+        padding: 5,
+        borderRadius: 10,
         elevation: 3,
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#778899',
         shadowOffset: { width: 1, height: 1 },
         shadowColor: '#333',
         shadowOpacity: 0.3,
         shadowRadius: 2,
+        borderWidth: 2,
+        borderColor: '#DCDCDC',
         marginHorizontal: 4,
         marginVertical: 6,
     },
@@ -229,6 +268,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
     },
 
     cardModalScreen: {
@@ -238,8 +278,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         elevation: 20,
         borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: 'white'
+        borderColor: '#000a1a',
+        backgroundColor: '#d8eafd'
     },
 
     modalTextInput: {
@@ -248,7 +288,7 @@ const styles = StyleSheet.create({
         padding: 5,
         paddingLeft: 15,
         borderWidth: 1,
-        borderColor: 'black',
+        borderColor: '#000a1a',
         borderRadius: 10,
         backgroundColor: 'white'
     },

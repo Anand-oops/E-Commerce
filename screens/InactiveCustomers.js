@@ -13,7 +13,6 @@ const Stack = createStackNavigator();
 
 const Customers=({ navigation })=> {
 
-    // console.log("reg deal", navigation);
     const [items, setItems] = useState([]);
     const [listenCheck, setListenCheck] = useState(true);
     const [collapsed, setCollapsed] = useState([])
@@ -91,7 +90,6 @@ const Customers=({ navigation })=> {
         setCollapsed(final);
     }
     const RemoveFromBlackList=(item)=>{
-        // console.log('clicked');
         Firebase.database().ref(`Customers/${item.id}/activity`).remove();
         setListenCheck(true);
     }
@@ -134,7 +132,7 @@ const Customers=({ navigation })=> {
                     </Collapsible>
                 </TouchableOpacity>
                 <TouchableOpacity style={{alignSelf:'center'} } onPress={()=>{navigation.navigate('InsideRegCus',{id:item.id})}}>
-                <AntDesign name="rightcircle" size={24} color="black" />
+                <AntDesign name="rightcircle" size={24} color="#000a1a" />
                 </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={()=>{
@@ -145,7 +143,7 @@ const Customers=({ navigation })=> {
                     ], { cancelable: false }
                 );
                 }}>
-                    <View style={{borderRadius:1,elevation:1,padding:4,margin:4,backgroundColor:'pink'}}>
+                    <View style={{borderRadius:5,elevation:1,padding:4,margin:4,backgroundColor:'pink'}}>
                         <Text style={{fontSize:20,fontWeight:'bold',alignSelf:'center'}}>Remove from Blacklist</Text>
                     </View>
                 </TouchableOpacity>
@@ -157,7 +155,7 @@ const Customers=({ navigation })=> {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -170,12 +168,8 @@ const Customers=({ navigation })=> {
 const styles = StyleSheet.create({
     main: {
         height: '100%',
-        width: '100%'
-    },
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
+        width: '100%',
+        backgroundColor:'#a6b8ca'
     },
 });
 
@@ -194,32 +188,16 @@ export default function InactiveCustomers({ navigation }) {
             options={{
                 title: 'Customers',
                 headerStyle: {
-                    backgroundColor: 'black'
+                    backgroundColor: '#223240'
                 },
-                // headerTitle: () => (
-                //     <View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                //         <Entypo name="menu" size={24} color="white" onPress={() => navigation.openDrawer()} style={{ position: 'absolute', left: 3 }} />
-                //         <View>
-                //             <Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Customers</Text>
-                //         </View>
-                //     </View>
-                // ),
             }} 
             />
             <Stack.Screen name="InsideRegCus" component={InsideRegCus} 
             options={{
                 title: 'Customers Details',
                 headerStyle: {
-                    backgroundColor: 'black'
+                    backgroundColor: '#223240'
                 },
-                // headerTitle: () => (
-                //     <View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                //         <Entypo name="menu" size={24} color="white" onPress={() => navigation.openDrawer()} style={{ position: 'absolute', left: 3 }} />
-                //         <View>
-                //             <Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Customers</Text>
-                //         </View>
-                //     </View>
-                // ),
             }}
              />
 

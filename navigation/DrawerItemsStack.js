@@ -1,7 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { View,Text } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import Header from '../shared/Header';
 import React from 'react';
 import DrawerItemsList from '../screens/DrawerItemsList';
 import SubCategory from "../screens/SubCategory";
@@ -20,7 +19,7 @@ return(
 		<Stack.Screen name="Drawer List" component={DrawerItemsList} options={{
 			title: 'Drawer List',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -32,10 +31,10 @@ return(
 			),
 		}} />
 
-		<Stack.Screen name="Sub Category" component={SubCategory} options={{
+		<Stack.Screen name="SubCategory" component={SubCategory} options={{
 			title: 'Sub Category',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>

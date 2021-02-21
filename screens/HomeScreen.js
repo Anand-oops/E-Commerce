@@ -297,7 +297,7 @@ const HomeScreen = () => {
 		if (isCardChanged) {
 			cards.map(card => {
 				if (card.images.length == 0) {
-					Alert.alert('Card Image Error', `The card with the header ${card.header} does not contain any images. Please add an image to the card`)
+					Alert.alert('Sale Product missing', `The card with the header ${card.header} does not contain any Sale Product.`)
 					CardFlag = false;
 				}
 			});
@@ -329,7 +329,7 @@ const HomeScreen = () => {
 	}
 
 	return (
-		<SafeAreaView style={{ paddingTop: 0, flex: 1, }}>
+		<SafeAreaView style={{ paddingTop: 0, flex: 1, backgroundColor:'#a6b8ca' }}>
 			<StatusBar style="light" />
 			<ScrollView keyboardShouldPersistTaps='always'>
 				<View style={styles.iconContainer}>
@@ -378,8 +378,8 @@ const HomeScreen = () => {
 								containerStyle={{ height: 40, margin: 10, }}
 								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
 								style={{ backgroundColor: 'white' }}
-								labelStyle={{ color: 'blue' }}
-								activeLabelStyle={{ color: 'red' }}
+								labelStyle={{ color: 'black' }}
+								activeLabelStyle={{ color: 'blue' }}
 								onChangeItem={item => { setHeader(item.value) }}
 							/>
 
@@ -414,8 +414,8 @@ const HomeScreen = () => {
 								containerStyle={{ height: 40, margin: 10, }}
 								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, marginBottom: 20, zIndex: 5 }}
 								style={{ backgroundColor: 'white' }}
-								labelStyle={{ color: 'blue' }}
-								activeLabelStyle={{ color: 'red' }}
+								labelStyle={{ color: 'black' }}
+								activeLabelStyle={{ color: 'blue' }}
 								onChangeItem={item => { setProductSubCategory(item.value), setDisabled(true), setProductImage(''), setProducts([]), setProductListCall(true), setCardProduct([]) }}
 							/>
 							<DropDownPicker
@@ -425,8 +425,8 @@ const HomeScreen = () => {
 								containerStyle={{ height: 40, margin: 10, }}
 								dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
 								style={{ backgroundColor: 'white' }}
-								labelStyle={{ color: 'blue' }}
-								activeLabelStyle={{ color: 'red' }}
+								labelStyle={{ color: 'black' }}
+								activeLabelStyle={{ color: 'blue' }}
 								onChangeItem={item => { setProductImage(item.value.image.uri), setCardProduct(item.value) }}
 							/>
 							<Image source={{ uri: productImage }} style={{ height: 80, width: 80, alignSelf: 'center', resizeMode: 'contain' }} />
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
 		padding: 5,
 		paddingHorizontal: 20,
 		borderWidth: 1,
-		borderColor: 'black',
+		borderColor: '#000a1a',
 		justifyContent: 'space-between',
 		alignItems: 'center'
 	},
@@ -508,13 +508,13 @@ const styles = StyleSheet.create({
 
 	imageDeck: {
 		height: 175,
-		borderColor: 'black',
+		borderColor: '#000a1a',
 		borderWidth: 1,
 		backgroundColor: '#778899'
 	},
 
 	saveButton: {
-		backgroundColor: 'black',
+		backgroundColor: '#000a1a',
 		padding: 15,
 		elevation: 10,
 		borderTopLeftRadius: 30,
@@ -535,8 +535,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		elevation: 20,
 		borderWidth: 1,
-		borderColor: 'black',
-		backgroundColor: 'white'
+		borderColor: '#000a1a',
+		backgroundColor: '#d8eafd'
 	},
 
 	cardImageContainer: {
@@ -561,8 +561,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		elevation: 20,
 		borderWidth: 1,
-		borderColor: 'black',
-		backgroundColor: 'white'
+		borderColor: '#000a1a',
+		backgroundColor: '#d8eafd'
 	},
 	modalTextInput: {
 		width: '90%',
@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
 		padding: 5,
 		paddingLeft: 15,
 		borderWidth: 1,
-		borderColor: 'black',
+		borderColor: '#000a1a',
 		borderRadius: 10,
 		backgroundColor: 'white'
 	},

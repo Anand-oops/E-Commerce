@@ -59,7 +59,7 @@ const ProfileScreen = ({ navigation}) => {
 
 	return (
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor:'#a6b8ca' }}>
 				<StatusBar style="light" />
 				<View style={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1, }}>
 
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
 		elevation: 10,
 		borderTopRightRadius: 30,
 		borderTopLeftRadius: 30,
-		backgroundColor: 'black',
+		backgroundColor: '#000a1a',
 		alignItems: 'center',
 	},
 });

@@ -50,9 +50,9 @@ const ChangeEmailScreen = ({ navigation }) => {
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor:'#a6b8ca' }}>
                 <StatusBar style="light" />
-                <View style={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1, }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}>
 
                     <Text style={{ marginTop: -100, marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>
                         Change Your Email </Text>
@@ -110,16 +110,12 @@ const ChangeEmailScreen = ({ navigation }) => {
 export default ChangeEmailScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 50,
-    },
     saveButton: {
         padding: 15,
         elevation: 10,
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
-        backgroundColor: 'black',
+        backgroundColor: '#000a1a',
         alignItems: 'center',
     },
 });

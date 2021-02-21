@@ -18,7 +18,7 @@ export default function AppStack({ navigation }) {
             <Stack.Screen name="Home" component={Home} options={{
                 title: 'Home',
                 headerStyle: {
-                    backgroundColor: 'black'
+                    backgroundColor: '#223240'
                 },
                 headerTitle: () => (
                     <View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

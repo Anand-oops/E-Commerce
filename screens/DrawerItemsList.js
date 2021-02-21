@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-simple-toast'
 
 
-export default function DrawerItemsList({ navigation }) {
+export default function DrawerItemsList(props) {
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
@@ -52,7 +52,7 @@ export default function DrawerItemsList({ navigation }) {
 
 	const moveAhead = (item) => {
 		var index = items.indexOf(item);
-		navigation.navigate('SubCategory', { item: item, id: index });
+		props.navigation.navigate('SubCategory', { id: index });
 	}
 
 	return (
@@ -95,7 +95,7 @@ export default function DrawerItemsList({ navigation }) {
 						<Text style={{ paddingLeft: 15, marginTop: 10, alignSelf: 'center' }}>Add Category</Text>
 						<View style={{ alignItems: 'center', justifyContent: 'center', }}>
 							<TextInput style={styles.modalTextInput} onChangeText={(val) => onTextChange(val)}
-								value={text} placeholder={'Enter item name'} />
+								value={text} />
 						</View>
 						<View style={styles.modalButtonContainer}>
 							<View style={{ padding: 10, width: '30%' }}>
@@ -113,7 +113,7 @@ export default function DrawerItemsList({ navigation }) {
 				<ActivityIndicator
 
 					size='large'
-					color="grey"
+					color="#000a1a"
 					animating={loader}
 
 				/>
@@ -125,12 +125,8 @@ export default function DrawerItemsList({ navigation }) {
 const styles = StyleSheet.create({
 	main: {
 		height: '100%',
-		width: '100%'
-	},
-	container: {
-		flex: 1,
-		alignItems: "center",
-		paddingTop: '50%'
+		width: '100%',
+		backgroundColor: '#a6b8ca'
 	},
 	modalContainer: {
 		flex: 1,
@@ -145,15 +141,16 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		elevation: 20,
 		borderWidth: 1,
-		borderColor: 'black',
-		backgroundColor: 'white'
-	}, modalTextInput: {
+		borderColor: '#000a1a',
+		backgroundColor: '#d8eafd'
+	}, 
+	modalTextInput: {
 		width: '90%',
 		marginVertical: 10,
 		padding: 5,
 		paddingLeft: 15,
 		borderWidth: 1,
-		borderColor: 'black',
+		borderColor: '#000a1a',
 		borderRadius: 10,
 		backgroundColor: 'white'
 	},

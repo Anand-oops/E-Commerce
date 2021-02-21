@@ -23,7 +23,7 @@ return(
 		<Stack.Screen name="ProfileDisplay" component={ProfileDisplayScreen} options={{
 			title: 'Profile',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -38,7 +38,7 @@ return(
 		<Stack.Screen name="Edit Profile" component={ProfileScreen} options={{
 			title: 'Edit Profile',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>
@@ -54,7 +54,7 @@ return(
 		<Stack.Screen name="Change Email" component={ChangeEmailScreen} options={{
 			title: 'Change Email',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>
@@ -71,7 +71,7 @@ return(
 		<Stack.Screen name="Change Password" component={ChangePasswordScreen} options={{
 			title: 'Change Password',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>

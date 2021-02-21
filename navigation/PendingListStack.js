@@ -1,7 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { View,Text } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import Header from '../shared/Header';
 import React from 'react';
 import PendingListScreen from '../screens/PendingListScreen';
 import DealerItems from "../screens/DealerItems";
@@ -21,7 +20,7 @@ return(
 		<Stack.Screen name="Pending List" component={PendingListScreen} options={{
 			title: 'Pending List',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -33,10 +32,10 @@ return(
 			),
 		}} />
 
-		<Stack.Screen name="Dealer Items" component={DealerItems} options={{
+		<Stack.Screen name="DealerItems" component={DealerItems} options={{
 			title: 'Dealer Items',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>

@@ -20,7 +20,7 @@ return(
 			
 			title: 'All Users',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

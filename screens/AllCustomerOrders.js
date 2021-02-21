@@ -8,7 +8,6 @@ import ReturnedOrders from '../screens/ReturnedOrdersScreen';
 
 export default function AllCustomerOrders({ navigation }) {
 
-	console.log('nv of all cus order', navigation);
 	const Tab = createMaterialTopTabNavigator();
 
 
@@ -18,7 +17,7 @@ export default function AllCustomerOrders({ navigation }) {
 			tabBarOptions={{
 				activeTintColor: 'white',
 				labelStyle: { fontSize: 10 },
-				style: { backgroundColor: 'black', elevation: 5 },
+				style: { backgroundColor: '#223240', elevation: 5 },
 			}}
 		>
 			<Tab.Screen

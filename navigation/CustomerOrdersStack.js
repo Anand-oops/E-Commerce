@@ -19,7 +19,7 @@ return(
 		<Stack.Screen name="All Customer Orders" component={AllCustomerOrders} options={{
 			title: 'All Customer Orders',
 			headerStyle: {
-				backgroundColor: 'black'
+				backgroundColor: '#223240'
 			},
 			headerTitle: () => (
 				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

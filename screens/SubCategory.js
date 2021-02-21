@@ -7,10 +7,9 @@ import Toast from 'react-native-simple-toast';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function SubCategory({ navigation }) {
+export default function SubCategory(props) {
 
-	const name = navigation.getParam('item').itemName;
-	const id = navigation.getParam('id');
+	const id = props.route.params.id;
 
 	const [listenCheck, setListenCheck] = useState(true);
 	const [visibleModalAdd, setVisibleModalAdd] = useState(false);
@@ -157,7 +156,7 @@ export default function SubCategory({ navigation }) {
 				<ActivityIndicator
 
 					size='large'
-					color="grey"
+					color="#000a1a"
 					animating={loader}
 
 				/>
@@ -169,12 +168,8 @@ export default function SubCategory({ navigation }) {
 const styles = StyleSheet.create({
 	main: {
 		height: '100%',
-		width: '100%'
-	},
-	container: {
-		flex: 1,
-		alignItems: "center",
-		paddingTop: '50%'
+		width: '100%',
+		backgroundColor: '#a6b8ca'
 	},
 	modalContainer: {
 		flex: 1,
@@ -190,8 +185,9 @@ const styles = StyleSheet.create({
 		elevation: 20,
 		borderWidth: 1,
 		borderColor: 'black',
-		backgroundColor: 'white'
-	}, modalTextInput: {
+		backgroundColor: '#d8eafd'
+	}, 
+	modalTextInput: {
 		width: '90%',
 		marginVertical: 10,
 		padding: 5,
@@ -201,11 +197,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: 'white'
 	},
-	modalButtonContainer: {
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		marginVertical: 15,
-	},
 	imageModalScreen: {
 		height: 300,
 		width: '85%',
@@ -214,7 +205,12 @@ const styles = StyleSheet.create({
 		elevation: 20,
 		borderWidth: 1,
 		borderColor: 'black',
-		backgroundColor: 'white'
+		backgroundColor: '#d8eafd'
+	},
+	modalButtonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginVertical: 15,
 	},
 	cardImageContainer: {
 		flex: 1,

@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
 
-export default function PendingListScreen({ navigation }) {
+export default function PendingListScreen( props ) {
 
     const [items, setItems] = useState([]);
     const [loader, setLoader] = useState(true);
@@ -14,7 +14,7 @@ export default function PendingListScreen({ navigation }) {
 
     const pressHandler = (item) => {
         console.log("clicked");
-        navigation.navigate('DealerItems', { id: item.id });
+        props.navigation.navigate('DealerItems', { id: item.id });
     }
 
     Firebase.database().ref('Dealers/').on('value', (data) => {
@@ -45,7 +45,7 @@ export default function PendingListScreen({ navigation }) {
                 </View>
                 <TouchableOpacity style={{ position: 'absolute', right: 10 }}
                     onPress={item.pendingStatus ? () => pressHandler(item) : () => { Toast.show("No Pending Products", Toast.SHORT) }}>
-                    <AntDesign name="doubleright" size={30} color={item.pendingStatus ? 'red' : 'black'} />
+                    <AntDesign name="doubleright" size={30} color={item.pendingStatus ? 'red' : '#000a1a'} />
                 </TouchableOpacity>
 
             </Card>)}>
@@ -55,7 +55,7 @@ export default function PendingListScreen({ navigation }) {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -67,11 +67,7 @@ export default function PendingListScreen({ navigation }) {
 const styles = StyleSheet.create({
     main: {
         height: '100%',
-        width: '100%'
-    },
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
+        width: '100%',
+        backgroundColor:'#a6b8ca'
     },
 });
