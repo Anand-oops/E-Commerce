@@ -75,7 +75,7 @@ export default function DealerItems(props) {
                 <ActivityIndicator
 
                     size='large'
-                    color="grey"
+                    color="#000a1a"
                     animating={loader}
 
                 />
@@ -93,11 +93,6 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#a6b8ca'
     },
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
-    },
     card: {
         marginTop: 8,
         padding: 5,
@@ -113,38 +108,5 @@ const styles = StyleSheet.create({
         borderColor: '#DCDCDC',
         marginHorizontal: 4,
         marginVertical: 6,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    cardModalScreen: {
-        height: 300,
-        width: '85%',
-        borderRadius: 15,
-        justifyContent: 'center',
-        elevation: 20,
-        borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: 'white'
-    },
-
-    modalTextInput: {
-        width: '90%',
-        marginVertical: 10,
-        padding: 5,
-        paddingLeft: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
-        backgroundColor: 'white'
-    },
-
-    modalButtonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginVertical: 15,
     },
 });
