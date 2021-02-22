@@ -56,6 +56,8 @@ export default function PendingOrders({ }) {
     const changeStatus = (item) => {
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
+        var notif="Your order "+item.productName+" is delivered.";
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         setListen(true);
     }
 

@@ -98,6 +98,21 @@ export default function ReturnedOrders({ }) {
         setCollapsed(final);
     }
 
+
+    const acceptCancel=(item)=>{
+        var notif="You return request is accepted for the product: "+ item.productName +" having id: "+item.orderId;
+          Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
+          Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Returned : Accepted' });
+          Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Returned : Accepted' });  
+          Toast.show("Product Accepted", Toast.SHORT)
+    }
+    const rejectCancel=(item)=>{
+        var notif="You return request is rejected for the product: "+ item.productName +" having id: "+item.orderId;
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Returned : Rejected' });
+        Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Returned : Rejected' });    
+        Toast.show("Product Rejected", Toast.SHORT)
+    }
     const onChange = (event, selectedDate) => {
         setShow(false)
         setSearchText('');
@@ -178,6 +193,30 @@ export default function ReturnedOrders({ }) {
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price: {data.item.finalPrice}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <View style={{flexDirection:'row'}}>
+                                    <TouchableOpacity style={{flex:1,elevation:1,borderRadius:1,padding:4,margin:2,backgroundColor:'pink'}} onPress={()=>{
+                                        Alert.alert("Accept", "Are you sure?",
+                                        [
+                                            { text: "Cancel" },
+                                            { text: "Proceed", onPress: () => acceptCancel(data.item) }
+                                        ], { cancelable: false }
+                                    );
+                                    }
+                                        }>
+                                        <Text style={{fontWeight:'bold',alignSelf:'center'}}>Accept</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flex:1,elevation:1,borderRadius:1,padding:4,backgroundColor:'pink',margin:2}} onPress={()=>{
+                                        Alert.alert("Reject", "Are you sure?",
+                                        [
+                                            { text: "Cancel" },
+                                            { text: "Proceed", onPress: () => rejectCancel(data.item) }
+                                        ], { cancelable: false }
+                                    );
+                                    }
+                                        }>
+                                        <Text style={{fontWeight:'bold',alignSelf:'center'}}>Reject</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </Collapsible>
                         </View>
                     </TouchableOpacity>

@@ -11,7 +11,8 @@ import AllUsersStack from "./AllUsersStack";
 import React from "react";
 import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert, Image } from "react-native";
 import dummyImage from "../assets/avatar.png";
-import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Notifications from '../screens/Notifications';
 
 const DrawerNav = createDrawerNavigator();
 
@@ -72,7 +73,7 @@ export default function Drawer() {
 
 
     return (
-        <DrawerNav.Navigator initialRouteName="HomeScreen" drawerContentOptions={{ activeBackgroundColor: '#a6b8ca', activeTintColor: '#0001a1'}}
+        <DrawerNav.Navigator initialRouteName="HomeScreen" drawerContentOptions={{ activeBackgroundColor: '#a6b8ca', activeTintColor: '#0001a1' }}
             drawerContent={props => <DrawerContent {...props} />} >
             <DrawerNav.Screen name="Home" component={AppStack}
                 options={{
@@ -108,6 +109,12 @@ export default function Drawer() {
 
                 options={{
                     title: 'All Users',
+                }}
+            />
+            <DrawerNav.Screen name="Notifications" component={Notifications}
+
+                options={{
+                    title: 'Notifications',
                 }}
             />
 

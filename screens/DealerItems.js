@@ -13,12 +13,16 @@ export default function DealerItems(props) {
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([])
     const [showModal, setShowModal] = useState(false)
+    const [showModal2, setShowModal2] = useState(false)
     const [adminPrice, setAdminPrice] = useState()
     const [discountRate, setDiscountRate] = useState()
     const [product, setProduct] = useState()
+    const [dummy,setDummy]=useState();
+    const [dummyIndex,setDummyIndex]=useState();
     const [itemIndex, setItemIndex] = useState(-1)
     const id = props.route.params.id;
     const [loader, setLoader] = useState(true);
+    const [reason,setReason]=useState();
 
 
     Firebase.database().ref(`Dealers/${id}`).once('value', (data) => {
@@ -66,9 +70,12 @@ export default function DealerItems(props) {
                 setItemIndex(index)
                 setProduct(item)
                 setShowModal(true)
-                setAdminPrice(item.productPrice)
+                setAdminPrice(item.productPrice);
+                
+
             }
         }]);
+        
     }
 
     function deleteProduct(item) {
@@ -85,13 +92,23 @@ export default function DealerItems(props) {
         }, {
             text: 'OK',
             onPress: () => {
-                Firebase.database().ref(`Dealers/${id}/DealerProducts/${index}`).update({ status: 'Rejected' });
-                Toast.show("Product Rejected", Toast.SHORT)
+                
+                setDummyIndex(index);
+                setDummy(item);
+                setShowModal2(true);
                 setDealerCall(true);
             }
         }]);
     };
+    
+    function addReason() {
 
+        Firebase.database().ref(`Dealers/${id}/DealerProducts/${dummyIndex}`).update({ status: 'Rejected' });
+                Toast.show("Product Rejected", Toast.SHORT)
+        var text= "Product with id : " + id + " and product name : "+ dummy.productName+ " is rejected :- "+reason;
+        Firebase.database().ref(`Dealers/${id}/Notifications`).push(text);
+        setShowModal2(false);
+    }
     function addProduct() {
         product.productPrice = adminPrice;
         var finalPrice = adminPrice - (adminPrice * discountRate) / 100;
@@ -107,6 +124,8 @@ export default function DealerItems(props) {
             console.log(error);
         });
 
+        var text= "Product with id : " + id+ " and product name : "+ product.productName + " is accepted."
+                Firebase.database().ref(`Dealers/${id}/Notifications`).push(text);
         setShowModal(false);
         setDiscountRate('')
     }
@@ -220,6 +239,33 @@ export default function DealerItems(props) {
                                         if (adminPrice.size != 0 && parseFloat(discountRate) >= 0 && parseFloat(discountRate) < 100) {
                                             addProduct()
                                         } else Toast.show("Enter valid valued", Toast.SHORT);
+                                    }} />
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    visible={showModal2}
+                    position='center'
+                    transparent={true}
+                    onRequestClose={() => setShowModal2(false)}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.cardModalScreen}>
+                            
+                            <Text style={{ paddingLeft: 15, marginTop: 10 }}>Enter Reason:</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <TextInput style={styles.modalTextInput} onChangeText={(reason) => setReason(reason)} value={reason} />
+                            </View>
+                            <View style={styles.modalButtonContainer}>
+                                <View style={{ padding: 10, width: '30%' }}>
+                                    <Button title='Cancel' style={styles.modalButton} onPress={() => setShowModal2(false)} />
+                                </View>
+                                <View style={{ padding: 10, width: '30%' }}>
+                                    <Button title='OK' onPress={() => {
+                                        if (reason.size != 0 ) {
+                                            addReason()
+                                        } else Toast.show("Enter valid reason", Toast.SHORT);
                                     }} />
                                 </View>
                             </View>
