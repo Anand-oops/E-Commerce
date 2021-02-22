@@ -35,7 +35,8 @@ export default function CancelledOrders({ }) {
                     console.log(items)
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
-                        if (data.val()[key][item].deliveryStatus === 'Cancelled') {
+                        if (data.val()[key][item].deliveryStatus === 'Cancelled : Pending' || data.val()[key][item].deliveryStatus === 'Cancelled : Accepted'
+                                || data.val()[key][item].deliveryStatus === 'Cancelled : Rejected') {
                             list.push(data.val()[key][item])
                             coll.push(true)
                         }
@@ -178,6 +179,15 @@ export default function CancelledOrders({ }) {
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Category : {data.item.category} :: {data.item.subCategory}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Price: {data.item.finalPrice}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                {/* <TouchableOpacity style={{ flexDirection: 'row', alignContent: 'space-around', marginTop: 5 }}
+                                    onPress={() => {
+                                        Alert.alert("Delivered ?", "Product will be marked Delivered !",
+                                            [{ text: 'Cancel' },
+                                            { text: 'Proceed', onPress: () => changeStatus(data.item) }])
+                                    }}>
+                                    <Text style={{ color: 'red' }}>Mark as Delivered</Text>
+                                    <MaterialCommunityIcons style={{ marginLeft: 20 }} name="truck-delivery-outline" size={24} color="red" />
+                                </TouchableOpacity> */}
                             </Collapsible>
                         </View>
                     </TouchableOpacity>
