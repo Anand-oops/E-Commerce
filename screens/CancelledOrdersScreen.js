@@ -35,7 +35,8 @@ export default function CancelledOrders({ }) {
                     console.log(items)
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
-                        if (data.val()[key][item].deliveryStatus === 'Cancelled') {
+                        if (data.val()[key][item].deliveryStatus === 'Cancelled : Pending' || data.val()[key][item].deliveryStatus === 'Cancelled : Accepted'
+                                || data.val()[key][item].deliveryStatus === 'Cancelled : Rejected') {
                             list.push(data.val()[key][item])
                             coll.push(true)
                         }

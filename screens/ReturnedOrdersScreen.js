@@ -35,7 +35,8 @@ export default function ReturnedOrders({ }) {
                     console.log(items)
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
-                        if (data.val()[key][item].deliveryStatus === 'Returned') {
+                        if (data.val()[key][item].deliveryStatus === 'Returned : Pending' || data.val()[key][item].deliveryStatus === 'Returned : Accepted'
+                                || data.val()[key][item].deliveryStatus === 'Returned : Rejected') {
                             list.push(data.val()[key][item])
                             coll.push(true)
                         }
