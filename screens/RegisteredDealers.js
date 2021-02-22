@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert, Modal, Keyboard, TextInput, Button } from 'react-native';
 import Card from "../shared/Card";
 import Firebase from '../firebaseConfig';
 import { SearchBar } from 'react-native-elements'
@@ -19,6 +19,9 @@ export default function Dealers({ navigation }) {
     const [searchedColl, setSearchedColl] = useState([])
     const [searchBy, setSearchBy] = useState('name');
     const [loader, setLoader] = useState(true);
+    const [reason, setReason] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [item, setItem] = useState([]);
 
     Firebase.database().ref('Dealers/').on('value', (data) => {
         if (listenCheck) {
@@ -87,13 +90,18 @@ export default function Dealers({ navigation }) {
         setCollapsed(final);
     }
     const addtoBlackList = (item) => {
-        console.log('clicked');
-
+        var notif = "You have been Blacklisted . Reason : " + reason + ". Contact Admin."
+        Firebase.database().ref(`Dealers/${item.id}/Notifications`).push(notif);
+        setReason('');
+        setShowModal(false);
         Firebase.database().ref(`Dealers/${item.id}`).update({
             activity: 'Inactive'
         })
         setListenCheck(true);
     }
+
+    const closeModal = () => { setShowModal(false), setReason('') }
+
     return (
         <View style={styles.main}>
             <StatusBar style='light' />
@@ -142,7 +150,7 @@ export default function Dealers({ navigation }) {
                         Alert.alert("Blacklist", "Are you sure ?",
                             [
                                 { text: "Cancel" },
-                                { text: "Proceed", onPress: () => addtoBlackList(item) }
+                                { text: "Proceed", onPress: () => { setShowModal(true), setItem(item) } }
                             ], { cancelable: false }
                         );
                     }}>
@@ -154,6 +162,40 @@ export default function Dealers({ navigation }) {
             </Card>)}>
 
             </FlatList>
+            <Modal
+                animationType='fade'
+                visible={showModal}
+                position='center'
+                transparent={true}
+                onRequestClose={() => closeModal()}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.cardModalScreen}>
+                        <Text style={{ paddingLeft: 15, marginTop: 10, }}>Reason for Blacklisting :</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', }}>
+                            <TextInput style={styles.modalTextInput} onChangeText={(text) => setReason(text)} value={reason} />
+                        </View>
+
+                        <View style={styles.modalButtonContainer}>
+                            <View style={{ padding: 10, width: '30%' }}>
+                                <Button title='Cancel' onPress={() => { Keyboard.dismiss(), closeModal() }} />
+                            </View>
+                            <View style={{ padding: 10, width: '30%' }}>
+                                <Button title='OK' onPress={() => {
+                                    if (reason.length == 0) {
+                                        Keyboard.dismiss()
+                                        Toast.show("Enter the reason first", Toast.SHORT);
+                                    } else {
+                                        Keyboard.dismiss(),
+                                        setShowModal(false)
+                                        addtoBlackList(item);
+                                    }
+                                }
+                                } />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
                 <ActivityIndicator
 
@@ -174,9 +216,36 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#a6b8ca'
     },
-    container: {
+    modalContainer: {
         flex: 1,
-        alignItems: "center",
-        paddingTop: '50%'
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
+    },
+    cardModalScreen: {
+        height: 200,
+        width: '85%',
+        borderRadius: 15,
+        justifyContent: 'center',
+        elevation: 20,
+        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: '#d8eafd'
+    },
+    modalTextInput: {
+        width: '90%',
+        marginVertical: 10,
+        padding: 5,
+        paddingLeft: 15,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 10,
+        backgroundColor: 'white'
+    },
+    modalButtonContainer: {
+        zIndex: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 15,
     },
 });

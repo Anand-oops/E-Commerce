@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ActivityIndicator ,Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar';
@@ -36,7 +36,7 @@ export default function CancelledOrders({ }) {
                     for (var j = 0; j < items.length; j++) {
                         var item = items[j];
                         if (data.val()[key][item].deliveryStatus === 'Cancelled : Pending' || data.val()[key][item].deliveryStatus === 'Cancelled : Accepted'
-                                || data.val()[key][item].deliveryStatus === 'Cancelled : Rejected') {
+                            || data.val()[key][item].deliveryStatus === 'Cancelled : Rejected') {
                             list.push(data.val()[key][item])
                             coll.push(true)
                         }
@@ -98,18 +98,18 @@ export default function CancelledOrders({ }) {
         final.splice(ind, 1, !final[ind])
         setCollapsed(final);
     }
-    const acceptCancel=(item)=>{
-        var notif="You cancel request is accepted for the product: "+ item.productName +" having id: "+item.orderId;
-          Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
-          Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });
-          Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });  
-          Toast.show("Product Accepted", Toast.SHORT)
+    const acceptCancel = (item) => {
+        var notif = "You cancel request is accepted for the product: " + item.productName + " having id: " + item.orderId;
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
+        Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });
+        Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });
+        Toast.show("Product Accepted", Toast.SHORT)
     }
-    const rejectCancel=(item)=>{
-        var notif="You cancel request is rejected for the product: "+ item.productName +" having id: "+item.orderId;
+    const rejectCancel = (item) => {
+        var notif = "You cancel request is rejected for the product: " + item.productName + " having id: " + item.orderId;
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Rejected' });
-        Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Rejected' });    
+        Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Rejected' });
         Toast.show("Product Rejected", Toast.SHORT)
     }
 
@@ -183,40 +183,42 @@ export default function CancelledOrders({ }) {
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
                         <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5 }}>Order Id: {data.item.orderId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Id: {data.item.customer.customerId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Name : {(data.item.customer.customerName != 'undefined undefined') ? data.item.customer.customerName : "No name provided"}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Order Date: {data.item.orderDate}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Reason: {data.item.reason}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Id: {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Name : {(data.item.customer.customerName != 'undefined undefined') ? data.item.customer.customerName : "No name provided"}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date: {data.item.orderDate}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Reason: {data.item.reason}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Product : {data.item.productName}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Price: {data.item.finalPrice}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
-                                <View style={{flexDirection:'row'}}>
-                                    <TouchableOpacity style={{flex:1,elevation:1,borderRadius:1,padding:4,margin:2,backgroundColor:'pink'}} onPress={()=>{
-                                        Alert.alert("Accept", "Are you sure?",
-                                        [
-                                            { text: "Cancel" },
-                                            { text: "Proceed", onPress: () => acceptCancel(data.item) }
-                                        ], { cancelable: false }
-                                    );
-                                    }
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price: {data.item.finalPrice}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                {(data.item.deliveryStatus === 'Cancelled : Pending') && (
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <TouchableOpacity style={{ flex: 1, elevation: 1, borderRadius: 1, padding: 4, margin: 2, backgroundColor: 'pink' }} onPress={() => {
+                                            Alert.alert("Accept", "Are you sure?",
+                                                [
+                                                    { text: "Cancel" },
+                                                    { text: "Proceed", onPress: () => acceptCancel(data.item) }
+                                                ], { cancelable: false }
+                                            );
+                                        }
                                         }>
-                                        <Text style={{fontWeight:'bold',alignSelf:'center'}}>Accept</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{flex:1,elevation:1,borderRadius:1,padding:4,backgroundColor:'pink',margin:2}} onPress={()=>{
-                                        Alert.alert("Reject", "Are you sure?",
-                                        [
-                                            { text: "Cancel" },
-                                            { text: "Proceed", onPress: () => rejectCancel(data.item) }
-                                        ], { cancelable: false }
-                                    );
-                                    }
+                                            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Accept</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ flex: 1, elevation: 1, borderRadius: 1, padding: 4, backgroundColor: 'pink', margin: 2 }} onPress={() => {
+                                            Alert.alert("Reject", "Are you sure?",
+                                                [
+                                                    { text: "Cancel" },
+                                                    { text: "Proceed", onPress: () => rejectCancel(data.item) }
+                                                ], { cancelable: false }
+                                            );
+                                        }
                                         }>
-                                        <Text style={{fontWeight:'bold',alignSelf:'center'}}>Reject</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                            <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>Reject</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </Collapsible>
                         </View>
                     </TouchableOpacity>
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
     main: {
         height: '100%',
         width: '100%',
-        backgroundColor:'#a6b8ca'
+        backgroundColor: '#a6b8ca'
     },
     listContainer: {
         flexDirection: 'row',
