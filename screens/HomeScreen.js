@@ -263,7 +263,7 @@ const HomeScreen = () => {
 	const closeModal = () => { setShowCardModel(false), setShowImageModal(false), setDisabled(true) }
 
 	const populateSubCats = (category) => {
-		if (!subCategories) {
+		if (subCategories) {
 			subCategories.map(subcat => {
 				if (subcat.itemName === category) {
 					var temp = [];

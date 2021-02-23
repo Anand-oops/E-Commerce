@@ -92,7 +92,7 @@ export default function Customers({ navigation }) {
 
     const addtoBlackList = (item) => {
         var notif = "You have been Blacklisted . Reason : " + reason + ". Contact Admin."
-        Firebase.database().ref(`Customer/${item.id}/Notifications`).push(notif);
+        Firebase.database().ref(`Customers/${item.id}/Notifications`).push(notif);
         setReason('');
         setShowModal(false);
         Firebase.database().ref(`Customers/${item.id}`).update({

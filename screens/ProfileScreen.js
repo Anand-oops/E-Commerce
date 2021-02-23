@@ -13,50 +13,47 @@ const ProfileScreen = ({ navigation }) => {
 
 	const { user } = useContext(AuthContext);
 	const [listen, setListen] = useState(true)
-	const [value, setValue] = useState({
-		firstName: '',
-		lastName: '',
-		mobile: '',
-		city: '',
-		AccountNumber: '',
-		IfscCode: ''
-	})
+	const [firstName, setFirstName] = useState('')
+	const [lastName, setLastName] = useState('')
+	const [mobile,setMobile] = useState('')
+	const [city,setCity] = useState('')
+	const [AccountNumber,setAccountNumber] = useState('')
+	const [IfscCode, setIfscCode] = useState('')
 
 	const ref = Firebase.database().ref(`Admin/${user.uid}`);
 	ref.on('value', function (snapshot) {
 		if (listen) {
 			console.log("Snapshot", snapshot.val())
 			if (snapshot.val().firstName)
-				setValue({ firstName: snapshot.val().firstName })
+				setFirstName(snapshot.val().firstName)
 			if (snapshot.val().lastName)
-				setValue({ lastName: snapshot.val().lastName })
+				setLastName(snapshot.val().lastName)
 			if (snapshot.val().mobile)
-				setValue({ mobile: snapshot.val().mobile })
+				setMobile(snapshot.val().mobile)
 			if (snapshot.val().city)
-				setValue({ city: snapshot.val().city })
+				setCity(snapshot.val().city)
 			if (snapshot.val().AccountNumber)
-				setValue({ AccountNumber: snapshot.val().AccountNumber })
+				setAccountNumber(snapshot.val().AccountNumber)
 			if (snapshot.val().IfscCode)
-				setValue({ IfscCode: snapshot.val().IfscCode })
+				setIfscCode(snapshot.val().IfscCode)
 			setListen(false);
 		}
 	})
 
 
 	function saveUser() {
-		console.log("Value",value)
-		if (!value.firstName || !value.lastName ) {
+		if (firstName.length == 0 || lastName.length == 0) {
 			Toast.show("Enter Full Name", Toast.SHORT);
-		} else if (value.mobile == '' || value.mobile.length < 10) {
+		} else if (mobile.length < 10) {
 			Toast.show("Enter 10 digit number", Toast.SHORT);
 		} else {
 			Firebase.database().ref(`/Admin/${user.uid}`).update({
-				firstName: value.firstName,
-				lastName: value.lastName,
-				mobile: value.mobile,
-				city: value.city,
-				AccountNumber: value.AccountNumber,
-				IfscCode: value.IfscCode
+				firstName: firstName,
+				lastName: lastName,
+				mobile: mobile,
+				city: city,
+				AccountNumber: AccountNumber,
+				IfscCode: IfscCode
 			}, Toast.show("Successfully Updated", Toast.SHORT))
 			navigation.goBack();
 		}
@@ -77,13 +74,13 @@ const ProfileScreen = ({ navigation }) => {
 							padding={6}
 							fontSize={18}
 							label={'First Name'}
-							value={value.firstName}
+							value={firstName}
 							blurOnSubmit={true}
 							autoCorrect={false}
 							leftComponent={
 								<FontAwesome name="user-o" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, firstName: val })}
+							onChangeText={(val) => setFirstName(val)}
 						/>
 					</View>
 					<View style={{ marginVertical: 10, width: '90%' }}>
@@ -91,19 +88,19 @@ const ProfileScreen = ({ navigation }) => {
 							label={'Last Name'}
 							padding={6}
 							fontSize={18}
-							value={value.lastName}
+							value={lastName}
 							blurOnSubmit={true}
 							autoCorrect={false}
 							leftComponent={
 								<FontAwesome name="user-o" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, lastName: val })} />
+							onChangeText={(val) => setLastName(val)} />
 					</View>
 
 					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							label={'Mobile'}
-							value={value.mobile}
+							value={mobile}
 							blurOnSubmit={true}
 							padding={6}
 							fontSize={18}
@@ -112,13 +109,13 @@ const ProfileScreen = ({ navigation }) => {
 							leftComponent={
 								<Feather name="phone" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, mobile: val })} />
+							onChangeText={(val) => setMobile(val)} />
 					</View>
 
 					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							label={'City'}
-							value={value.city}
+							value={city}
 							blurOnSubmit={true}
 							padding={6}
 							fontSize={18}
@@ -126,25 +123,26 @@ const ProfileScreen = ({ navigation }) => {
 							leftComponent={
 								<FontAwesome5 name="city" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, city: val })} />
+							onChangeText={(val) => setCity(val)} />
 					</View>
 					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							label={'Account Number'}
-							value={value.AccountNumber}
+							value={AccountNumber}
 							blurOnSubmit={true}
 							padding={6}
 							fontSize={18}
+							keyboardType='number-pad'
 							autoCapitalize={'words'}
 							leftComponent={
 								<FontAwesome name="bank" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, AccountNumber: val })} />
+							onChangeText={(val) => setAccountNumber(val)} />
 					</View>
 					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							label={'Ifsc Code'}
-							value={value.IfscCode}
+							value={IfscCode}
 							blurOnSubmit={true}
 							padding={6}
 							fontSize={18}
@@ -152,7 +150,7 @@ const ProfileScreen = ({ navigation }) => {
 							leftComponent={
 								<FontAwesome name="qrcode" color={'purple'} size={20} />
 							}
-							onChangeText={(val) => setValue({ ...value, IfscCode: val })} />
+							onChangeText={(val) => setIfscCode(val)} />
 					</View>
 
 				</View>

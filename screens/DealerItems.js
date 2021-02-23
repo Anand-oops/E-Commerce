@@ -29,8 +29,7 @@ export default function DealerItems(props) {
         if (dealerCall) {
             if (data.val()) {
                 setDealer(data.val());
-                var keys = Object.keys(data.val())
-                var key = keys[0];
+                var key = 'DealerProducts';
                 var filtered = [];
                 var allItems = [];
                 for (var i = 0; i < data.val()[key].length; i++) {
@@ -39,6 +38,7 @@ export default function DealerItems(props) {
                         filtered.push(data.val()[key][i]);
                     }
                 } if (filtered.length == 0) {
+                    console.log("No Pending Preducts")
                     Firebase.database().ref(`Dealers/${id}/pendingStatus`).set(false)
                         .then(props.navigation.goBack())
                 }
@@ -136,10 +136,10 @@ export default function DealerItems(props) {
             <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Dealer Id : " + (dealer.id ? dealer.id : "")}</Text>
             <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Name : " + (dealer.firstName ? dealer.firstName + " " + (dealer.lastName ? dealer.lastName : " ") : "No name provided")}</Text>
             <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Email : " + (dealer.email ? dealer.email : "")}</Text>
-            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Mobile No. :" + (dealer.mobile ? dealer.mobile : "Not Provided")}</Text>
-            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"City :" + (dealer.city ? dealer.city : "Not provided")}</Text>
-            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank Account No. :" + (dealer.AccountNumber ? dealer.AccountNumber : "Not Provided")}</Text>
-            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank IFSC Code :" + (dealer.IfscCode ? dealer.IfscCode : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Mobile No. : " + (dealer.mobile ? dealer.mobile : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"City : " + (dealer.city ? dealer.city : "Not provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank Account No. : " + (dealer.AccountNumber ? dealer.AccountNumber : "Not Provided")}</Text>
+            <Text style={{ color: 'black', fontSize: 14, padding: 1 }}>{"Bank IFSC Code : " + (dealer.IfscCode ? dealer.IfscCode : "Not Provided")}</Text>
 
 
             <SafeAreaView style={{ flex: 1 }}>
@@ -158,6 +158,7 @@ export default function DealerItems(props) {
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Category : {item.category}</Text>
+                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Sub Category : {item.subCategory}</Text>
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Description : {item.description}</Text>
                             <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Specs : {item.specs}</Text>
