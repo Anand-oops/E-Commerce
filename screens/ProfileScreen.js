@@ -9,7 +9,7 @@ import Firebase from '../firebaseConfig'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { FloatingLabelInput } from 'react-native-floating-label-input'
 
-const ProfileScreen = ({ navigation}) => {
+const ProfileScreen = ({ navigation }) => {
 
 	const { user } = useContext(AuthContext);
 	const [listen, setListen] = useState(true)
@@ -17,40 +17,46 @@ const ProfileScreen = ({ navigation}) => {
 		firstName: '',
 		lastName: '',
 		mobile: '',
-		city:'',
-		AccountNumber:'',
-		IfscCode:''
+		city: '',
+		AccountNumber: '',
+		IfscCode: ''
 	})
 
 	const ref = Firebase.database().ref(`Admin/${user.uid}`);
 	ref.on('value', function (snapshot) {
 		if (listen) {
-			setValue({
-				firstName: snapshot.val().firstName,
-				lastName: snapshot.val().lastName,
-				mobile: snapshot.val().mobile,
-				city:snapshot.val().city,
-				AccountNumber:snapshot.val().AccountNumber,
-				IfscCode:snapshot.val().IfscCode
-			})
+			console.log("Snapshot", snapshot.val())
+			if (snapshot.val().firstName)
+				setValue({ firstName: snapshot.val().firstName })
+			if (snapshot.val().lastName)
+				setValue({ lastName: snapshot.val().lastName })
+			if (snapshot.val().mobile)
+				setValue({ mobile: snapshot.val().mobile })
+			if (snapshot.val().city)
+				setValue({ city: snapshot.val().city })
+			if (snapshot.val().AccountNumber)
+				setValue({ AccountNumber: snapshot.val().AccountNumber })
+			if (snapshot.val().IfscCode)
+				setValue({ IfscCode: snapshot.val().IfscCode })
 			setListen(false);
 		}
 	})
 
 
 	function saveUser() {
-		if (value.firstName.length == 0 || value.lastName.length == 0) {
-			alert("Empty Name");
-		} else if (value.mobile.length < 10) {
-			alert("Invalid number");
+		console.log("Value",value)
+		if (!value.firstName || !value.lastName ) {
+			Toast.show("Enter Full Name", Toast.SHORT);
+		} else if (value.mobile == '' || value.mobile.length < 10) {
+			Toast.show("Enter 10 digit number", Toast.SHORT);
 		} else {
 			Firebase.database().ref(`/Admin/${user.uid}`).update({
 				firstName: value.firstName,
 				lastName: value.lastName,
 				mobile: value.mobile,
-				city:value.city,
-				AccountNumber:value.AccountNumber,
-				IfscCode:value.IfscCode
+				city: value.city,
+				AccountNumber: value.AccountNumber,
+				IfscCode: value.IfscCode
 			}, Toast.show("Successfully Updated", Toast.SHORT))
 			navigation.goBack();
 		}
@@ -59,14 +65,14 @@ const ProfileScreen = ({ navigation}) => {
 
 	return (
 		<TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
-			<View style={{ flex: 1, backgroundColor:'#a6b8ca' }}>
+			<View style={{ flex: 1, backgroundColor: '#a6b8ca' }}>
 				<StatusBar style="light" />
 				<View style={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1, }}>
 
 					<Text style={{ marginBottom: 40, fontSize: 30, fontWeight: 'bold' }}>
 						Edit Your Profile </Text>
 
-					<View style={{ marginVertical: 10, width: '90%'}}>
+					<View style={{ marginVertical: 10, width: '90%' }}>
 						<FloatingLabelInput
 							padding={6}
 							fontSize={18}
@@ -84,7 +90,7 @@ const ProfileScreen = ({ navigation}) => {
 						<FloatingLabelInput
 							label={'Last Name'}
 							padding={6}
-                            fontSize={18}
+							fontSize={18}
 							value={value.lastName}
 							blurOnSubmit={true}
 							autoCorrect={false}
@@ -100,7 +106,7 @@ const ProfileScreen = ({ navigation}) => {
 							value={value.mobile}
 							blurOnSubmit={true}
 							padding={6}
-                            fontSize={18}
+							fontSize={18}
 							maxLength={10}
 							keyboardType={'number-pad'}
 							leftComponent={
@@ -115,7 +121,7 @@ const ProfileScreen = ({ navigation}) => {
 							value={value.city}
 							blurOnSubmit={true}
 							padding={6}
-                            fontSize={18}
+							fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
 								<FontAwesome5 name="city" color={'purple'} size={20} />
@@ -128,7 +134,7 @@ const ProfileScreen = ({ navigation}) => {
 							value={value.AccountNumber}
 							blurOnSubmit={true}
 							padding={6}
-                            fontSize={18}
+							fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
 								<FontAwesome name="bank" color={'purple'} size={20} />
@@ -141,7 +147,7 @@ const ProfileScreen = ({ navigation}) => {
 							value={value.IfscCode}
 							blurOnSubmit={true}
 							padding={6}
-                            fontSize={18}
+							fontSize={18}
 							autoCapitalize={'words'}
 							leftComponent={
 								<FontAwesome name="qrcode" color={'purple'} size={20} />

@@ -129,7 +129,7 @@ export default function SignUpScreen({ navigation }) {
                         <Text style={styles.signinText}>Already have a account?  LOG IN.</Text>
 
                     </TouchableOpacity>
-                    <Text style={styles.text}>Sign up with your social account</Text>
+                    {/* <Text style={styles.text}>Sign up with your social account</Text>
 
                     <View style={{
                         flex: 0,
@@ -151,7 +151,7 @@ export default function SignUpScreen({ navigation }) {
                             <AntDesign name="google" size={24} color="red" />
                             <Text style={styles.socialText}>Google</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                 </LinearGradient>
 
             </View>

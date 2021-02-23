@@ -257,7 +257,7 @@ const LoginScreen = ({ navigation }) => {
 							<Text style={styles.signUpText}>New here?  SIGN UP.</Text>
 						</TouchableOpacity>
 
-						<Text
+						{/* <Text
 							style={{ color: 'white', marginTop: 40, textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
 							Sign in with your social account : </Text>
 
@@ -295,7 +295,7 @@ const LoginScreen = ({ navigation }) => {
 								</View>
 							</TouchableOpacity>
 
-						</View>
+						</View> */}
 					</View>
 				</LinearGradient>
 			</View>
