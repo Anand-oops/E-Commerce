@@ -168,16 +168,16 @@ export default function DeliveredOrders({ }) {
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
-                        <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Order Id: {data.item.orderId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Id: {data.item.customer.customerId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Customer Name : {(data.item.customer.customerName != 'undefined undefined') ? data.item.customer.customerName : "No name provided"}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Order Date: {data.item.orderDate}</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id : {data.item.orderId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id : {data.item.dealerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id : {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date : {data.item.orderDate}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Product : {data.item.productName}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Price: {data.item.finalPrice}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5}}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price : {data.item.finalPrice}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At : {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
                             </Collapsible>
                         </View>
                     </TouchableOpacity>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     main: {
         height: '100%',
         width: '100%',
-        backgroundColor:'#a6b8ca'
+        backgroundColor: '#a6b8ca'
     },
     listContainer: {
         flexDirection: 'row',

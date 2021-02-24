@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import Firebase from '../firebaseConfig';
-import Toast from 'react-native-simple-toast'
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function DealerItems(props) {
@@ -26,8 +25,6 @@ export default function DealerItems(props) {
                     }
                 }
                 setItems(allItems)
-            } if (allItems.length == 0) {
-                Toast.show("No Dealer Products found", Toast.SHORT);
             }
             setDealerCall(false);
             setLoader(false);
@@ -57,13 +54,14 @@ export default function DealerItems(props) {
                             circleLoop={true}
                             resizeMode={'contain'}
                         />
-                       <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Product Name : {item.productName}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Price : {item.productPrice}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Category : {item.category}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Stocks : {item.stocks}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Description : {item.description}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Specs : {item.specs}</Text>
-                            <Text style={{ color: 'black', fontSize: 15, alignSelf: 'center' }}>Date : {item.productDate}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Product Id : {item.key}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Product Name : {item.productName}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Price : {item.productPrice}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Category : {item.category}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Stocks : {item.stocks}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Description : {item.description}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Specs : {item.specs}</Text>
+                        <Text style={{ color: 'black', fontSize: 15, letterSpacing: 0.5 }}>Date : {item.productDate}</Text>
                     </View>
 
                 )}>
@@ -102,7 +100,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#778899',
         shadowOffset: { width: 1, height: 1 },
         shadowColor: '#333',
-        shadowOpacity: 0.3, 
+        shadowOpacity: 0.3,
         shadowRadius: 2,
         borderWidth: 2,
         borderColor: '#DCDCDC',

@@ -90,6 +90,8 @@ const Customers=({ navigation })=> {
         setCollapsed(final);
     }
     const RemoveFromBlackList=(item)=>{
+        var notif = "You have been removed from the Blacklist."
+        Firebase.database().ref(`Customers/${item.id}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.id}/activity`).remove();
         setListenCheck(true);
     }
