@@ -102,7 +102,6 @@ export default function DealerItems(props) {
     };
     
     function addReason() {
-
         Firebase.database().ref(`Dealers/${id}/DealerProducts/${dummyIndex}`).update({ status: 'Rejected' });
                 Toast.show("Product Rejected", Toast.SHORT)
         var text= "Product with id : " + id + " and product name : "+ dummy.productName+ " is rejected :- "+reason;
@@ -252,7 +251,7 @@ export default function DealerItems(props) {
                     transparent={true}
                     onRequestClose={() => setShowModal2(false)}>
                     <View style={styles.modalContainer}>
-                        <View style={styles.cardModalScreen}>
+                        <View style={styles.reasonModalScreen}>
                             
                             <Text style={{ paddingLeft: 15, marginTop: 10 }}>Enter Reason:</Text>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -328,7 +327,16 @@ const styles = StyleSheet.create({
         borderColor: '#000a1a',
         backgroundColor: '#d8eafd'
     },
-
+    reasonModalScreen: {
+		height: 200,
+		width: '85%',
+		borderRadius: 15,
+		justifyContent: 'center',
+		elevation: 20,
+		borderWidth: 1,
+		borderColor: '#000a1a',
+		backgroundColor: '#d8eafd'
+	},
     modalTextInput: {
         width: '90%',
         marginVertical: 10,
