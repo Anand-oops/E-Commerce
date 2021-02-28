@@ -11,9 +11,6 @@ import Toast from 'react-native-simple-toast';
 export default function AddProductScreen() {
 
     const { user } = useContext(AuthContext);
-
-    const [adminProducts, setAdminProducts] = useState([]);
-    const [adminProductsCall, setAdminProductsCall] = useState(true)
     const [dropdownCat, setDropdownCat] = useState([]);
     const [productImages, setProductImages] = useState([])
     const [productName, setProductName] = useState('')
@@ -28,15 +25,7 @@ export default function AddProductScreen() {
     const [dropDownSubCat, setDropDownSubCat] = useState([])
     const [productSubCategory, setProductSubCategory] = useState('')
     const [disabled, setDisabled] = useState(true)
-
-    Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).on('value', (data) => {
-        if (adminProductsCall) {
-            if (data.val()) {
-                setAdminProducts(data.val())
-            }
-            setAdminProductsCall(false);
-        }
-    })
+    const [discount, setDiscount] = useState('')
 
     Firebase.database().ref('DrawerItemsList/').on('value', (snapshot) => {
         if (drawerItemsCall) {
@@ -104,8 +93,8 @@ export default function AddProductScreen() {
                 productTime: date.getHours() + ":" + date.getMinutes() + ":" + date.getMilliseconds(),
                 productName: productName,
                 productPrice: productPrice,
-                discount: 0 + " %",
-                finalPrice: productPrice,
+                discount: discount + " %",
+                finalPrice: productPrice - (productPrice * discount) / 100,
                 stocks: productStocks,
                 category: productCategory,
                 subCategory: productSubCategory,
@@ -117,10 +106,8 @@ export default function AddProductScreen() {
                 deliveryStatus: 'Pending',
                 rating: 0,
             };
-            let completeList = [...adminProducts, product];
-            setAdminProducts(completeList)
-            Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).set(completeList).then(() => {
-                setAdminProductsCall(true)
+            
+            Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product).then(() => {
                 Toast.show("Product Added", Toast.SHORT);
                 setProductName('')
                 setProductPrice('')
@@ -130,8 +117,8 @@ export default function AddProductScreen() {
                 setProductCategory('')
                 setProductSubCategory('')
                 setProductImages([])
+                setDiscount('')
                 setDisabled(true)
-                Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product)
             })
         }
         else {
@@ -176,6 +163,13 @@ export default function AddProductScreen() {
                     style={styles.textInput}
                     value={productPrice}
                     onChangeText={(val) => setProductPrice(val)} />
+                <TextInput
+                    placeholder='Enter product discount on above price'
+                    placeholderTextColor='gray'
+                    keyboardType='number-pad'
+                    style={styles.textInput}
+                    value={discount}
+                    onChangeText={(val) => setDiscount(val)} />
                 <TextInput
                     placeholder='Enter your product stock'
                     placeholderTextColor='gray'
@@ -248,12 +242,12 @@ export default function AddProductScreen() {
 
                 <TouchableOpacity style={styles.saveButton} onPress={() => {
                     if (productImages.length != 0 && productName.length != 0 && productPrice.length != 0 && productSubCategory.length != 0
-                        && productStocks.length != 0 && productDescription.length != 0 && productCategory.length != 0) {
+                        && productStocks.length != 0 && discount.length != 0 && productDescription.length != 0 && productCategory.length != 0) {
                         addProduct()
                     }
                     else {
                         if (productSubCategory.length == 0) {
-                            Toast.show("Select Valid Sub Category", Toast.SHORT);
+                            Toast.show("Select Sub Category", Toast.SHORT);
                         } else
                             Toast.show("Fill required fields", Toast.SHORT);
                     }

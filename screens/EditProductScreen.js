@@ -31,19 +31,7 @@ export default function AddProductScreen(props) {
     const [index, setIndex] = useState(-1);
     const [productSubCategory, setProductSubCategory] = useState('')
     const [disabled, setDisabled] = useState(true)
-
-    Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).on('value', (data) => {
-        if (adminProductsCall) {
-            if (data.val()) {
-                var list = data.val();
-                setAdminProducts(list)
-                let ind = list.findIndex(prod => prod.key === item.key)
-                console.log("Index", ind)
-                setIndex(ind);
-            }
-            setAdminProductsCall(false);
-        }
-    })
+    const [discount, setDiscount] = useState(item.discount)
 
     Firebase.database().ref('DrawerItemsList/').on('value', (snapshot) => {
         if (drawerItemsCall) {
@@ -114,7 +102,8 @@ export default function AddProductScreen(props) {
                 category: productCategory,
                 subCategory: productSubCategory,
                 finalPrice: productPrice,
-                discount: 0 + " %",
+                discount: discount + " %",
+                finalPrice: productPrice - (productPrice * discount) / 100,
                 description: productDescription,
                 specs: productSpecs,
                 status: 'Pending',
@@ -123,11 +112,8 @@ export default function AddProductScreen(props) {
                 deliveryStatus: 'Pending',
                 rating: item.rating,
             };
-            let completeList = [...adminProducts];
-            completeList.splice(index, 1, product);
-            setAdminProducts(completeList);
 
-            Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).update(completeList).then(() => {
+            Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product).then(() => {
                 setAdminProductsCall(true)
                 Toast.show("Product Updated", Toast.SHORT);
                 setProductName('')
@@ -138,8 +124,8 @@ export default function AddProductScreen(props) {
                 setProductCategory('')
                 setProductSubCategory('')
                 setProductImages([])
+                setDiscount('')
                 setDisabled(true)
-                Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product);
                 props.navigation.goBack();
             })
         }
@@ -189,6 +175,13 @@ export default function AddProductScreen(props) {
                     style={styles.textInput}
                     value={productPrice}
                     onChangeText={(val) => setProductPrice(val)} />
+                 <TextInput
+                    placeholder='Enter product discount on above price'
+                    placeholderTextColor='gray'
+                    keyboardType='number-pad'
+                    style={styles.textInput}
+                    value={discount}
+                    onChangeText={(val) => setDiscount(val)} />
                 <TextInput
                     placeholder='Enter your product stock'
                     placeholderTextColor='gray'
@@ -263,12 +256,12 @@ export default function AddProductScreen(props) {
 
                 <TouchableOpacity style={styles.saveButton} onPress={() => {
                     if (productImages.length != 0 && productName.length != 0 && productPrice.length != 0 && productSubCategory.length != 0
-                        && productStocks.length != 0 && productDescription.length != 0 && productCategory.length != 0) {
+                        && productStocks.length != 0 && discount.length != 0 && productDescription.length != 0 && productCategory.length != 0) {
                         addProduct()
                     }
                     else {
                         if (productSubCategory.length == 0) {
-                            Toast.show("Select Valid Sub Category", Toast.SHORT);
+                            Toast.show("Select Sub Category", Toast.SHORT);
                         } else
                             Toast.show("Fill required fields", Toast.SHORT);
                     }
