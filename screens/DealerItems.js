@@ -116,7 +116,7 @@ export default function DealerItems(props) {
         temp.status = "Accepted"
         temp.finalPrice = finalPrice;
         temp.discount = discountRate + " %";
-        Firebase.database().ref(`ProductList/${temp.category}/${temp.subCategory}/${temp.key}`).set(temp).then(() => {
+        Firebase.database().ref(`ProductList/${temp.category}/${temp.subCategory}/${temp.key}`).update(temp).then(() => {
             Firebase.database().ref(`Dealers/${id}/DealerProducts/${itemIndex}`).update({ status: 'Accepted' });
             Toast.show("Product Accepted", Toast.SHORT)
             setDealerCall(true);

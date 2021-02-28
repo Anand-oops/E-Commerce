@@ -1,0 +1,311 @@
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../navigation/AuthProvider';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert, StatusBar } from 'react-native';
+import Firebase from '../firebaseConfig'
+import * as ImagePicker from 'expo-image-picker'
+import DropDownPicker from 'react-native-dropdown-picker'
+import { SliderBox } from 'react-native-image-slider-box'
+import { ScrollView } from "react-native-gesture-handler";
+import Toast from 'react-native-simple-toast';
+
+export default function AddProductScreen() {
+
+    const { user } = useContext(AuthContext);
+
+    const [adminProducts, setAdminProducts] = useState([]);
+    const [adminProductsCall, setAdminProductsCall] = useState(true)
+    const [dropdownCat, setDropdownCat] = useState([]);
+    const [productImages, setProductImages] = useState([])
+    const [productName, setProductName] = useState('')
+    const [productPrice, setProductPrice] = useState('')
+    const [productStocks, setProductStocks] = useState('')
+    const [productDescription, setProductDescription] = useState('')
+    const [productCategory, setProductCategory] = useState('')
+    const [productSpecs, setProductSpecs] = useState('')
+    const [imageDeckIndex, setImageDeckIndex] = useState(-1)
+    const [drawerItemsCall, setDrawerItemsCall] = useState(true)
+    const [subCategories, setSubCategories] = useState([])
+    const [dropDownSubCat, setDropDownSubCat] = useState([])
+    const [productSubCategory, setProductSubCategory] = useState('')
+    const [disabled, setDisabled] = useState(true)
+
+    Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).on('value', (data) => {
+        if (adminProductsCall) {
+            if (data.val()) {
+                setAdminProducts(data.val())
+            }
+            setAdminProductsCall(false);
+        }
+    })
+
+    Firebase.database().ref('DrawerItemsList/').on('value', (snapshot) => {
+        if (drawerItemsCall) {
+            if (snapshot.val()) {
+                var cats = [];
+                var subCats = [];
+                var keys = Object.keys(snapshot.val())
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i]
+                    var cat = snapshot.val()[key].itemName
+                    cats.push({ label: cat, value: cat })
+                    subCats.push(snapshot.val()[key])
+                }
+                setSubCategories(subCats);
+                setDropdownCat(cats);
+            }
+            setDrawerItemsCall(false)
+        }
+    })
+
+    const AddImageHandler = async () => {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert("Permission to access camera roll is required!");
+            return;
+        }
+
+        const pickerResult = await ImagePicker.launchImageLibraryAsync();
+        if (pickerResult.cancelled === true) {
+            return;
+        }
+        let URI = pickerResult.uri;
+        const imageName = URI.substring(URI.lastIndexOf('/') + 1);
+        const response = await fetch(URI);
+        const blob = await response.blob();
+        Firebase.storage()
+            .ref(`${imageName}`)
+            .put(blob)
+            .then((snapshot) => {
+                snapshot.ref.getDownloadURL().then((url) => {
+                    setProductImages([...productImages, { uri: url }])
+                });
+            })
+            .catch((e) => console.log('uploading image error => ', e));
+    };
+
+    const DeleteImageHandler = imageDeckIndex => {
+        if (productImages.length >= 0) {
+            const images = productImages;
+            const imageRef = productImages.splice(imageDeckIndex, 1);
+            if (imageRef[0]) {
+                setProductImages(images)
+            }
+        }
+    };
+
+    const addProduct = () => {
+        if (productImages[0].uri) {
+            var date = new Date()
+            const product = {
+                dealerId: user.uid,
+                key: date.getTime().toString(),
+                productDate: date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear(),
+                productTime: date.getHours() + ":" + date.getMinutes() + ":" + date.getMilliseconds(),
+                productName: productName,
+                productPrice: productPrice,
+                discount: 0 + " %",
+                finalPrice: productPrice,
+                stocks: productStocks,
+                category: productCategory,
+                subCategory: productSubCategory,
+                description: productDescription,
+                specs: productSpecs,
+                status: 'Pending',
+                images: productImages,
+                image: productImages[0],
+                deliveryStatus: 'Pending',
+                rating: 0,
+            };
+            let completeList = [...adminProducts, product];
+            setAdminProducts(completeList)
+            Firebase.database().ref(`Admin/${user.uid}/AdminProducts`).set(completeList).then(() => {
+                setAdminProductsCall(true)
+                Toast.show("Product Added", Toast.SHORT);
+                setProductName('')
+                setProductPrice('')
+                setProductSpecs('')
+                setProductStocks('')
+                setProductDescription('')
+                setProductCategory('')
+                setProductSubCategory('')
+                setProductImages([])
+                setDisabled(true)
+                Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product)
+            })
+        }
+        else {
+            Alert.alert('Image Not Found', 'Pick an Image from the gallery');
+        }
+    };
+
+    return (
+        <View style={styles.main}>
+            <StatusBar style='light' />
+
+            <ScrollView >
+
+                <View style={styles.iconContainer}>
+                    <TouchableOpacity onPress={() => DeleteImageHandler(imageDeckIndex)}>
+                        <Image source={require('../assets/images/delete.png')} style={styles.image} />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}> Product Images </Text>
+                    <TouchableOpacity onPress={() => AddImageHandler()}>
+                        <Image source={require('../assets/images/add.png')} style={styles.image} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.imageDeck}>
+                    <SliderBox
+                        images={productImages}
+                        sliderBoxHeight={175}
+                        circleLoop={true}
+                        autoplay={true}
+                        resizeMode={'contain'}
+                        currentImageEmitter={index => setImageDeckIndex(index)} />
+                </View>
+                <TextInput
+                    placeholder='Enter your product name'
+                    placeholderTextColor='gray'
+                    style={styles.textInput}
+                    value={productName}
+                    onChangeText={(val) => setProductName(val)} />
+                <TextInput
+                    placeholder='Enter your product price'
+                    placeholderTextColor='gray'
+                    keyboardType='number-pad'
+                    style={styles.textInput}
+                    value={productPrice}
+                    onChangeText={(val) => setProductPrice(val)} />
+                <TextInput
+                    placeholder='Enter your product stock'
+                    placeholderTextColor='gray'
+                    keyboardType='number-pad'
+                    style={styles.textInput}
+                    value={productStocks}
+                    onChangeText={(val) => setProductStocks(val)} />
+                <TextInput
+                    placeholder='Enter your product description'
+                    multiline={true}
+                    placeholderTextColor='gray'
+                    style={styles.textInput}
+                    value={productDescription}
+                    onChangeText={(val) => setProductDescription(val)} />
+                <DropDownPicker
+                    items={dropdownCat}
+                    placeholder="Select the product category"
+                    containerStyle={{ height: 40, margin: 10, }}
+                    dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
+                    style={{ backgroundColor: '#d8eafd' }}
+                    labelStyle={{ color: 'black' }}
+                    activeLabelStyle={{ color: 'blue' }}
+                    onChangeItem={item => {
+                        setProductCategory(item.value),
+                            setProductSubCategory('');
+                        if (subCategories.length != 0) {
+                            subCategories.map(subcat => {
+                                if (subcat.itemName === item.value) {
+                                    var temp = [];
+                                    if (subcat.SubCategories) {
+                                        var keys = Object.keys(subcat.SubCategories)
+                                        for (var i = 0; i < keys.length; i++) {
+                                            var key = keys[i];
+                                            var entry = subcat.SubCategories[key].subitemName
+                                            temp.push({ label: entry, value: entry })
+                                        }
+                                        setDropDownSubCat(temp);
+                                        setDisabled(false);
+                                    } else {
+                                        Toast.show("No subcategories present", Toast.SHORT);
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    }
+
+                />
+
+                <DropDownPicker
+                    items={dropDownSubCat}
+                    disabled={disabled}
+                    placeholder="Select the product sub category"
+                    containerStyle={{ height: 40, margin: 10, }}
+                    dropDownStyle={{ backgroundColor: 'white', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, marginBottom: 20, zIndex: 5 }}
+                    style={{ backgroundColor: '#d8eafd' }}
+                    labelStyle={{ color: 'black' }}
+                    activeLabelStyle={{ color: 'blue' }}
+                    onChangeItem={item => { setProductSubCategory(item.value) }}
+                />
+
+                <Text style={{ marginVertical: 10, alignSelf: 'center', fontWeight: 'bold', fontSize: 20 }}>Product Specifications </Text>
+                <TextInput
+                    placeholder='(eg: Color:blue , size:XL ,each in new line)'
+                    multiline={true}
+                    placeholderTextColor='gray'
+                    style={styles.textInput}
+                    value={productSpecs}
+                    onChangeText={(val) => setProductSpecs(val)} />
+
+                <TouchableOpacity style={styles.saveButton} onPress={() => {
+                    if (productImages.length != 0 && productName.length != 0 && productPrice.length != 0 && productSubCategory.length != 0
+                        && productStocks.length != 0 && productDescription.length != 0 && productCategory.length != 0) {
+                        addProduct()
+                    }
+                    else {
+                        if (productSubCategory.length == 0) {
+                            Toast.show("Select Valid Sub Category", Toast.SHORT);
+                        } else
+                            Toast.show("Fill required fields", Toast.SHORT);
+                    }
+
+                }}>
+                    <Text style={{ color: 'white', fontSize: 20 }} >Add Product</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    main: {
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#a6b8ca'
+    },
+    saveButton: {
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        alignItems: 'center',
+        backgroundColor: '#000a1a',
+        padding: 15,
+        elevation: 10,
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        padding: 10,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: '#000a1a',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    imageDeck: {
+        height: 175,
+        borderColor: '#000a1a',
+        borderWidth: 1,
+        backgroundColor: '#778899',
+        alignItems: 'center',
+    },
+    textInput: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#000a1a',
+        margin: 10,
+        padding: 5,
+        backgroundColor: '#d8eafd',
+        borderRadius: 5
+    },
+    image: {
+        height: 35,
+        width: 35,
+    },
+});
