@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { SliderBox } from 'react-native-image-slider-box';
 import { AuthContext } from '../navigation/AuthProvider';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,29 +12,11 @@ import { Entypo } from '@expo/vector-icons';
 
 export default function ProductDetailsScreen(props) {
 
-    const { user } = useContext(AuthContext);
     const item = props.route.params.item;
-    const [check, setcheck] = useState(true);
+    console.log("Props",props)
     const [check2, setcheck2] = useState(true);
-    const [wishlistItems, setWishlistItems] = useState([]);
-    const [cartItems, setCart] = useState([]);
     const [reviews, setReviews] = useState([]);
 
-    Firebase.database().ref(`Customers/${user.uid}`).on('value', (data) => {
-        if (check) {
-            if (data.val()) {
-
-                if (data.val().wishlist) {
-                    setWishlistItems(data.val().wishlist);
-                }
-                if (data.val().cart) {
-                    setCart(data.val().cart);
-                }
-                setcheck(false);
-            }
-        }
-
-    })
     Firebase.database().ref(`ProductList/${item.category}/${item.subCategory}/${item.key}/Reviews`).on('value', (data) => {
         if (check2) {
             if (data.val()) {
@@ -53,12 +35,15 @@ export default function ProductDetailsScreen(props) {
 
     const editItem = (item) => {
         console.log('clcked');
-        props.navigation.navigate('EditProductScreen',{product:item});
+        props.navigation.navigate('EditProductScreen', { product: item });
 
     }
 
-    const deleteItem=(item)=>{
-        Firebase.database().ref(`ProductList/${item.category}/${item.subCategory}/${item.key}`).remove();
+    const deleteItem = (item) => {
+        Firebase.database().ref(`ProductList/${item.category}/${item.subCategory}/${item.key}`).remove().then(() => {
+            Toast.show("Product Deleted", Toast.SHORT);
+            props.navigation.navigate("Categories");
+        })
     }
 
 
@@ -105,25 +90,27 @@ export default function ProductDetailsScreen(props) {
                     <Text style={{ fontSize: 18, marginLeft: 7, color: '#2f4f4f', fontWeight: 'bold' }}>Product Specifications:</Text>
                     <Text style={{ fontSize: 16, marginLeft: 7, marginBottom: 5, color: 'grey' }}>{item.specs}</Text>
 
-                    <View style={{ flexDirection:'row', margin: 5 }}>
-                        <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center',justifyContent:'center' }}
+                    <View style={{ flexDirection: 'row', margin: 5 }}>
+                        <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}
                             onPress={() => { editItem(item) }}>
-                                
+
                             <Entypo name="edit" size={20} color="grey" />
                             <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black', marginLeft: 10 }}>EDIT</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center',justifyContent:'center' }}
-                            onPress={() => { Alert.alert("DELETE", "ARE YOU SURE ?",
-                            [
-                                { text: "Cancel" },
-                                { text: "Proceed", onPress: () => deleteItem(item) }
-                            ], { cancelable: false }
-                        ); }}>
-                                
-                                <AntDesign name="delete" size={20} color="grey" />
+                        <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}
+                            onPress={() => {
+                                Alert.alert("DELETE", "ARE YOU SURE ?",
+                                    [
+                                        { text: "Cancel" },
+                                        { text: "Proceed", onPress: () => deleteItem(item) }
+                                    ], { cancelable: false }
+                                );
+                            }}>
+
+                            <AntDesign name="delete" size={20} color="grey" />
                             <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black', marginLeft: 10 }}>DELETE</Text>
                         </TouchableOpacity>
-                        
+
                     </View>
                 </View>
 

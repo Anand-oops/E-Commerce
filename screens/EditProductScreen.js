@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../navigation/AuthProvider';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert, StatusBar } from 'react-native';
 import Firebase from '../firebaseConfig'
 import * as ImagePicker from 'expo-image-picker'
@@ -10,12 +9,8 @@ import Toast from 'react-native-simple-toast';
 
 export default function AddProductScreen(props) {
 
-    const { user } = useContext(AuthContext);
-    console.log("Props", props.route.params.product)
     const item = props.route.params.product;
 
-    const [adminProducts, setAdminProducts] = useState([]);
-    const [adminProductsCall, setAdminProductsCall] = useState(true)
     const [dropdownCat, setDropdownCat] = useState([]);
     const [productImages, setProductImages] = useState(item.images)
     const [productName, setProductName] = useState(item.productName)
@@ -28,10 +23,9 @@ export default function AddProductScreen(props) {
     const [drawerItemsCall, setDrawerItemsCall] = useState(true)
     const [subCategories, setSubCategories] = useState([])
     const [dropDownSubCat, setDropDownSubCat] = useState([])
-    const [index, setIndex] = useState(-1);
     const [productSubCategory, setProductSubCategory] = useState('')
     const [disabled, setDisabled] = useState(true)
-    const [discount, setDiscount] = useState(item.discount)
+    const [discount, setDiscount] = useState(item.discount.substring(0,2))
 
     Firebase.database().ref('DrawerItemsList/').on('value', (snapshot) => {
         if (drawerItemsCall) {
@@ -91,6 +85,9 @@ export default function AddProductScreen(props) {
 
     const addProduct = () => {
         if (productImages[0].uri) {
+
+            Firebase.database().ref(`ProductList/${item.category}/${item.subCategory}/${item.key}`).remove();
+
             const product = {
                 dealerId: item.dealerId,
                 key: item.key,
@@ -114,7 +111,6 @@ export default function AddProductScreen(props) {
             };
 
             Firebase.database().ref(`ProductList/${productCategory}/${productSubCategory}/${product.key}`).update(product).then(() => {
-                setAdminProductsCall(true)
                 Toast.show("Product Updated", Toast.SHORT);
                 setProductName('')
                 setProductPrice('')
@@ -126,7 +122,7 @@ export default function AddProductScreen(props) {
                 setProductImages([])
                 setDiscount('')
                 setDisabled(true)
-                props.navigation.goBack();
+                props.navigation.navigate("Categories");
             })
         }
         else {

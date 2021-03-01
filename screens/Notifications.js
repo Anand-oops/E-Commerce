@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity ,ActivityIndicator} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Firebase from '../firebaseConfig';
 import Toast from 'react-native-simple-toast';
@@ -7,30 +7,27 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from '@expo/vector-icons';
 
 
-const NotificationsScreen=()=> {
+const NotificationsScreen = () => {
 
     const [listen, setListen] = useState(true)
     const [notif, setNotif] = useState([]);
-    const [loader,setLoader] = useState(true);
-    
+    const [loader, setLoader] = useState(true);
+
     Firebase.database().ref(`Admin/Notifications`).on('value', data => {
         if (listen) {
             if (data.val()) {
-                console.log(data.val());
                 var list = [];
                 var keys = Object.keys(data.val());
-                console.log("keys",keys);
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
-                    console.log('item',data.val()[key]);
-                        list.push(data.val()[key])
+                    list.push(data.val()[key])
                 }
                 setNotif(list.reverse());
             } else
                 Toast.show("No Notifications", Toast.SHORT);
             setListen(false);
             setLoader(false);
-            
+
         }
     });
 
@@ -40,13 +37,13 @@ const NotificationsScreen=()=> {
 
             <FlatList data={notif}
                 renderItem={(data) => (
-                    <TouchableOpacity style={{borderRadius:2,elevation:1,margin:8,backgroundColor:'pink',padding:8}} >
+                    <TouchableOpacity style={{ borderRadius: 2, elevation: 1, margin: 8, backgroundColor: 'pink', padding: 8 }} >
                         <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing:0.5,fontSize:18}}>{data.item}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5, fontSize: 18 }}>{data.item}</Text>
                         </View>
                     </TouchableOpacity>
                 )} />
-                <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
+            <View style={{ position: 'absolute', zIndex: 4, alignSelf: 'center', flex: 1, top: '50%' }}>
                 <ActivityIndicator
 
                     size='large'
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     main: {
         height: '100%',
         width: '100%',
-        backgroundColor:'#a6b8ca'
+        backgroundColor: '#a6b8ca'
     },
     listContainer: {
         flexDirection: 'row',
@@ -85,31 +82,31 @@ const styles = StyleSheet.create({
 
 const Stack = createStackNavigator();
 
-export default function Notifications({navigation}){
-return(
-    <Stack.Navigator screenOptions={{
-		headerTintColor: 'white',
-		headerTitleStyle: {
-			fontWeight: 'bold',
-			alignSelf: 'center'
-		},
-	}}>
-		<Stack.Screen name="Notifications" component={NotificationsScreen} options={{
-			title: 'Notifications',
-			headerStyle: {
-				backgroundColor: '#223240'
-			},
-			headerTitle: () => (
-				<View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-					<Entypo name="menu" size={24} color="white" onPress={() => navigation.openDrawer()} style={{ position: 'absolute', left: 3 }} />
-					<View>
-						<Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Notifications</Text>
-					</View>
-				</View>
-			),
-		}} />
+export default function Notifications({ navigation }) {
+    return (
+        <Stack.Navigator screenOptions={{
+            headerTintColor: 'white',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                alignSelf: 'center'
+            },
+        }}>
+            <Stack.Screen name="Notifications" component={NotificationsScreen} options={{
+                title: 'Notifications',
+                headerStyle: {
+                    backgroundColor: '#223240'
+                },
+                headerTitle: () => (
+                    <View style={{ height: '100%', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <Entypo name="menu" size={24} color="white" onPress={() => navigation.openDrawer()} style={{ position: 'absolute', left: 3 }} />
+                        <View>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Notifications</Text>
+                        </View>
+                    </View>
+                ),
+            }} />
 
-	</Stack.Navigator>
-)
+        </Stack.Navigator>
+    )
 
 }

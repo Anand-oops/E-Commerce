@@ -13,9 +13,7 @@ import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert, Image } from "
 import dummyImage from "../assets/avatar.png";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Notifications from '../screens/Notifications';
-
 import Products from '../screens/Products';
-
 import AddProductStack from './AddProductStack'
 
 
