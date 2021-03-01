@@ -57,6 +57,10 @@ export default function ProductDetailsScreen(props) {
 
     }
 
+    const deleteItem=(item)=>{
+        Firebase.database().ref(`ProductList/${item.category}/${item.subCategory}/${item.key}`).remove();
+    }
+
 
 
     return (
@@ -101,12 +105,23 @@ export default function ProductDetailsScreen(props) {
                     <Text style={{ fontSize: 18, marginLeft: 7, color: '#2f4f4f', fontWeight: 'bold' }}>Product Specifications:</Text>
                     <Text style={{ fontSize: 16, marginLeft: 7, marginBottom: 5, color: 'grey' }}>{item.specs}</Text>
 
-                    <View style={{  margin: 5 }}>
+                    <View style={{ flexDirection:'row', margin: 5 }}>
                         <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center',justifyContent:'center' }}
                             onPress={() => { editItem(item) }}>
                                 
                             <Entypo name="edit" size={20} color="grey" />
                             <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black', marginLeft: 10 }}>EDIT</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, margin: 5, flexDirection: 'row', padding: 10, elevation: 10, borderRadius: 4, backgroundColor: 'white', alignItems: 'center',justifyContent:'center' }}
+                            onPress={() => { Alert.alert("DELETE", "ARE YOU SURE ?",
+                            [
+                                { text: "Cancel" },
+                                { text: "Proceed", onPress: () => deleteItem(item) }
+                            ], { cancelable: false }
+                        ); }}>
+                                
+                                <AntDesign name="delete" size={20} color="grey" />
+                            <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black', marginLeft: 10 }}>DELETE</Text>
                         </TouchableOpacity>
                         
                     </View>
