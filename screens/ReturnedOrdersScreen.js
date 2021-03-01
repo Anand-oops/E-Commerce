@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar';
@@ -105,14 +105,14 @@ export default function ReturnedOrders({ }) {
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Returned : Accepted' });
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Returned : Accepted' });
-        Toast.show("Product Accepted", Toast.SHORT)
+        Toast.show("Product Return Accepted", Toast.SHORT)
     }
     const rejectCancel = (item) => {
         var notif = "You return request is rejected for the product: " + item.productName + " having id: " + item.orderId;
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Returned : Rejected' });
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Returned : Rejected' });
-        Toast.show("Product Rejected", Toast.SHORT)
+        Toast.show("Product Return Rejected", Toast.SHORT)
     }
     const onChange = (event, selectedDate) => {
         setShow(false)
@@ -183,17 +183,17 @@ export default function ReturnedOrders({ }) {
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
-                        <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id: {data.item.dealerId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id: {data.item.customer.customerId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date: {data.item.orderDate}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Reason: {data.item.reason}</Text>
+                        <View style={{ flex: 1 }} >
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id : {data.item.orderId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id : {data.item.dealerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id : {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date : {data.item.orderDate}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Reason : {data.item.reason}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price: {data.item.finalPrice}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price : {data.item.finalPrice}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At : {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
                                 {(data.item.deliveryStatus === 'Returned : Pending') && (
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity style={{ flex: 1, elevation: 1, borderRadius: 1, padding: 4, margin: 2, backgroundColor: 'pink' }} onPress={() => {

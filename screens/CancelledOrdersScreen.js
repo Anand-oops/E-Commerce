@@ -103,14 +103,14 @@ export default function CancelledOrders({ }) {
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Accepted' });
-        Toast.show("Product Accepted", Toast.SHORT)
+        Toast.show("Product Cancellation Accepted", Toast.SHORT)
     }
     const rejectCancel = (item) => {
         var notif = "You cancel request is rejected for the product: " + item.productName + " having id: " + item.orderId;
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Rejected' });
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Cancelled : Rejected' });
-        Toast.show("Product Rejected", Toast.SHORT)
+        Toast.show("Product Cancellation Rejected", Toast.SHORT)
     }
 
     const onChange = (event, selectedDate) => {
@@ -182,17 +182,17 @@ export default function CancelledOrders({ }) {
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
-                        <View >
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Id: {data.item.customer.customerId}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Name : {(data.item.customer.customerName != 'undefined undefined') ? data.item.customer.customerName : "No name provided"}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date: {data.item.orderDate}</Text>
-                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Reason: {data.item.reason}</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id : {data.item.orderId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id : {data.item.dealerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id : {data.item.customer.customerId}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date : {data.item.orderDate}</Text>
+                            <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Reason : {data.item.reason}</Text>
                             <Collapsible collapsed={searchedColl[data.index]}>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price: {data.item.finalPrice}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price : {data.item.finalPrice}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At : {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
                                 {(data.item.deliveryStatus === 'Cancelled : Pending') && (
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity style={{ flex: 1, elevation: 1, borderRadius: 1, padding: 4, margin: 2, backgroundColor: 'pink' }} onPress={() => {

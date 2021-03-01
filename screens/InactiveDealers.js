@@ -1,4 +1,3 @@
-import RegisteredDealers from '../screens/RegisteredDealers';
 import { createStackNavigator } from "@react-navigation/stack";
 import InsideRegDea from "../screens/InsideRegDea";
 import React, { useState } from 'react';
@@ -50,14 +49,6 @@ const Dealers=({ navigation })=> {
             setLoader(false);
         }
     });
-    // Firebase.database().ref(`BlackList/Dealers`).on('value',(data)=>{
-    //        if(check2){
-    //            if(data.val()){
-    //             setBlackList(data.val());
-    //            }
-    //        }
-    //        setCheck2(false);
-    // });
 
     const performSearch = (text) => {
         var filter = [];
@@ -102,6 +93,8 @@ const Dealers=({ navigation })=> {
     }
     const RemoveFromBlackList=(item)=>{
         console.log('clicked');
+        var notif = "You have been removed from the Blacklist."
+        Firebase.database().ref(`Dealers/${item.id}/Notifications`).push(notif);
         Firebase.database().ref(`Dealers/${item.id}/activity`).remove();
         setListenCheck(true);
     }
@@ -185,7 +178,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function InactiveDealers({ navigation }) {
+export default function InactiveDealers({ }) {
     return (
         <Stack.Navigator screenOptions={{
             headerShown:false,

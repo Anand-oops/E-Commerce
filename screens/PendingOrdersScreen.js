@@ -56,7 +56,7 @@ export default function PendingOrders({ }) {
     const changeStatus = (item) => {
         Firebase.database().ref(`CustomerOrders/${item.dealerId}/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
         Firebase.database().ref(`Customers/${item.customer.customerId}/Orders/${item.orderId}`).update({ deliveryStatus: 'Delivered' });
-        var notif="Your order "+item.productName+" is delivered.";
+        var notif = "Your order " + item.productName + " is delivered.";
         Firebase.database().ref(`Customers/${item.customer.customerId}/Notifications`).push(notif);
         setListen(true);
     }
@@ -177,7 +177,7 @@ export default function PendingOrders({ }) {
                 renderItem={(data) => (
                     <TouchableOpacity style={styles.listContainer} onPress={() => pressHandler(data.index)}>
                         <Image source={data.item.image} style={styles.listimage} />
-                        <View >
+                        <View style={{ flex: 1 }}>
                             <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
                             <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Dealer Id: {data.item.dealerId}</Text>
                             <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Customer Id: {data.item.customer.customerId}</Text>
@@ -185,7 +185,7 @@ export default function PendingOrders({ }) {
                             <Collapsible collapsed={searchedColl[data.index]}>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Category : {data.item.category} :: {data.item.subCategory}</Text>
-                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Ordered On: {data.item.orderDate}</Text>
+                                <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Price : {data.item.finalPrice}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Delivered At: {data.item.address.city + "," + data.item.address.state + " - " + data.item.address.pincode}</Text>
                                 <TouchableOpacity style={{ flexDirection: 'row', alignContent: 'space-around', marginTop: 5 }}
                                     onPress={() => {

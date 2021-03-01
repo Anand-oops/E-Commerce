@@ -139,7 +139,7 @@ const Orders = (props) => {
                     renderItem={data => (
                         <View style={styles.listContainer}>
                             <Image source={data.item.image} style={styles.listimage} />
-                            <View >
+                            <View style={{flex:1}}>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Id: {data.item.orderId}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Order Date: {data.item.orderDate}</Text>
                                 <Text style={{ color: 'black', fontWeight: 'bold', letterSpacing: 0.5 }}>Product : {data.item.productName}</Text>
