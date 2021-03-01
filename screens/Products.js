@@ -6,6 +6,7 @@ import Card from "../shared/Card";
 import ShopByCategory from '../screens/ShopByCategory';
 import NewScreen from "../screens/NewScreen";
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
+import EditProductScreen from "../screens/EditProductScreen";
 import Firebase from "../firebaseConfig";
 
 const Stack = createStackNavigator();
@@ -128,6 +129,21 @@ return(
 
 					<View>
 						<Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Products Details</Text>
+					</View>
+
+				</View>
+			),
+		}} />
+		<Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{
+			title: 'EditProduct',
+			headerStyle: {
+				backgroundColor: '#223240'
+			},
+			headerTitle: () => (
+				<View style={{ height: '100%', width: '100%', flexDirection: 'row'}}>
+
+					<View>
+						<Text style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1, color: 'white' }}>Edit Product</Text>
 					</View>
 
 				</View>

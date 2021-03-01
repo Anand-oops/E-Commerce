@@ -53,6 +53,7 @@ export default function ProductDetailsScreen(props) {
 
     const editItem = (item) => {
         console.log('clcked');
+        props.navigation.navigate('EditProductScreen',{product:item});
 
     }
 
