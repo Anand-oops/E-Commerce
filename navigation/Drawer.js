@@ -13,6 +13,7 @@ import { SafeAreaView, Text, ScrollView, TouchableOpacity, Alert, Image } from "
 import dummyImage from "../assets/avatar.png";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Notifications from '../screens/Notifications';
+import Products from '../screens/Products';
 
 const DrawerNav = createDrawerNavigator();
 
@@ -115,6 +116,12 @@ export default function Drawer() {
 
                 options={{
                     title: 'Notifications',
+                }}
+            />
+            <DrawerNav.Screen name="Products" component={Products}
+
+                options={{
+                    title: 'Products',
                 }}
             />
 
